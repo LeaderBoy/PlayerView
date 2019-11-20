@@ -33,10 +33,9 @@ public class PlayerView: UIView {
     
     public lazy var itemObserver = ItemObserver()
     
-    lazy var player: AVPlayer = {
-        let p = AVPlayer()
-        return p
-    }()
+    var player = AVPlayer()
+    
+    lazy var layerView = PlayerLayerView(player: player)
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -49,18 +48,44 @@ public class PlayerView: UIView {
     }
     
     func setup() {
-        fromNib()
+        addSubViews()
         observerCallBack()
     }
     
     public func prepare(url : URL) {
         let item = AVPlayerItem(url: url)
-        itemObserver.item = item
         player.replaceCurrentItem(with: item)
+        itemObserver.item = item
         itemObserver.player = player
     }
     
+    func addSubViews() {
+        addSubview(layerView)
+        
+        layerView.edges(to: self)
+    }
+    
     func observerCallBack() {
+        itemObserver.observedStatus =  {[weak self] status in
+            guard let self = self else { return }
+            switch status {
+            case .readyToPlay:
+                self.layerView.play()
+            case .failed:
+               print("播放失败")
+            default:
+                break
+            }
+        }
+        
+        itemObserver.observedDuration =  {[weak self] duration in
+            
+        }
+        
+        itemObserver.observedPosition =  {[weak self] position in
+            
+        }
+        
         itemObserver.observedBufferEmpty =  {[weak self] isEmpty in
             
         }

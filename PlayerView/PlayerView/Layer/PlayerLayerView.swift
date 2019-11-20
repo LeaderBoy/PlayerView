@@ -34,6 +34,7 @@ import AVKit
 enum PlayerErrorState {
     case networkUnReachable
     case timeout
+    case cellular
     case failed
     case error(_ error : Error)
 }
@@ -46,9 +47,11 @@ enum PlayerStateMode {
 }
 
 
+/// player state
 enum PlayerState {
     case playing
     case paused
+    case loading
     case error(_ error : PlayerErrorState)
     case mode(_ mode : PlayerStateMode)
 }
@@ -76,10 +79,6 @@ class PlayerLayerView: UIView {
         playerLayer.player = player
     }
     
-    func initialConfig() {
-
-    }
-    
     public func play() {
         player.play()
     }
@@ -101,7 +100,7 @@ class PlayerLayerView: UIView {
         player.replaceCurrentItem(with: nil)
     }
     
-    func seekToTime(_ time : TimeInterval,completionHandler: @escaping (Bool) -> Void) {
+    public func seekToTime(_ time : TimeInterval,completionHandler: @escaping (Bool) -> Void) {
         if duration == 0 {
             return
         }

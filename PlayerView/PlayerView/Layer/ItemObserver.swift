@@ -37,15 +37,15 @@ public class ItemObserver: NSObject {
     public typealias ItemPlayDone      = () -> Void
     public typealias ItemBool          = (Bool) -> Void
 
-    public var observedPosition    : ItemTimeinterval!
-    public var observedLoadedTime  : ItemTimeinterval!
-    public var observedDuration    : ItemTimeinterval!
-    public var observedError       : ItemError!
-    public var observedStatus      : ItemStatus!
-    public var observedPlayDone    : ItemPlayDone!
-    public var observedBufferEmpty : ItemBool!
-    public var observedBufferFull  : ItemBool!
-    public var observedKeepUp      : ItemBool!
+    public var observedPosition    : ItemTimeinterval?
+    public var observedLoadedTime  : ItemTimeinterval?
+    public var observedDuration    : ItemTimeinterval?
+    public var observedError       : ItemError?
+    public var observedStatus      : ItemStatus?
+    public var observedPlayDone    : ItemPlayDone?
+    public var observedBufferEmpty : ItemBool?
+    public var observedBufferFull  : ItemBool?
+    public var observedKeepUp      : ItemBool?
     
     private var itemErrorContext                    = 0
     private var itemDurationContext                 = 0
@@ -140,7 +140,7 @@ public class ItemObserver: NSObject {
         guard let newChange = change, let newError = newChange[.newKey] as? Error else {
             return
         }
-        observedError(newError)
+        observedError?(newError)
     }
     
     func observeDurationValue(change: [NSKeyValueChangeKey : Any]?) {
@@ -152,16 +152,16 @@ public class ItemObserver: NSObject {
         let seconds = CMTimeGetSeconds(time)
         if duration >= 0 {
             duration = seconds
-            observedDuration(seconds)
+            observedDuration?(seconds)
         }
     }
     
     func observeStatusValue(change: [NSKeyValueChangeKey : Any]?) {
         guard let newChange = change, let value = newChange[.newKey] as? NSNumber,let status = AVPlayer.Status(rawValue: value.intValue) else{
-            observedStatus(.unknown)
+            observedStatus?(.unknown)
             return
         }
-        observedStatus(status)
+        observedStatus?(status)
     }
     
     func observeLoadedTimeRangesValue(change: [NSKeyValueChangeKey : Any]?) {
@@ -172,35 +172,35 @@ public class ItemObserver: NSObject {
         let startSeconds = CMTimeGetSeconds(timeRange.start)
         let durationSeconds = CMTimeGetSeconds(timeRange.duration)
         let bufferTime = startSeconds + durationSeconds
-        observedLoadedTime(bufferTime)
+        observedLoadedTime?(bufferTime)
     }
     
     func observePlaybackBufferEmptyValue(change: [NSKeyValueChangeKey : Any]?) {
         guard let newChange = change, let value = newChange[.newKey] as? NSNumber else{
             return
         }
-        observedBufferEmpty(value.boolValue)
+        observedBufferEmpty?(value.boolValue)
     }
     
     func observePlaybackBufferFullValue(change: [NSKeyValueChangeKey : Any]?) {
         guard let newChange = change, let value = newChange[.newKey] as? NSNumber else{
             return
         }
-        observedBufferFull(value.boolValue)
+        observedBufferFull?(value.boolValue)
     }
     
     func observePlaybackLikelyToKeepUpValue(change: [NSKeyValueChangeKey : Any]?) {
         guard let newChange = change, let value = newChange[.newKey] as? NSNumber else{
             return
         }
-        observedKeepUp(value.boolValue)
+        observedKeepUp?(value.boolValue)
     }
     
     @objc func observePlayToEndTime(note: Notification) {
         guard let item = note.object as? AVPlayerItem,player?.currentItem == item else{
             return
         }
-        observedPlayDone()
+        observedPlayDone?()
     }
     
     func observerItemError(_ item : AVPlayerItem) {
@@ -294,7 +294,7 @@ public class ItemObserver: NSObject {
             }
             
             if player.timeControlStatus == .playing {
-                self.observedPosition(current)
+                self.observedPosition?(current)
             }
         }
     }

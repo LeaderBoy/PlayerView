@@ -10,9 +10,21 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    let urlString = "http://lessimore.cn/Meet%20iPhone%20X%20%E2%80%94%20Apple.mp4"
+    
+    @IBOutlet weak var playerView: PlayerView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        playerViewPlay()
         // Do any additional setup after loading the view.
+    }
+    
+    func playerViewPlay() {
+        if let url = URL(string: urlString) {
+            playerView.prepare(url: url)
+        }
     }
 
 
