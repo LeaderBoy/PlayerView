@@ -20,6 +20,9 @@
 		52F896A92385155200D87D9E /* UIView + XIB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52F896A82385155200D87D9E /* UIView + XIB.swift */; };
 		52F896AB23852B3A00D87D9E /* ItemObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52F896AA23852B3A00D87D9E /* ItemObserver.swift */; };
 		52F896AD2385403F00D87D9E /* PlayerLayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52F896AC2385403F00D87D9E /* PlayerLayerView.swift */; };
+		52F896B22386273100D87D9E /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52F896B12386273100D87D9E /* Reachability.swift */; };
+		52F896B623866B5A00D87D9E /* ControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52F896B523866B5A00D87D9E /* ControlsView.swift */; };
+		52F896B823866B8100D87D9E /* ControlsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52F896B723866B8100D87D9E /* ControlsView.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,6 +53,9 @@
 		52F896A82385155200D87D9E /* UIView + XIB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView + XIB.swift"; sourceTree = "<group>"; };
 		52F896AA23852B3A00D87D9E /* ItemObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemObserver.swift; sourceTree = "<group>"; };
 		52F896AC2385403F00D87D9E /* PlayerLayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerLayerView.swift; sourceTree = "<group>"; };
+		52F896B12386273100D87D9E /* Reachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
+		52F896B523866B5A00D87D9E /* ControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlsView.swift; sourceTree = "<group>"; };
+		52F896B723866B8100D87D9E /* ControlsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ControlsView.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,9 +130,11 @@
 			isa = PBXGroup;
 			children = (
 				52F8969E2385136D00D87D9E /* PlayerView.swift */,
+				52F896A2238513AA00D87D9E /* Layer */,
+				52F896B423866B4400D87D9E /* Controls */,
+				52F896AE238626E900D87D9E /* Reachability */,
 				520595802385937000BBEF77 /* Indicator */,
 				52F896A32385142300D87D9E /* Extension */,
-				52F896A2238513AA00D87D9E /* Layer */,
 			);
 			path = PlayerView;
 			sourceTree = "<group>";
@@ -147,6 +155,23 @@
 				52F896A82385155200D87D9E /* UIView + XIB.swift */,
 			);
 			path = Extension;
+			sourceTree = "<group>";
+		};
+		52F896AE238626E900D87D9E /* Reachability */ = {
+			isa = PBXGroup;
+			children = (
+				52F896B12386273100D87D9E /* Reachability.swift */,
+			);
+			path = Reachability;
+			sourceTree = "<group>";
+		};
+		52F896B423866B4400D87D9E /* Controls */ = {
+			isa = PBXGroup;
+			children = (
+				52F896B523866B5A00D87D9E /* ControlsView.swift */,
+				52F896B723866B8100D87D9E /* ControlsView.xib */,
+			);
+			path = Controls;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -231,6 +256,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				52F896882385124000D87D9E /* LaunchScreen.storyboard in Resources */,
+				52F896B823866B8100D87D9E /* ControlsView.xib in Resources */,
 				52F896852385124000D87D9E /* Assets.xcassets in Resources */,
 				520595842385939500BBEF77 /* IndicatorView.xib in Resources */,
 				52F896832385123D00D87D9E /* Main.storyboard in Resources */,
@@ -256,8 +282,10 @@
 				52F896802385123D00D87D9E /* ViewController.swift in Sources */,
 				52F8967C2385123D00D87D9E /* AppDelegate.swift in Sources */,
 				52F8969F2385136D00D87D9E /* PlayerView.swift in Sources */,
+				52F896B22386273100D87D9E /* Reachability.swift in Sources */,
 				52F896AD2385403F00D87D9E /* PlayerLayerView.swift in Sources */,
 				520595822385938300BBEF77 /* IndicatorView.swift in Sources */,
+				52F896B623866B5A00D87D9E /* ControlsView.swift in Sources */,
 				52F896A52385151300D87D9E /* UIView + Constraints.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -419,6 +447,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 7ZZ2BN3Q48;
 				INFOPLIST_FILE = PlayerView/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -437,6 +466,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 7ZZ2BN3Q48;
 				INFOPLIST_FILE = PlayerView/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (

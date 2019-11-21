@@ -30,33 +30,16 @@ import UIKit
 import AVKit
 
 
-/// error state
-enum PlayerErrorState {
-    case networkUnReachable
-    case timeout
-    case cellular
-    case failed
-    case error(_ error : Error)
-}
-
-/// full screen or not
-enum PlayerStateMode {
-    case landscapeFull
-    case portraitFull
-    case small
-}
-
-
-/// player state
-enum PlayerState {
-    case playing
-    case paused
-    case loading
-    case error(_ error : PlayerErrorState)
-    case mode(_ mode : PlayerStateMode)
-}
-
 class PlayerLayerView: UIView {
+    
+    var state : PlayerState = .prepare {
+        didSet {
+            handleState(state)
+        }
+    }
+    
+    var stateUpdater : PlayerStateUpdater?
+    
     var player : AVPlayer
     
     var playerLayer : AVPlayerLayer {
@@ -77,6 +60,14 @@ class PlayerLayerView: UIView {
         self.player = player
         super.init(frame: .zero)
         playerLayer.player = player
+    }
+    
+    public func show() {
+        self.isHidden = false
+    }
+    
+    public func hide() {
+        self.isHidden = true
     }
     
     public func play() {
@@ -109,5 +100,31 @@ class PlayerLayerView: UIView {
         }
         let time = CMTimeMake(value: Int64(600.0 * time), timescale: 600)
         player.seek(to: time, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero, completionHandler: completionHandler)
+    }
+    
+    func handleState(_ state : PlayerState) {
+        switch state {
+        case .prepare:
+            break
+        case .playing:
+            play()
+        case .paused:
+            pause()
+        case .seeking(let time):
+            seekToTime(time) { [weak self](done) in
+                guard let self = self else {
+                    return
+                }
+                if done {
+                    self.stateUpdater?(.seekDone)
+                }
+            }
+        case .loading:
+            hide()
+        case .error(_):
+            hide()
+        default:
+            break
+        }
     }
 }

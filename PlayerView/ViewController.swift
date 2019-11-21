@@ -14,10 +14,15 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var playerView: PlayerView!
     
+    var reachability = Reachability.forInternetConnection()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         playerViewPlay()
+        reachability?.statusDidChanged = { status in
+            print(status)
+        }
         // Do any additional setup after loading the view.
     }
     
