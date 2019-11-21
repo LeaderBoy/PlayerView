@@ -127,4 +127,12 @@ class PlayerLayerView: UIView {
             break
         }
     }
+    
+    func switchVideoGravity() {
+        if playerLayer.videoGravity == .resizeAspect {
+            playerLayer.videoGravity = .resizeAspectFill
+        }else {
+            playerLayer.videoGravity = .resizeAspect
+        }
+    }
 }

@@ -41,9 +41,12 @@ class ControlsView : UIView {
     @IBOutlet weak var slider: UISlider!
     @IBOutlet weak var progressView: UIProgressView!
     
+    @IBOutlet weak var controlsStackView: UIStackView!
+    
+    
     var isSlide = false
     var oldPosition : TimeInterval = 0
-    var hideTimeInterval = 3.0
+    var hideTimeInterval = 5.0
     
     var state : PlayerState = .prepare {
         didSet {
@@ -104,6 +107,12 @@ class ControlsView : UIView {
     func setup() {
         fromNib()
         setupSlider()
+        setupButtons()
+    }
+    
+    func setupButtons() {
+        playButton.setImage(#imageLiteral(resourceName: "controls_pause"), for: UIControl.State.init(arrayLiteral: .selected,.highlighted))
+        fullButton.setImage(#imageLiteral(resourceName: "full_screen_selected"), for: UIControl.State.init(arrayLiteral: .selected,.highlighted))
     }
     
     func setupSlider() {
@@ -119,6 +128,7 @@ class ControlsView : UIView {
     @objc func sliderValueChange(_ slider:UISlider) {
         isSlide = true
         let time = TimeInterval(slider.value)
+        oldPosition = time
         position = time
         updatePosition(time)
         stateUpdater?(.seeking(time))
@@ -148,6 +158,18 @@ class ControlsView : UIView {
         isSlide = true
     }
     
+    @objc func switchHiddenState(gesture : UIGestureRecognizer) {
+        if ignore(gesture: gesture) {
+            return
+        }
+            
+        if self.isHidden {
+            show()
+        }else {
+            hide()
+        }
+    }
+    
     func updatePosition(_ time : TimeInterval) {
         startLabel.text = transformSecondsToMMSS(time)
     }
@@ -160,7 +182,7 @@ class ControlsView : UIView {
         if (self.isHidden) {
             oldPosition = position;
         } else {
-            let drop = round(position - oldPosition);
+            let drop = abs(round(position - oldPosition));
             if (drop >= hideTimeInterval) {
                 oldPosition = position;
                 hide()
@@ -175,7 +197,6 @@ class ControlsView : UIView {
             stateUpdater?(.playing)
         }
     }
-    
     
     @IBAction func back(_ sender: UIButton) {
         stateUpdater?(.mode(.small))
@@ -225,12 +246,20 @@ class ControlsView : UIView {
             playButton.isSelected = true
             duration = 0
             position = 0
+            oldPosition = 0
             bufferTime = 0
             isSlide = false
         default:
             break
         }
         
+    }
+    
+    func ignore(gesture : UIGestureRecognizer) -> Bool {
+        if !isHidden && controlsStackView.frame.contains(gesture.location(in: self))  {
+            return true
+        }
+        return false
     }
 }
 

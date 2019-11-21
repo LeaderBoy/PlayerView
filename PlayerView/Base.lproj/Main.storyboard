@@ -16,23 +16,36 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PNn-ue-Oyc" customClass="PlayerView" customModule="PlayerView" customModuleProvider="target">
-                                <rect key="frame" x="20" y="64" width="374" height="199.5"/>
-                                <color key="backgroundColor" systemColor="systemGreenColor" red="0.20392156859999999" green="0.78039215689999997" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VHn-9v-XcO">
+                                <rect key="frame" x="20" y="44" width="374" height="280.5"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PNn-ue-Oyc" customClass="PlayerView" customModule="PlayerView" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="374" height="280.5"/>
+                                        <color key="backgroundColor" systemColor="systemGreenColor" red="0.20392156859999999" green="0.78039215689999997" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="PNn-ue-Oyc" secondAttribute="height" multiplier="4:3" id="oAP-5u-cS4"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" secondItem="PNn-ue-Oyc" secondAttribute="height" multiplier="15:8" id="oAP-5u-cS4"/>
+                                    <constraint firstAttribute="bottom" secondItem="PNn-ue-Oyc" secondAttribute="bottom" id="A77-nY-Fg6"/>
+                                    <constraint firstAttribute="trailing" secondItem="PNn-ue-Oyc" secondAttribute="trailing" id="dfE-gF-91I"/>
+                                    <constraint firstItem="PNn-ue-Oyc" firstAttribute="top" secondItem="VHn-9v-XcO" secondAttribute="top" id="shQ-Eu-lN3"/>
+                                    <constraint firstItem="PNn-ue-Oyc" firstAttribute="leading" secondItem="VHn-9v-XcO" secondAttribute="leading" id="w3n-GB-Chm"/>
                                 </constraints>
                             </view>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
-                            <constraint firstItem="PNn-ue-Oyc" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="20" id="WaI-1H-TJl"/>
-                            <constraint firstItem="PNn-ue-Oyc" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="kwa-wA-21j"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="PNn-ue-Oyc" secondAttribute="trailing" constant="20" id="n4n-Xc-rjO"/>
+                            <constraint firstItem="VHn-9v-XcO" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="Ppi-Ad-6q8"/>
+                            <constraint firstItem="VHn-9v-XcO" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="tFQ-Gf-ooN"/>
+                            <constraint firstItem="VHn-9v-XcO" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" constant="-20" id="vDS-33-d1K"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
+                        <outlet property="containerView" destination="VHn-9v-XcO" id="jl3-Ha-jIN"/>
                         <outlet property="playerView" destination="PNn-ue-Oyc" id="YPt-hd-qGg"/>
                     </connections>
                 </viewController>

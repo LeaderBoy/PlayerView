@@ -141,14 +141,15 @@ public enum PlayerState : Equatable {
 
 
 protocol PlayerViewDataSource {
-    func indicatorTitleForState(_ state : PlayerState) -> String?
+    func playerControlsView() -> UIView?
+    func playerIndicatorTitleForState(_ state : PlayerState) -> String?
 }
 
 
 typealias PlayerStateUpdater = (PlayerState) -> Void
 
 public class PlayerView: UIView {
-    
+        
     var dataSource : PlayerViewDataSource?
     
     var stateUpdater : PlayerStateUpdater?
@@ -168,6 +169,8 @@ public class PlayerView: UIView {
     lazy var layerView = PlayerLayerView(player: player)
     var indicatorView = IndicatorView()
     var controlsView  = ControlsView()
+    
+    var shouldStatusBarHidden = false
         
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -183,6 +186,7 @@ public class PlayerView: UIView {
         backgroundColor = .black
         state = .prepare
         addSubViews()
+        addGestures()
         reachabilityCallBack()
         observerCallBack()
     }
@@ -207,6 +211,19 @@ public class PlayerView: UIView {
         controlsView.edges(to: self)
         indicatorView.edges(to: self)
         layerView.edges(to: self)
+    }
+    
+    func addGestures() {
+        let oneTap = UITapGestureRecognizer(target: controlsView, action: #selector(ControlsView.switchHiddenState(gesture:)))
+        oneTap.numberOfTapsRequired = 1
+        oneTap.delegate = self
+        addGestureRecognizer(oneTap)
+        
+        let doubleTap = UITapGestureRecognizer(target: self, action: #selector(switchVideoGravity(gesture:)))
+        doubleTap.numberOfTapsRequired = 2
+        doubleTap.delegate = self
+        oneTap.require(toFail: doubleTap)
+        addGestureRecognizer(doubleTap)
     }
     
     func reachabilityCallBack() {
@@ -278,5 +295,22 @@ public class PlayerView: UIView {
             let error = PlayerErrorState(error: error)
             self.state = .error(error)
         }
+    }
+    
+    @objc func switchVideoGravity(gesture : UIGestureRecognizer) {
+        if controlsView.ignore(gesture: gesture) {
+            return
+        }
+        layerView.switchVideoGravity()
+    }
+}
+
+
+extension PlayerView : UIGestureRecognizerDelegate {
+    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        if touch.view is UIControl {
+            return false
+        }
+        return true
     }
 }

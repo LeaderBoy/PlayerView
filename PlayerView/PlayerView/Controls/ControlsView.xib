@@ -11,6 +11,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ControlsView" customModule="PlayerView" customModuleProvider="target">
             <connections>
                 <outlet property="backButton" destination="fsR-Gl-wYF" id="gvr-Mg-nhd"/>
+                <outlet property="controlsStackView" destination="fZx-DJ-HsU" id="HVJ-jt-LYp"/>
                 <outlet property="endLabel" destination="sd8-U6-KeF" id="jAu-JL-x98"/>
                 <outlet property="fullButton" destination="koJ-LB-ffQ" id="Nxv-jn-ftg"/>
                 <outlet property="playButton" destination="F8w-dK-18L" id="pzx-zS-rae"/>
@@ -24,7 +25,7 @@
             <rect key="frame" x="0.0" y="0.0" width="504" height="433"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="F8w-dK-18L">
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="F8w-dK-18L">
                     <rect key="frame" x="230.5" y="195" width="43" height="43"/>
                     <state key="normal" image="controls_play"/>
                     <state key="selected" image="controls_pause"/>
@@ -70,7 +71,7 @@
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="koJ-LB-ffQ">
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="koJ-LB-ffQ">
                             <rect key="frame" x="424" y="0.0" width="60" height="50"/>
                             <state key="normal" image="full_screen"/>
                             <connections>
