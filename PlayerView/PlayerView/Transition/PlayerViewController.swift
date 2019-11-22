@@ -74,10 +74,34 @@ class PlayerViewController: UIViewController {
 
 }
 
+extension PlayerViewController : DismissAnimation {
+    func dismissAnimationWillBegin(for animator: Animator) {
+        view.backgroundColor = .clear
+    }
+    
+    func dismissAnimationDidBegin(for animator: Animator, complete: @escaping () -> Void) {
+        UIView.animate(withDuration: animator.transitionDuration(using: nil), delay: 0, options: .layoutSubviews, animations: {
+            let sourceFrame = animator.sourceFrame
+            self.containerView.frame = sourceFrame
+            self.containerView.center = CGPoint(x: sourceFrame.midY, y: sourceFrame.midX)
+            self.containerView.transform = .init(rotationAngle: .pi / -2)
+        }) { (_) in
+            let sourceView = animator.sourceView
+            let superView = animator.superView
+            sourceView.removeFromSuperview()
+            sourceView.removeConstraints()
+            superView.addSubview(sourceView)
+            sourceView.edges(to: superView)
+            complete()
+        }
+    }
+}
+
+
 extension PlayerViewController : PresentAnimation {
     
     func presentAnimationDidBegin(for animator : Animator,complete:@escaping ()->Void) {
-        UIView.animate(withDuration: 0.5, delay: 0, options: .layoutSubviews, animations: {
+        UIView.animate(withDuration: animator.transitionDuration(using: nil), delay: 0, options: .layoutSubviews, animations: {
             let newFrame = CGRect(x: 0, y: 0, width: self.view.frame.height, height: self.view.frame.width)
             self.containerView.frame = newFrame
             self.containerView.center = CGPoint(x: self.view.center.x, y: self.view.center.y)
@@ -109,17 +133,6 @@ extension PlayerViewController : PresentAnimation {
         containerView.frame    = sourceFrame
         containerView.center   = newCenter
         containerView.transform = .init(rotationAngle: .pi / -2)
-
         containerView.layoutIfNeeded()
-    }
-    
-    func swap(rect : CGRect) -> CGRect {
-        let newRect = CGRect(x: rect.minY, y: rect.minX, width: rect.height, height: rect.width)
-        return newRect
-    }
-    
-    func swap(size : CGSize) -> CGSize {
-        let newSize = CGSize(width: size.height, height: size.width)
-        return newSize
     }
 }
