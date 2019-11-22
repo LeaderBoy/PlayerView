@@ -101,7 +101,7 @@ class ControlsView : UIView {
     }
     
     public func hide() {
-        self.isHidden = true
+//        self.isHidden = true
     }
     
     func setup() {

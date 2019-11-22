@@ -14,6 +14,7 @@
 		52A7972B2386A75A0043EB99 /* TransitionContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A7972A2386A75A0043EB99 /* TransitionContext.swift */; };
 		52A7972D2386A7BA0043EB99 /* Animator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A7972C2386A7BA0043EB99 /* Animator.swift */; };
 		52A7972F2386AB9B0043EB99 /* Transition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A7972E2386AB9B0043EB99 /* Transition.swift */; };
+		52A7973123878A640043EB99 /* UIView + FullAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A7973023878A640043EB99 /* UIView + FullAnimation.swift */; };
 		52F8967C2385123D00D87D9E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52F8967B2385123D00D87D9E /* AppDelegate.swift */; };
 		52F896802385123D00D87D9E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52F8967F2385123D00D87D9E /* ViewController.swift */; };
 		52F896832385123D00D87D9E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 52F896812385123D00D87D9E /* Main.storyboard */; };
@@ -48,6 +49,7 @@
 		52A7972A2386A75A0043EB99 /* TransitionContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransitionContext.swift; sourceTree = "<group>"; };
 		52A7972C2386A7BA0043EB99 /* Animator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animator.swift; sourceTree = "<group>"; };
 		52A7972E2386AB9B0043EB99 /* Transition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transition.swift; sourceTree = "<group>"; };
+		52A7973023878A640043EB99 /* UIView + FullAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView + FullAnimation.swift"; sourceTree = "<group>"; };
 		52F896782385123D00D87D9E /* PlayerView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PlayerView.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		52F8967B2385123D00D87D9E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		52F8967F2385123D00D87D9E /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -100,8 +102,8 @@
 			children = (
 				52A797252386A4CB0043EB99 /* PlayerViewController.swift */,
 				52A797262386A4CB0043EB99 /* PlayerViewController.xib */,
-				52A7972A2386A75A0043EB99 /* TransitionContext.swift */,
 				52A7972C2386A7BA0043EB99 /* Animator.swift */,
+				52A7972A2386A75A0043EB99 /* TransitionContext.swift */,
 				52A7972E2386AB9B0043EB99 /* Transition.swift */,
 			);
 			path = Transition;
@@ -176,6 +178,7 @@
 			children = (
 				52F896A42385151300D87D9E /* UIView + Constraints.swift */,
 				52F896A82385155200D87D9E /* UIView + XIB.swift */,
+				52A7973023878A640043EB99 /* UIView + FullAnimation.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -305,6 +308,7 @@
 				52F896AB23852B3A00D87D9E /* ItemObserver.swift in Sources */,
 				52F896A92385155200D87D9E /* UIView + XIB.swift in Sources */,
 				52F896802385123D00D87D9E /* ViewController.swift in Sources */,
+				52A7973123878A640043EB99 /* UIView + FullAnimation.swift in Sources */,
 				52F8967C2385123D00D87D9E /* AppDelegate.swift in Sources */,
 				52F8969F2385136D00D87D9E /* PlayerView.swift in Sources */,
 				52F896B22386273100D87D9E /* Reachability.swift in Sources */,

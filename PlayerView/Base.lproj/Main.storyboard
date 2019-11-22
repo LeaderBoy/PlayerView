@@ -22,14 +22,12 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PNn-ue-Oyc" customClass="PlayerView" customModule="PlayerView" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="374" height="280.5"/>
                                         <color key="backgroundColor" systemColor="systemGreenColor" red="0.20392156859999999" green="0.78039215689999997" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" secondItem="PNn-ue-Oyc" secondAttribute="height" multiplier="4:3" id="oAP-5u-cS4"/>
-                                        </constraints>
                                     </view>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <constraints>
                                     <constraint firstAttribute="bottom" secondItem="PNn-ue-Oyc" secondAttribute="bottom" id="A77-nY-Fg6"/>
+                                    <constraint firstAttribute="width" secondItem="VHn-9v-XcO" secondAttribute="height" multiplier="4:3" id="aTj-i2-rgt"/>
                                     <constraint firstAttribute="trailing" secondItem="PNn-ue-Oyc" secondAttribute="trailing" id="dfE-gF-91I"/>
                                     <constraint firstItem="PNn-ue-Oyc" firstAttribute="top" secondItem="VHn-9v-XcO" secondAttribute="top" id="shQ-Eu-lN3"/>
                                     <constraint firstItem="PNn-ue-Oyc" firstAttribute="leading" secondItem="VHn-9v-XcO" secondAttribute="leading" id="w3n-GB-Chm"/>

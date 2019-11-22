@@ -60,6 +60,7 @@ class PlayerLayerView: UIView {
         self.player = player
         super.init(frame: .zero)
         playerLayer.player = player
+        playerLayer.videoGravity = .resizeAspectFill
     }
     
     public func show() {

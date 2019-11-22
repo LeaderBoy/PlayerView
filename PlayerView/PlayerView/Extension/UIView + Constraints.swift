@@ -75,4 +75,53 @@ extension UIView {
         
         return [top,left,bottom,right]
     }
+    
+    
+    func removeConstraints() {
+        if let superView = self.superview {
+            for constraint in superView.constraints {
+                if let v = constraint.firstItem as? UIView,v == self {
+                    superView.removeConstraint(constraint)
+                }
+                if let v = constraint.secondItem as? UIView,v == self {
+                    superView.removeConstraint(constraint)
+                }
+            }
+        }
+        removeWidthConstraints()
+        removeHeightConstraints()
+    }
+    
+    func removeWidthConstraints() {
+        for constraint in constraints {
+            if #available(iOS 10.0, *) {
+                if constraint.firstAnchor == widthAnchor {
+                    removeConstraint(constraint)
+                }
+            } else {
+                if constraint.firstAttribute == .width {
+                    removeConstraint(constraint)
+                }
+            }
+        }
+    }
+    
+    func removeHeightConstraints() {
+        for constraint in constraints {
+            if #available(iOS 10.0, *) {
+                if constraint.firstAnchor == heightAnchor {
+                    removeConstraint(constraint)
+                }
+            } else {
+                if constraint.firstAttribute == .height {
+                    removeConstraint(constraint)
+                }
+            }
+        }
+    }
+    
+    
+    
+    
+    
 }

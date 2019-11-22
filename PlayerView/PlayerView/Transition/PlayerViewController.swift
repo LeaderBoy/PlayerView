@@ -30,10 +30,18 @@ import UIKit
 
 class PlayerViewController: UIViewController {
 
+    var containerView: UIView = {
+        let v = UIView()
+        v.backgroundColor = .blue
+        return v
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         view.backgroundColor = .red
+        view.addSubview(containerView)
+        
         // Do any additional setup after loading the view.
     }
 
@@ -51,6 +59,10 @@ class PlayerViewController: UIViewController {
     override var shouldAutorotate: Bool {
         return true
     }
+    
+    override var prefersStatusBarHidden: Bool {
+        return false
+    }
         
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return UIInterfaceOrientationMask.landscapeRight
@@ -60,4 +72,57 @@ class PlayerViewController: UIViewController {
          dismiss(animated: true, completion: nil)
     }
 
+}
+
+extension PlayerViewController : PresentAnimation {
+    
+    func presentAnimationDidBegin(for animator : Animator,complete:@escaping ()->Void) {
+        
+//        containerView.translatesAutoresizingMaskIntoConstraints = false
+//
+//
+//        NSLayoutConstraint.activate([
+//            containerView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+//            containerView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+//            containerView.widthAnchor.constraint(equalTo: view.widthAnchor),
+//            containerView.heightAnchor.constraint(equalTo: view.heightAnchor)
+//        ])
+        
+        UIView.animate(withDuration: 0.5, delay: 0, options: .layoutSubviews, animations: {
+            print(self.view.bounds)
+            self.containerView.frame = self.view.bounds
+            self.containerView.center = CGPoint(x: self.view.center.y, y: self.view.center.x)
+            self.containerView.transform = .identity
+
+        }) { (_) in
+            complete()
+        }
+    }
+    
+    func presentAnimationWillBegin(for animator: Animator) {
+        // insert snapshot view
+//        if let snapShotView = animator.sourceShotView {
+//            snapShotView.frame = view.bounds
+//            view.addSubview(snapShotView)
+//        }
+                
+        
+//        containerView.removeConstraints()
+        let sourceView = animator.sourceView
+        let sourceFrame = animator.sourceFrame
+        sourceView.removeFromSuperview()
+        sourceView.removeConstraints()
+        containerView.addSubview(sourceView)
+        sourceView.edges(to: containerView)
+        
+        let newCenter   = CGPoint(x: sourceFrame.midY, y: sourceFrame.midX)
+        containerView.frame    = sourceFrame
+        containerView.center   = newCenter
+        containerView.transform = .init(rotationAngle: .pi / -2)
+    }
+    
+    func swap(rect : CGRect) -> CGRect {
+        let newRect = CGRect(x: rect.minY, y: rect.minX, width: rect.height, height: rect.width)
+        return newRect
+    }
 }

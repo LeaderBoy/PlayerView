@@ -21,7 +21,7 @@ class ViewController: UIViewController {
     var reachability = Reachability.forInternetConnection()
     
     lazy var delegate : Transition = {
-        let animator = Animator(with: containerView)
+        let animator = Animator(with: playerView)
         let d = Transition(animator: animator)
         return d
     }()
@@ -33,6 +33,7 @@ class ViewController: UIViewController {
         reachability?.statusDidChanged = { status in
             print(status)
         }
+        view.backgroundColor = .green
         // Do any additional setup after loading the view.
     }
     
