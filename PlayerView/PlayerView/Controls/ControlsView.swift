@@ -40,8 +40,9 @@ class ControlsView : UIView {
     @IBOutlet weak var fullButton: UIButton!
     @IBOutlet weak var slider: UISlider!
     @IBOutlet weak var progressView: UIProgressView!
-    
     @IBOutlet weak var controlsStackView: UIStackView!
+    @IBOutlet weak var containerView: UIView!
+    
     
     
     var isSlide = false
@@ -101,9 +102,16 @@ class ControlsView : UIView {
     }
     
     public func hide() {
-//        self.isHidden = true
+        self.isHidden = true
     }
     
+    override func safeAreaInsetsDidChange() {
+        UIView.animate(withDuration: 0.5) {
+            self.layoutIfNeeded()
+        }
+    }
+    
+
     func setup() {
         fromNib()
         setupSlider()

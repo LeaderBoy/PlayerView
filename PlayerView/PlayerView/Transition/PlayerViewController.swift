@@ -39,9 +39,9 @@ class PlayerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = .red
+        view.backgroundColor = .clear
+       
         view.addSubview(containerView)
-        
         // Do any additional setup after loading the view.
     }
 
@@ -77,52 +77,49 @@ class PlayerViewController: UIViewController {
 extension PlayerViewController : PresentAnimation {
     
     func presentAnimationDidBegin(for animator : Animator,complete:@escaping ()->Void) {
-        
-//        containerView.translatesAutoresizingMaskIntoConstraints = false
-//
-//
-//        NSLayoutConstraint.activate([
-//            containerView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-//            containerView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-//            containerView.widthAnchor.constraint(equalTo: view.widthAnchor),
-//            containerView.heightAnchor.constraint(equalTo: view.heightAnchor)
-//        ])
-        
         UIView.animate(withDuration: 0.5, delay: 0, options: .layoutSubviews, animations: {
-            print(self.view.bounds)
-            self.containerView.frame = self.view.bounds
-            self.containerView.center = CGPoint(x: self.view.center.y, y: self.view.center.x)
+            let newFrame = CGRect(x: 0, y: 0, width: self.view.frame.height, height: self.view.frame.width)
+            self.containerView.frame = newFrame
+            self.containerView.center = CGPoint(x: self.view.center.x, y: self.view.center.y)
             self.containerView.transform = .identity
-
         }) { (_) in
             complete()
         }
     }
     
     func presentAnimationWillBegin(for animator: Animator) {
-        // insert snapshot view
+        // insert snapshotView
 //        if let snapShotView = animator.sourceShotView {
-//            snapShotView.frame = view.bounds
-//            view.addSubview(snapShotView)
+//            let newFrame = CGRect(x: 0, y: 0, width: self.view.frame.height, height: self.view.frame.width)
+//            snapShotView.frame = newFrame
+//            snapShotView.center = CGPoint(x: self.view.center.x, y: self.view.center.y)
+//            snapShotView.transform = .init(rotationAngle: .pi / -2)
+//            view.insertSubview(snapShotView, at: 0)
 //        }
-                
-        
-//        containerView.removeConstraints()
+
+        // insert playerView
         let sourceView = animator.sourceView
         let sourceFrame = animator.sourceFrame
         sourceView.removeFromSuperview()
         sourceView.removeConstraints()
         containerView.addSubview(sourceView)
         sourceView.edges(to: containerView)
-        
+
         let newCenter   = CGPoint(x: sourceFrame.midY, y: sourceFrame.midX)
         containerView.frame    = sourceFrame
         containerView.center   = newCenter
         containerView.transform = .init(rotationAngle: .pi / -2)
+
+        containerView.layoutIfNeeded()
     }
     
     func swap(rect : CGRect) -> CGRect {
         let newRect = CGRect(x: rect.minY, y: rect.minX, width: rect.height, height: rect.width)
         return newRect
+    }
+    
+    func swap(size : CGSize) -> CGSize {
+        let newSize = CGSize(width: size.height, height: size.width)
+        return newSize
     }
 }

@@ -54,6 +54,10 @@ class ViewController: UIViewController {
         return true
     }
     
+    override var preferredStatusBarUpdateAnimation: UIStatusBarAnimation {
+        return .fade
+    }
+    
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return UIInterfaceOrientationMask.portrait
     }
@@ -63,7 +67,11 @@ class ViewController: UIViewController {
         let player = PlayerViewController()
         player.modalPresentationStyle = .fullScreen
         player.transitioningDelegate = delegate
-        present(player, animated: true, completion: nil)
+        
+        present(player, animated: true) {
+            player.view.backgroundColor = .clear
+        }
+//        present(player, animated: true, completion: nil)
     }
 
 

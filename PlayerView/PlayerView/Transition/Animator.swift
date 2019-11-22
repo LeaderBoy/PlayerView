@@ -89,8 +89,8 @@ extension Animator : UIViewControllerAnimatedTransitioning {
         let toViewController = context.toViewController
         let fromView = context.fromView
         let toView = context.toView
+        toView.frame = containerView.bounds
         containerView.addSubview(toView)
-        toView.edges(to: containerView)
         
         if let animation = toViewController as? PresentAnimation {
             animation.presentAnimationWillBegin(for: self)
@@ -98,9 +98,7 @@ extension Animator : UIViewControllerAnimatedTransitioning {
                 context.transitionContext.completeTransition(true)
             }
         }
-        
-        
-        
+                
         return;
 
         return;
