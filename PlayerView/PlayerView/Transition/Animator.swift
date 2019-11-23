@@ -28,6 +28,8 @@
 
 import UIKit
 
+let playerAnimationTime : TimeInterval =   0.5
+
 class Animator : NSObject {
     enum State {
         case animating
@@ -40,7 +42,7 @@ class Animator : NSObject {
     
     var isPortrait = true
     var state : State = .animated
-    var sourceShotView : UIView?
+    var sourceShotView : UIView!
     
     init(with sourceView : UIView) {
         self.sourceView = sourceView
@@ -63,6 +65,9 @@ protocol PresentAnimation {
 protocol DismissAnimation {
     func dismissAnimationWillBegin(for animator : Animator)
     func dismissAnimationDidBegin(for animator : Animator,complete:@escaping ()->Void)
+    func dismissAnimationWillEnd(for animator : Animator)
+    func dismissAnimationDidEnd(for animator : Animator)
+
 }
 
 extension PresentAnimation {
@@ -73,12 +78,14 @@ extension PresentAnimation {
 extension DismissAnimation {
     func dismissAnimationWillBegin(for animator : Animator){}
     func dismissAnimationDidBegin(for animator : Animator,complete:@escaping ()->Void){}
+    func dismissAnimationWillEnd(for animator : Animator){}
+    func dismissAnimationDidEnd(for animator : Animator){}
 }
 
 
 extension Animator : UIViewControllerAnimatedTransitioning {
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        return 0.5
+        return playerAnimationTime
     }
     
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
@@ -95,6 +102,17 @@ extension Animator : UIViewControllerAnimatedTransitioning {
         let containerView = context.containerView
         let toViewController = context.toViewController
         let toView = context.toView
+    
+        let fromView = context.fromView
+        fromView.frame = containerView.bounds
+        fromView.transform = .init(rotationAngle: .pi / -2)
+    
+        sourceShotView.frame = CGRect(x: 0, y: 0, width: containerView.frame.height, height: containerView.frame.width)
+        sourceShotView.center = fromView.center
+        sourceShotView.transform = .init(rotationAngle: .pi / -2)
+        containerView.addSubview(sourceShotView)
+        
+        
         toView.frame = containerView.bounds
         containerView.addSubview(toView)
         
@@ -102,6 +120,8 @@ extension Animator : UIViewControllerAnimatedTransitioning {
             animation.presentAnimationWillBegin(for: self)
             animation.presentAnimationDidBegin(for: self) {
                 context.transitionContext.completeTransition(true)
+                self.sourceShotView.transform = .identity
+                self.sourceShotView.removeFromSuperview()
             }
         }
     }
@@ -110,32 +130,27 @@ extension Animator : UIViewControllerAnimatedTransitioning {
         let containerView = context.containerView
         let fromViewController = context.fromViewController
         let fromView = context.fromView
+        let fromAnimation = fromViewController as? DismissAnimation
+        
+        let toViewController = context.toViewController
         let toView = context.toView
+        let toAnimation = toViewController as? DismissAnimation
+        
         toView.frame = containerView.bounds
+        toView.transform = .identity
+
         containerView.insertSubview(toView, at: 0)
                 
-        if let animation = fromViewController as? DismissAnimation {
-            animation.dismissAnimationWillBegin(for: self)
-            animation.dismissAnimationDidBegin(for: self) {
-                fromView.removeFromSuperview()
-                context.transitionContext.completeTransition(true)
-            }
+        fromAnimation?.dismissAnimationWillBegin(for: self)
+        fromAnimation?.dismissAnimationDidBegin(for: self) {
+            fromView.removeFromSuperview()
+            fromAnimation?.dismissAnimationWillEnd(for: self)
+            toAnimation?.dismissAnimationWillEnd(for: self)
+            context.transitionContext.completeTransition(true)
+            fromAnimation?.dismissAnimationDidEnd(for: self)
+            toAnimation?.dismissAnimationDidEnd(for: self)
+            
         }
-        return ;
-        
-//        UIView.animate(withDuration: 10, delay: 0, options: .layoutSubviews, animations: {
-//            let newFrame = CGRect(x: self.sourceFrame.minX, y: self.sourceFrame.minY, width: self.sourceFrame.height, height: self.sourceFrame.width)
-//            fromView.frame = newFrame
-//            fromView.center = CGPoint(x: self.sourceFrame.midX, y: self.sourceFrame.midY)
-//            fromView.transform = CGAffineTransform.identity
-//        }) { (_) in
-//            fromView.removeFromSuperview()
-//            self.sourceView.removeFromSuperview()
-//            self.superView.addSubview(self.sourceView)
-//            self.sourceView.edges(to: self.superView)
-//            context.transitionContext.completeTransition(true)
-//        }
-        
     }
         
     func swap(size : CGSize) -> CGSize {

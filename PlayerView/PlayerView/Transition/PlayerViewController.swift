@@ -67,10 +67,6 @@ class PlayerViewController: UIViewController {
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return UIInterfaceOrientationMask.landscapeRight
     }
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-         dismiss(animated: true, completion: nil)
-    }
 
 }
 
@@ -94,6 +90,10 @@ extension PlayerViewController : DismissAnimation {
             sourceView.edges(to: superView)
             complete()
         }
+    }
+    
+    func dismissAnimationDidEnd(for animator: Animator) {
+        self.containerView.transform = .identity
     }
 }
 

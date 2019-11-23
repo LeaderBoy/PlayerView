@@ -14,27 +14,37 @@ class ViewController: UIViewController {
     
     let urlString = "http://lessimore.cn/iPhone%20X%20%20-%20Apple%20%20-%20cnBetaCOM.mp4"
     
-    @IBOutlet weak var playerView: PlayerView!
+    var originalOffset = CGPoint.zero
     
-    @IBOutlet weak var containerView: UIView!
+    var willEnterFullScreen = false
     
-    var reachability = Reachability.forInternetConnection()
+    var delegate : Transition!
     
-    lazy var delegate : Transition = {
-        let animator = Animator(with: playerView)
-        let d = Transition(animator: animator)
-        return d
-    }()
+    @IBOutlet weak var tableView: UITableView!
+    let playerVC = PlayerViewController()
+    lazy var playerView = PlayerView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        playerViewPlay()
-        reachability?.statusDidChanged = { status in
-            print(status)
+        playerView.delegate = self
+        setupTableView()
+    }
+    
+    @available(iOS 11.0, *)
+    override func viewSafeAreaInsetsDidChange() {
+        if willEnterFullScreen {
+            UIView.animate(withDuration: playerAnimationTime) {
+                self.view.layoutIfNeeded()
+            }
         }
-        view.backgroundColor = .green
-        // Do any additional setup after loading the view.
+    }
+    
+    func setupTableView() {
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.delaysContentTouches = false
+        let nib = UINib(nibName: "VideoCell", bundle: nil)
+        tableView.register(nib, forCellReuseIdentifier: "VideoCell")
     }
     
     func playerViewPlay() {
@@ -44,14 +54,13 @@ class ViewController: UIViewController {
     }
     
     override var shouldAutorotate: Bool {
-        return true
+        return false
     }
     
     override var prefersStatusBarHidden: Bool {
-        if playerView != nil {
-            return playerView.shouldStatusBarHidden
-        }
         return true
+            
+            //playerView.shouldStatusBarHidden
     }
     
     override var preferredStatusBarUpdateAnimation: UIStatusBarAnimation {
@@ -62,18 +71,98 @@ class ViewController: UIViewController {
         return UIInterfaceOrientationMask.portrait
     }
     
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        let player = PlayerViewController()
-        player.modalPresentationStyle = .fullScreen
-        player.transitioningDelegate = delegate
+    override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
         
-        present(player, animated: true) {
-            player.view.backgroundColor = .clear
+        if newCollection.verticalSizeClass == .regular {
+            tableView.contentOffset = originalOffset
+        }else {
+            originalOffset = tableView.contentOffset
+            print(originalOffset)
         }
-//        present(player, animated: true, completion: nil)
+        
+        print("执行")
     }
-
-
+    
+//    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+//        super.viewWillTransition(to: size, with: coordinator)
+//        let offset = tableView.contentOffset
+//        let height  = tableView.bounds.size.height
+//
+//        let index     = round(offset.y / height)
+//        let newOffset = CGPoint(x: offset.x, y: index * size.height)
+//
+//        tableView.setContentOffset(newOffset, animated: false)
+//
+//        coordinator.animate(alongsideTransition: { (context) in
+//            self.tableView.reloadData()
+//            self.tableView.setContentOffset(newOffset, animated: false)
+//        }, completion: nil)
+//    }
+    
+//    override func viewWillLayoutSubviews() {
+//        super.viewWillLayoutSubviews()
+//        tableView.contentOffset = originalOffset
+//    }
+    
 }
 
+extension ViewController : PlayerDelegate {
+    func playerWillExitFullScreen() {
+        willEnterFullScreen = false
+        playerVC.dismiss(animated: true, completion: nil)
+    }
+    func playerWillEnterFullScreen() {
+        willEnterFullScreen = true
+        playerVC.modalPresentationStyle = .fullScreen
+        let animator = Animator(with: playerView)
+        let delegate = Transition(animator: animator)
+        self.delegate = delegate
+        playerVC.transitioningDelegate = delegate
+        present(playerVC, animated: true) {
+            self.playerVC.view.backgroundColor = .clear
+        }
+    }
+}
+
+extension ViewController : UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 20
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "VideoCell") as! VideoCell
+        cell.label.text = "\(indexPath.row)"
+        cell.delegate = self
+        return cell
+    }
+    
+}
+
+extension ViewController : CellClick {
+    func click(at container: UIView) {
+        playerView.frame = CGRect(x: 0, y: 0, width: 100, height: 200)
+        container.addSubview(playerView)
+        playerView.edges(to: container)
+        playerViewPlay()
+    }
+}
+
+extension ViewController : UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+    }
+}
+
+extension ViewController : DismissAnimation {
+    func dismissAnimationWillEnd(for animator: Animator) {
+        DispatchQueue.main.async {
+            self.tableView.setContentOffset(self.originalOffset, animated: false)
+        }
+    }
+    
+//    func dismissAnimationDidEnd(for animator: Animator) {
+//        DispatchQueue.main.async {
+//            self.tableView.setContentOffset(self.originalOffset, animated: false)
+//        }
+//    }
+}

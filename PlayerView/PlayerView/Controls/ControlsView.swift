@@ -42,12 +42,11 @@ class ControlsView : UIView {
     @IBOutlet weak var progressView: UIProgressView!
     @IBOutlet weak var controlsStackView: UIStackView!
     @IBOutlet weak var containerView: UIView!
-    
-    
-    
+        
     var isSlide = false
     var oldPosition : TimeInterval = 0
     var hideTimeInterval = 5.0
+    var debouncer = Debouncer(seconds: 0.3)
     
     var state : PlayerState = .prepare {
         didSet {
@@ -87,6 +86,8 @@ class ControlsView : UIView {
         }
     }
     
+    var finalSafeAreaInsets : UIEdgeInsets = .zero
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
@@ -105,10 +106,44 @@ class ControlsView : UIView {
 //        self.isHidden = true
     }
     
+    @available(iOS 11.0, *)
     override func safeAreaInsetsDidChange() {
-        UIView.animate(withDuration: 0.5) {
+        let delay = 0.0
+        
+        // from small to full
+        /*
+         from:
+         UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 0.0)
+         or from:
+         UIEdgeInsets(top: 44.0, left: 0.0, bottom: 0.0, right: 0.0)
+         or from
+         UIEdgeInsets(top: 44.0, left: 0.0, bottom: 0.0, right: 34.0)
+         or from
+         UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 34.0)
+         to:
+         UIEdgeInsets(top: 0.0, left: 44.0, bottom: 20.999999999999943, right: 44.0)
+         */
+        
+        // from full to small
+        /*
+         from:
+         UIEdgeInsets(top: 0.0, left: 44.0, bottom: 20.999999999999943, right: 44.0)
+         to:
+         UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 0.0)
+         or to:
+         UIEdgeInsets(top: 44.0, left: 0.0, bottom: 0.0, right: 0.0)
+         or to
+         UIEdgeInsets(top: 44.0, left: 0.0, bottom: 0.0, right: 34.0)
+         or to
+         UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 34.0)
+         */
+        
+
+        UIView.animate(withDuration: playerAnimationTime - delay, delay: delay, options: [], animations: {
             self.layoutIfNeeded()
-        }
+        }, completion: { (done) in
+            print("完成 : \(done)")
+        })
     }
     
 

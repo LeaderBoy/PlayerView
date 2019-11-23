@@ -148,9 +148,15 @@ protocol PlayerViewDataSource {
 
 typealias PlayerStateUpdater = (PlayerState) -> Void
 
+protocol PlayerDelegate : class {
+    func playerWillEnterFullScreen()
+    func playerWillExitFullScreen()
+}
+
 public class PlayerView: UIView {
         
     var dataSource : PlayerViewDataSource?
+    var delegate : PlayerDelegate?
     
     var stateUpdater : PlayerStateUpdater?
     
@@ -160,6 +166,8 @@ public class PlayerView: UIView {
             indicatorView.state = state
             layerView.state = state
             controlsView.state = state
+            
+            handle(state: state)
         }
     }
     
@@ -293,6 +301,7 @@ public class PlayerView: UIView {
         itemObserver.observedError =  {[weak self] error in
             guard let self = self else { return }
             let error = PlayerErrorState(error: error)
+            print(error)
             self.state = .error(error)
         }
     }
@@ -302,6 +311,14 @@ public class PlayerView: UIView {
             return
         }
         layerView.switchVideoGravity()
+    }
+    
+    func handle(state : PlayerState) {
+        if state == .mode(.landscapeFull) {
+            delegate?.playerWillEnterFullScreen()
+        }else if state == .mode(.small) {
+            delegate?.playerWillExitFullScreen()
+        }
     }
 }
 

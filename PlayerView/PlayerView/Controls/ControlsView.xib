@@ -82,6 +82,7 @@
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="koJ-LB-ffQ">
                                     <rect key="frame" x="464" y="0.0" width="20" height="50"/>
                                     <state key="normal" image="full_screen"/>
+                                    <state key="selected" image="full_screen_selected"/>
                                     <connections>
                                         <action selector="full:" destination="-1" eventType="touchUpInside" id="mAp-0E-1wG"/>
                                     </connections>
@@ -130,5 +131,6 @@
         <image name="controls_pause" width="43" height="43"/>
         <image name="controls_play" width="43" height="43"/>
         <image name="full_screen" width="20" height="20"/>
+        <image name="full_screen_selected" width="20" height="21"/>
     </resources>
 </document>

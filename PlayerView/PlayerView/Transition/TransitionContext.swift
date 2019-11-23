@@ -22,7 +22,18 @@ class TransitionContext {
         self.fromViewController = transitionContext.viewController(forKey: .from)!
         self.toViewController = transitionContext.viewController(forKey: .to)!
         self.containerView = transitionContext.containerView
-        self.fromView = transitionContext.view(forKey: .from)!
-        self.toView = transitionContext.view(forKey: .to)!
+        
+        if let fromView = transitionContext.view(forKey: .from) {
+            self.fromView = fromView
+        }else {
+            fromView = fromViewController.view
+        }
+        
+        if let toView = transitionContext.view(forKey: .to) {
+            self.toView = toView
+        }else {
+            self.toView = toViewController.view
+        }
+
     }
 }
