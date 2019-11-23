@@ -30,25 +30,15 @@ class ViewController: UIViewController {
         setupTableView()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        print("appear")
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        print("disappear")
-    }
-    
     @available(iOS 11.0, *)
     override func viewSafeAreaInsetsDidChange() {
-        
-        UIView.animate(withDuration: playerAnimationTime, animations: {
-            self.view.layoutIfNeeded()
-        }, completion: nil)
-//        tableView.layoutIfNeeded()
-//        view.layoutIfNeeded()
-        print("safe")
+        if willEnterFullScreen {
+            UIView.animate(withDuration: playerAnimationTime) {
+                self.view.layoutIfNeeded()
+            }
+        }
+        print("change")
+
     }
     
     func setupTableView() {
@@ -84,45 +74,23 @@ class ViewController: UIViewController {
     }
     
     override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
-        
         if newCollection.verticalSizeClass == .regular {
             tableView.contentOffset = originalOffset
         }else {
             originalOffset = tableView.contentOffset
             print(originalOffset)
         }
-        
         print("执行")
     }
-    
-//    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-//        super.viewWillTransition(to: size, with: coordinator)
-//        let offset = tableView.contentOffset
-//        let height  = tableView.bounds.size.height
-//
-//        let index     = round(offset.y / height)
-//        let newOffset = CGPoint(x: offset.x, y: index * size.height)
-//
-//        tableView.setContentOffset(newOffset, animated: false)
-//
-//        coordinator.animate(alongsideTransition: { (context) in
-//            self.tableView.reloadData()
-//            self.tableView.setContentOffset(newOffset, animated: false)
-//        }, completion: nil)
-//    }
-    
-//    override func viewWillLayoutSubviews() {
-//        super.viewWillLayoutSubviews()
-//        tableView.contentOffset = originalOffset
-//    }
     
 }
 
 extension ViewController : PlayerDelegate {
     func playerWillExitFullScreen() {
+        willEnterFullScreen = false
         playerVC.dismiss(animated: true, completion: nil)
     }
-    func playerWillEnterFullScreen() { 
+    func playerWillEnterFullScreen() {
         willEnterFullScreen = true
         playerVC.modalPresentationStyle = .fullScreen
         let animator = Animator(with: playerView)
@@ -161,18 +129,5 @@ extension ViewController : CellClick {
 extension ViewController : UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-    }
-}
-
-extension ViewController : DismissAnimation {
-    func dismissAnimationWillEnd(for animator: Animator) {
-        
-    }
-    
-    func dismissAnimationDidEnd(for animator: Animator) {
-//        DispatchQueue.main.async {
-//        }
-        self.tableView.setContentOffset(self.originalOffset, animated: false)
-
     }
 }
