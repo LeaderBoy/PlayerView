@@ -120,8 +120,6 @@ extension Animator : UIViewControllerAnimatedTransitioning {
             animation.presentAnimationWillBegin(for: self)
             animation.presentAnimationDidBegin(for: self) {
                 context.transitionContext.completeTransition(true)
-                self.sourceShotView.transform = .identity
-                self.sourceShotView.removeFromSuperview()
             }
         }
     }
@@ -138,18 +136,23 @@ extension Animator : UIViewControllerAnimatedTransitioning {
         
         toView.frame = containerView.bounds
         toView.transform = .identity
-
+        
+        sourceShotView.center = toView.center
+        sourceShotView.transform = .identity
+        sourceShotView.frame = containerView.bounds
+        
         containerView.insertSubview(toView, at: 0)
+           
                 
         fromAnimation?.dismissAnimationWillBegin(for: self)
         fromAnimation?.dismissAnimationDidBegin(for: self) {
             fromView.removeFromSuperview()
             fromAnimation?.dismissAnimationWillEnd(for: self)
             toAnimation?.dismissAnimationWillEnd(for: self)
+            self.sourceShotView.removeFromSuperview()
             context.transitionContext.completeTransition(true)
             fromAnimation?.dismissAnimationDidEnd(for: self)
             toAnimation?.dismissAnimationDidEnd(for: self)
-            
         }
     }
         

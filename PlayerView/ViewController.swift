@@ -30,13 +30,25 @@ class ViewController: UIViewController {
         setupTableView()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        print("appear")
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        print("disappear")
+    }
+    
     @available(iOS 11.0, *)
     override func viewSafeAreaInsetsDidChange() {
-        if willEnterFullScreen {
-            UIView.animate(withDuration: playerAnimationTime) {
-                self.view.layoutIfNeeded()
-            }
-        }
+        
+        UIView.animate(withDuration: playerAnimationTime, animations: {
+            self.view.layoutIfNeeded()
+        }, completion: nil)
+//        tableView.layoutIfNeeded()
+//        view.layoutIfNeeded()
+        print("safe")
     }
     
     func setupTableView() {
@@ -108,10 +120,9 @@ class ViewController: UIViewController {
 
 extension ViewController : PlayerDelegate {
     func playerWillExitFullScreen() {
-        willEnterFullScreen = false
         playerVC.dismiss(animated: true, completion: nil)
     }
-    func playerWillEnterFullScreen() {
+    func playerWillEnterFullScreen() { 
         willEnterFullScreen = true
         playerVC.modalPresentationStyle = .fullScreen
         let animator = Animator(with: playerView)
@@ -155,14 +166,13 @@ extension ViewController : UITableViewDelegate {
 
 extension ViewController : DismissAnimation {
     func dismissAnimationWillEnd(for animator: Animator) {
-        DispatchQueue.main.async {
-            self.tableView.setContentOffset(self.originalOffset, animated: false)
-        }
+        
     }
     
-//    func dismissAnimationDidEnd(for animator: Animator) {
+    func dismissAnimationDidEnd(for animator: Animator) {
 //        DispatchQueue.main.async {
-//            self.tableView.setContentOffset(self.originalOffset, animated: false)
 //        }
-//    }
+        self.tableView.setContentOffset(self.originalOffset, animated: false)
+
+    }
 }

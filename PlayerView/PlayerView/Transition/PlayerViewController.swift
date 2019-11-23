@@ -112,15 +112,6 @@ extension PlayerViewController : PresentAnimation {
     }
     
     func presentAnimationWillBegin(for animator: Animator) {
-        // insert snapshotView
-//        if let snapShotView = animator.sourceShotView {
-//            let newFrame = CGRect(x: 0, y: 0, width: self.view.frame.height, height: self.view.frame.width)
-//            snapShotView.frame = newFrame
-//            snapShotView.center = CGPoint(x: self.view.center.x, y: self.view.center.y)
-//            snapShotView.transform = .init(rotationAngle: .pi / -2)
-//            view.insertSubview(snapShotView, at: 0)
-//        }
-
         // insert playerView
         let sourceView = animator.sourceView
         let sourceFrame = animator.sourceFrame

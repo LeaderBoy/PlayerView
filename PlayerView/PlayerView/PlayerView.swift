@@ -209,7 +209,7 @@ public class PlayerView: UIView {
     func addSubViews() {
         addSubview(layerView)
         addSubview(controlsView)
-        addSubview(indicatorView)
+//        addSubview(indicatorView)
         
         controlsView.stateUpdater = { [weak self] state in
             guard let self = self else { return }
@@ -217,7 +217,7 @@ public class PlayerView: UIView {
         }
         
         controlsView.edges(to: self)
-        indicatorView.edges(to: self)
+//        indicatorView.edges(to: self)
         layerView.edges(to: self)
     }
     
