@@ -32,7 +32,7 @@ class PlayerViewController: UIViewController {
 
     var containerView: UIView = {
         let v = UIView()
-        v.backgroundColor = .blue
+//        v.backgroundColor = .blue
         return v
     }()
     
@@ -101,6 +101,8 @@ extension PlayerViewController : DismissAnimation {
 extension PlayerViewController : PresentAnimation {
     
     func presentAnimationDidBegin(for animator : Animator,complete:@escaping ()->Void) {
+        let sourveView = animator.sourceView
+        sourveView.removeLayerAnimation()
         UIView.animate(withDuration: animator.transitionDuration(using: nil), delay: 0, options: .layoutSubviews, animations: {
             let newFrame = CGRect(x: 0, y: 0, width: self.view.frame.height, height: self.view.frame.width)
             self.containerView.frame = newFrame

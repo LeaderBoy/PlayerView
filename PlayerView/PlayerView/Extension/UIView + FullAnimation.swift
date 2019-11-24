@@ -26,4 +26,18 @@
 //  Created by 杨志远 on 2019/11/22.
 //
 
-import Foundation
+import UIKit
+
+
+extension UIView {
+    func removeLayerAnimation() {
+                
+        layer.removeAllAnimations()
+        if subviews.count > 0 {
+            for subView in subviews {
+                subView.layer.removeAllAnimations()
+                subView.removeLayerAnimation()
+            }
+        }
+    }
+}

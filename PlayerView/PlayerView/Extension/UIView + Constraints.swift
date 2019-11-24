@@ -90,6 +90,8 @@ extension UIView {
         }
         removeWidthConstraints()
         removeHeightConstraints()
+        
+        translatesAutoresizingMaskIntoConstraints = true
     }
     
     func removeWidthConstraints() {
