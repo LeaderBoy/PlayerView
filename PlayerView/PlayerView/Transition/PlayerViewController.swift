@@ -76,18 +76,20 @@ extension PlayerViewController : DismissAnimation {
     }
     
     func dismissAnimationDidBegin(for animator: Animator, complete: @escaping () -> Void) {
-        UIView.animate(withDuration: animator.transitionDuration(using: nil), delay: 0, options: .layoutSubviews, animations: {
-            let sourceFrame = animator.sourceFrame
+        let sourceFrame = animator.sourceFrame
+        let sourceView = animator.sourceView
+        let superView = animator.superView
+        
+        UIView.animate(withDuration: animator.transitionDuration(using: nil), delay: 0, options:.layoutSubviews, animations: {
             self.containerView.frame = sourceFrame
             self.containerView.center = CGPoint(x: sourceFrame.midY, y: sourceFrame.midX)
             self.containerView.transform = .init(rotationAngle: .pi / -2)
         }) { (_) in
-            let sourceView = animator.sourceView
-            let superView = animator.superView
             sourceView.removeFromSuperview()
             sourceView.removeConstraints()
             superView.addSubview(sourceView)
             sourceView.edges(to: superView)
+            superView.layoutIfNeeded()
             complete()
         }
     }
