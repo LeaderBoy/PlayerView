@@ -31,13 +31,9 @@ import UIKit
 
 extension UIView {
     func removeLayerAnimation() {
-                
         layer.removeAllAnimations()
-        if subviews.count > 0 {
-            for subView in subviews {
-                subView.layer.removeAllAnimations()
-                subView.removeLayerAnimation()
-            }
+        subviews.forEach{
+            $0.removeLayerAnimation()
         }
     }
 }
