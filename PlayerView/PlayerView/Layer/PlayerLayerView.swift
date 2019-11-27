@@ -43,6 +43,7 @@ class PlayerLayerView: UIView {
     var player : AVPlayer
     
     var isReadyToPlay = false
+    var isPausedByUser = false
     var isSeekingInProgress = false
     var targetTime : CMTime = .zero
     
@@ -115,8 +116,8 @@ class PlayerLayerView: UIView {
 //    }
     
     func seekToTime(_ time:TimeInterval,completionHandler: ((Bool) -> Void)? = nil) {
+    
         pause()
-        
        let newChaseTime = CMTimeMake(value: Int64(600.0 * time), timescale: 600)
         
        if CMTimeCompare(newChaseTime, targetTime) != 0 {
@@ -142,7 +143,9 @@ class PlayerLayerView: UIView {
                 
                 if isFinished {
                     print("完成seek:\(self.player.timeControlStatus.rawValue)")
-                    self.play()
+                    if !self.isPausedByUser {
+                        self.play()
+                    }
                     completionHandler?(true)
                 }else {
                     print("seek 失败")
@@ -162,6 +165,7 @@ class PlayerLayerView: UIView {
             play()
         case .paused:
             pause()
+            isPausedByUser = true
         case .seeking(let time):
             seekToTime(time) { [weak self](done) in
                 guard let self = self else {
