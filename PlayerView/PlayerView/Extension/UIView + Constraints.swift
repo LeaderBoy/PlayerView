@@ -76,6 +76,18 @@ extension UIView {
         return [top,left,bottom,right]
     }
     
+    @discardableResult
+    func center(to view: UIView) -> [NSLayoutConstraint] {
+        translatesAutoresizingMaskIntoConstraints = false
+        let x = self.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+        let y = self.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        
+        NSLayoutConstraint.activate([
+            x,y
+        ])
+        return [x,y]
+    }
+    
     
     func removeConstraints() {
         if let superView = self.superview {

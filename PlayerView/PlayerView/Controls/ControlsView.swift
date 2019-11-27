@@ -27,6 +27,7 @@
 //
 
 import UIKit
+import AVKit
 
 
 class ControlsView : UIView {
@@ -42,17 +43,24 @@ class ControlsView : UIView {
     @IBOutlet weak var progressView: UIProgressView!
     @IBOutlet weak var controlsStackView: UIStackView!
     @IBOutlet weak var containerView: UIView!
-        
+    @IBOutlet weak var containerLeftLayout: NSLayoutConstraint!
+    
+    @IBOutlet weak var sliderContainerView: UIView!
+    
     var isSlide = false
     var oldPosition : TimeInterval = 0
     var hideTimeInterval = 5.0
     var debouncer = Debouncer(seconds: 0.3)
+    var isBufferFull = false
+    
     
     var state : PlayerState = .prepare {
         didSet {
             handleState(state: state)
         }
     }
+    
+    var mode : PlayerModeState = .portrait
     
     var duration : TimeInterval = 0 {
         didSet {
@@ -81,7 +89,6 @@ class ControlsView : UIView {
             }
             updateSliderValue(position)
             updatePosition(position)
-            
             updateShowState()
         }
     }
@@ -109,7 +116,15 @@ class ControlsView : UIView {
     @available(iOS 11.0, *)
     override func safeAreaInsetsDidChange() {
         let delay = 0.0
+                            
+        let animation = {
+            UIView.animate(withDuration: playerAnimationTime - delay, delay: delay, options: [], animations: {
+                self.layoutIfNeeded()
+            }, completion: nil)
+        }
         
+        animation()
+
         // from small to full
         /*
          from:
@@ -124,6 +139,7 @@ class ControlsView : UIView {
          UIEdgeInsets(top: 0.0, left: 44.0, bottom: 20.999999999999943, right: 44.0)
          */
         
+        
         // from full to small
         /*
          from:
@@ -137,18 +153,12 @@ class ControlsView : UIView {
          or to
          UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 34.0)
          */
-        
-
-        UIView.animate(withDuration: playerAnimationTime - delay, delay: delay, options: [], animations: {
-            self.layoutIfNeeded()
-        }, completion: { (done) in
-            print("完成 : \(done)")
-        })
     }
     
 
     func setup() {
         fromNib()
+        backgroundColor = .clear
         setupSlider()
         setupButtons()
     }
@@ -242,14 +252,14 @@ class ControlsView : UIView {
     }
     
     @IBAction func back(_ sender: UIButton) {
-        stateUpdater?(.mode(.small))
+        stateUpdater?(.mode(.portrait))
     }
     
     @IBAction func full(_ sender: UIButton) {
         if sender.isSelected {
-            stateUpdater?(.mode(.small))
+            stateUpdater?(.mode(.portrait))
         }else {
-            stateUpdater?(.mode(.landscapeFull))
+            stateUpdater?(.mode(.landscape))
         }
     }
     
@@ -266,36 +276,61 @@ class ControlsView : UIView {
         }
     }
     
+    func playButton(hide : Bool) {
+        if playButton.isHidden != hide && !isBufferFull {
+            playButton.isHidden = hide
+        }
+    }
+    
+    func playButton(selected : Bool) {
+        if playButton.isSelected != selected {
+            playButton.isSelected = selected
+        }
+    }
+    
     func handleState(state : PlayerState) {
+        print("controls:\(state)")
+        playButton(hide:false)
         switch state {
-        case .prepare,.playing:
-            playButton.isSelected = true
+        case .prepare:
+            playButton(hide:true)
+            playButton(selected: true)
+        case .playing:
+            playButton(selected: true)
         case .paused:
-            playButton.isSelected = false
-        case .loading:
-            hide()
+            playButton(selected: false)
+        case .loading,.seeking(_):
+            playButton(hide:true)
         case .error(_):
             hide()
         case .mode(let mode):
             switch mode {
-            case .landscapeFull,.portraitFull:
+            case .landscape,.portraitFull:
                 backButton.isHidden = false
                 fullButton.isSelected = true
-            case .small:
+            case .portrait:
                 backButton.isHidden = true
                 fullButton.isSelected = false
             }
+            self.mode = mode
+            UIView.animate(withDuration: playerAnimationTime, delay: 0, options: [], animations: {
+                self.layoutIfNeeded()
+            }, completion: nil)
+        case .bufferFull(let isFull):
+            isBufferFull = isFull
         case .stop:
-            playButton.isSelected = true
+            playButton(selected: true)
             duration = 0
             position = 0
             oldPosition = 0
             bufferTime = 0
+            progressView.progress = 0.0
             isSlide = false
+            isBufferFull = false
+            mode = .portrait
         default:
             break
         }
-        
     }
     
     func ignore(gesture : UIGestureRecognizer) -> Bool {

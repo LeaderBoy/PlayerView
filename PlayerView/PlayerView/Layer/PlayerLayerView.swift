@@ -42,6 +42,11 @@ class PlayerLayerView: UIView {
     
     var player : AVPlayer
     
+    var isReadyToPlay = false
+    var isSeekingInProgress = false
+    var targetTime : CMTime = .zero
+    
+    
     var playerLayer : AVPlayerLayer {
         return self.layer as! AVPlayerLayer
     }
@@ -63,14 +68,6 @@ class PlayerLayerView: UIView {
         playerLayer.videoGravity = .resizeAspectFill
     }
     
-    public func show() {
-        self.isHidden = false
-    }
-    
-    public func hide() {
-        self.isHidden = true
-    }
-    
     public func play() {
         player.play()
     }
@@ -81,9 +78,7 @@ class PlayerLayerView: UIView {
     
     public func replay() {
         seekToTime(0) { done in
-            if done {
-                self.play()
-            }
+            
         }
     }
     
@@ -92,15 +87,71 @@ class PlayerLayerView: UIView {
         player.replaceCurrentItem(with: nil)
     }
     
-    public func seekToTime(_ time : TimeInterval,completionHandler: @escaping (Bool) -> Void) {
-        if duration == 0 {
-            return
+//    public func seekToTime(_ time : TimeInterval,completionHandler: ((Bool) -> Void)? = nil) {
+////        if duration == 0 {
+////            return
+////        }
+////        if time > duration {
+////            return
+////        }
+//
+////        if !isReadyToPlay {
+////            return
+////        }
+//
+////        isSeekingInProgress = true
+//
+////        let seekTimeInProgress = targetTime
+////        player.seek(to: seekTimeInProgress, toleranceBefore: .zero,toleranceAfter: .zero, completionHandler:{ (isFinished:Bool) -> Void in
+////            if CMTimeCompare(seekTimeInProgress, self.targetTime) == 0 {
+////                self.isSeekingInProgress = false
+////            } else{
+////                self.trySeekToChaseTime()
+////            }
+////        })
+//
+////        let time = CMTimeMake(value: Int64(600.0 * time), timescale: 600)
+//
+//    }
+    
+    func seekToTime(_ time:TimeInterval,completionHandler: ((Bool) -> Void)? = nil) {
+        pause()
+        
+       let newChaseTime = CMTimeMake(value: Int64(600.0 * time), timescale: 600)
+        
+       if CMTimeCompare(newChaseTime, targetTime) != 0 {
+           targetTime = newChaseTime;
+           if !isSeekingInProgress {
+               trySeekToChaseTime(completionHandler: completionHandler)
+           }
+       }
+    }
+    
+    func trySeekToChaseTime(completionHandler: ((Bool) -> Void)? = nil) {
+        if isReadyToPlay {
+            actuallySeekToTime(completionHandler: completionHandler)
         }
-        if time > duration {
-            return
-        }
-        let time = CMTimeMake(value: Int64(600.0 * time), timescale: 600)
-        player.seek(to: time, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero, completionHandler: completionHandler)
+    }
+    
+    func actuallySeekToTime(completionHandler: ((Bool) -> Void)? = nil) {
+        isSeekingInProgress = true
+        let seekTimeInProgress = targetTime
+        player.seek(to: seekTimeInProgress, toleranceBefore: CMTime.zero,toleranceAfter: .zero, completionHandler:{ (isFinished:Bool) -> Void in
+            if CMTimeCompare(seekTimeInProgress, self.targetTime) == 0 {
+                self.isSeekingInProgress = false
+                
+                if isFinished {
+                    print("完成seek:\(self.player.timeControlStatus.rawValue)")
+                    self.play()
+                    completionHandler?(true)
+                }else {
+                    print("seek 失败")
+                }
+                
+            } else {
+                self.trySeekToChaseTime(completionHandler: completionHandler)
+            }
+        })
     }
     
     func handleState(_ state : PlayerState) {
@@ -116,14 +167,8 @@ class PlayerLayerView: UIView {
                 guard let self = self else {
                     return
                 }
-                if done {
-                    self.stateUpdater?(.seekDone)
-                }
+                self.stateUpdater?(.seekDone)
             }
-        case .loading:
-            hide()
-        case .error(_):
-            hide()
         default:
             break
         }

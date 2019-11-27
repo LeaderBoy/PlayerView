@@ -61,7 +61,7 @@ class PlayerViewController: UIViewController {
     }
     
     override var prefersStatusBarHidden: Bool {
-        return false
+        return true
     }
         
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {

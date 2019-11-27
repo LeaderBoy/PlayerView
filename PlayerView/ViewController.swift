@@ -12,8 +12,9 @@ class ViewController: UIViewController {
 
 //    let urlString = "http://lessimore.cn/Meet%20iPhone%20X%20%E2%80%94%20Apple.mp4"
     
-    let urlString = "http://lessimore.cn/iPhone%20X%20%20-%20Apple%20%20-%20cnBetaCOM.mp4"
-    
+//    let urlString = "http://lessimore.cn/iPhone%20X%20%20-%20Apple%20%20-%20cnBetaCOM.mp4"
+    let urlString = "https://media.w3.org/2010/05/sintel/trailer.mp4"
+
     var originalOffset = CGPoint.zero
     
     var willEnterFullScreen = false
@@ -78,14 +79,13 @@ class ViewController: UIViewController {
             tableView.contentOffset = originalOffset
         }else {
             originalOffset = tableView.contentOffset
-            print(originalOffset)
         }
-        print("执行")
     }
     
 }
 
-extension ViewController : PlayerDelegate {
+// MARK: - PlayerViewDelegate
+extension ViewController : PlayerViewDelegate {
     func playerWillExitFullScreen() {
         willEnterFullScreen = false
         playerVC.dismiss(animated: true, completion: nil)

@@ -108,9 +108,9 @@ public enum PlayerNetworkState {
 
 /// full screen or not
 public enum PlayerModeState {
-    case landscapeFull
+    case landscape
     case portraitFull
-    case small
+    case portrait
 }
 
 /// player state
@@ -121,6 +121,7 @@ public enum PlayerState : Equatable {
     case seeking(_ time : TimeInterval)
     case seekDone
     case loading
+    case bufferFull(_ full : Bool)
     case stop
     case error(_ error  : PlayerErrorState)
     case mode(_ mode    : PlayerModeState)
@@ -148,7 +149,7 @@ protocol PlayerViewDataSource {
 
 typealias PlayerStateUpdater = (PlayerState) -> Void
 
-protocol PlayerDelegate : class {
+protocol PlayerViewDelegate : class {
     func playerWillEnterFullScreen()
     func playerWillExitFullScreen()
 }
@@ -156,7 +157,7 @@ protocol PlayerDelegate : class {
 public class PlayerView: UIView {
         
     var dataSource : PlayerViewDataSource?
-    var delegate : PlayerDelegate?
+    var delegate : PlayerViewDelegate?
     
     var stateUpdater : PlayerStateUpdater?
     
@@ -166,12 +167,15 @@ public class PlayerView: UIView {
             indicatorView.state = state
             layerView.state = state
             controlsView.state = state
-            
             handle(state: state)
         }
     }
     
-    var player = AVPlayer()
+    var player : AVPlayer = {
+        let p = AVPlayer()
+        p.automaticallyWaitsToMinimizeStalling = false
+        return p
+    }()
     var reachability = Reachability.forInternetConnection()
     
     lazy var layerView = PlayerLayerView(player: player)
@@ -179,6 +183,8 @@ public class PlayerView: UIView {
     var controlsView  = ControlsView()
     
     var shouldStatusBarHidden = false
+    
+    var item : AVPlayerItem?
         
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -187,6 +193,13 @@ public class PlayerView: UIView {
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
+        setup()
+    }
+    
+    init(dataSource : PlayerViewDataSource,delegate : PlayerViewDelegate?) {
+        self.dataSource = dataSource
+        self.delegate = delegate
+        super.init(frame: .zero)
         setup()
     }
     
@@ -200,25 +213,39 @@ public class PlayerView: UIView {
     }
     
     public func prepare(url : URL) {
+        
+        if item != nil {
+            self.state = .stop
+        }
+        
         let item = AVPlayerItem(url: url)
+        self.item = item
         player.replaceCurrentItem(with: item)
         itemObserver.item = item
         itemObserver.player = player
+        layerView.play()
+        state = .loading
     }
     
     func addSubViews() {
         addSubview(layerView)
         addSubview(controlsView)
-//        addSubview(indicatorView)
+        addSubview(indicatorView)
         
         controlsView.stateUpdater = { [weak self] state in
             guard let self = self else { return }
             self.state = state
         }
         
+        layerView.stateUpdater = { [weak self] state in
+            guard let self = self else { return }
+            self.state = state
+        }
+                
         controlsView.edges(to: self)
-//        indicatorView.edges(to: self)
+        indicatorView.edges(to: self)
         layerView.edges(to: self)
+        
     }
     
     func addGestures() {
@@ -258,7 +285,7 @@ public class PlayerView: UIView {
             guard let self = self else { return }
             switch status {
             case .readyToPlay:
-                self.state = .playing
+                self.layerView.isReadyToPlay = true
             case .failed:
                print("播放失败")
             default:
@@ -287,15 +314,20 @@ public class PlayerView: UIView {
         }
         
         itemObserver.observedBufferEmpty =  {[weak self] isEmpty in
-            
+            guard let self = self else { return }
+            self.state = .loading
         }
         
-        itemObserver.observedBufferFull =  {[weak self] isEmpty in
-            
+        itemObserver.observedBufferFull =  {[weak self] isFull in
+            guard let self = self else { return }
+            self.state = .bufferFull(isFull)
         }
         
-        itemObserver.observedKeepUp =  {[weak self] isEmpty in
-            
+        itemObserver.observedKeepUp =  {[weak self] isLikely in
+            guard let self = self else { return }
+            if isLikely {
+                self.state = .seekDone
+            }
         }
         
         itemObserver.observedError =  {[weak self] error in
@@ -314,9 +346,9 @@ public class PlayerView: UIView {
     }
     
     func handle(state : PlayerState) {
-        if state == .mode(.landscapeFull) {
+        if state == .mode(.landscape) {
             delegate?.playerWillEnterFullScreen()
-        }else if state == .mode(.small) {
+        }else if state == .mode(.portrait) {
             delegate?.playerWillExitFullScreen()
         }
     }

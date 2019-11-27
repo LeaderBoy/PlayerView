@@ -29,7 +29,6 @@
 import Foundation
 import AVKit
 
-
 public class ItemObserver: NSObject {
     public typealias ItemError         = (Swift.Error) -> Void
     public typealias ItemStatus        = (AVPlayer.Status) -> Void
@@ -172,6 +171,15 @@ public class ItemObserver: NSObject {
         let startSeconds = CMTimeGetSeconds(timeRange.start)
         let durationSeconds = CMTimeGetSeconds(timeRange.duration)
         let bufferTime = startSeconds + durationSeconds
+        
+        if bufferTime >= duration {
+            observedBufferFull?(true)
+        }
+        
+        if let player = self.player,player.timeControlStatus == .playing {
+            observedKeepUp?(true)
+        }
+        
         observedLoadedTime?(bufferTime)
     }
     
@@ -193,7 +201,7 @@ public class ItemObserver: NSObject {
         guard let newChange = change, let value = newChange[.newKey] as? NSNumber else{
             return
         }
-        observedKeepUp?(value.boolValue)
+//        observedKeepUp?(value.boolValue)
     }
     
     @objc func observePlayToEndTime(note: Notification) {

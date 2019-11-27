@@ -30,17 +30,55 @@ import UIKit
 
 class IndicatorView: UIView {
     
+    var isBufferFull = false
+    
     enum IndicatorState {
         case loading
-        case indicator
-        case custom
+        case networkUnReachable
+        case timeout
+        case wwan
+        case success
+        case error
+        case ignore
+        case stop
+        
+        init(state : PlayerState) {
+            switch state {
+            case .loading,.prepare,.seeking(_):
+                self = .loading
+            case .playing,.seekDone,.bufferFull(_):
+                self = .success
+            case .stop:
+                self = .stop
+            case .paused,.mode(_):
+                self = .ignore
+            case .error(let e):
+                switch e {
+                case .resourceUnavailable,.error(_):
+                    self = .error
+                case .networkUnReachable:
+                    self = .networkUnReachable
+                case .timeout:
+                    self = .timeout
+                }
+            case .network(let e):
+                switch e {
+                case .networkUnReachable:
+                    self = .networkUnReachable
+                case .wwan:
+                    self = .wwan
+                case .wifi:
+                    self = .success
+                }
+            }
+        }
     }
     
     @IBOutlet weak var customView: UIView!
     @IBOutlet weak var indicatorView: UIView!
     @IBOutlet weak var indicatorStackView: UIStackView!
-    @IBOutlet weak var indicatorActivityView: UIActivityIndicatorView!
     
+    @IBOutlet weak var indicatorLoadingView: IndicatorLoading!
     @IBOutlet weak var label: UILabel!
     
     @IBOutlet weak var leftButton: UIButton!    
@@ -48,6 +86,17 @@ class IndicatorView: UIView {
     
     var state : PlayerState = .prepare {
         didSet {
+            if oldValue == state {
+                return
+            }
+            
+            switch state {
+            case .bufferFull(let full):
+                isBufferFull = full
+            default:
+                break
+            }
+            
             handle(state: state)
         }
     }
@@ -68,66 +117,26 @@ class IndicatorView: UIView {
         fromNib()
         hide()
     }
-    
-    func showCustomView(_ show : Bool) {
-        customView.isHidden = !show
-        indicatorView.isHidden = show
-    }
-    
-    func show(state : IndicatorState) {
-        show()
-        switch state {
-        case .loading:
-            indicatorView.isHidden = false
-            indicatorActivityView.isHidden = false
-            indicatorActivityView.startAnimating()
-
-            indicatorStackView.isHidden = true
-            customView.isHidden = true
-        case .indicator:
-            indicatorView.isHidden = false
-            indicatorStackView.isHidden = false
-            
-            indicatorActivityView.isHidden = true
-            customView.isHidden = true
-        case .custom:
-            indicatorView.isHidden = true
-            customView.isHidden = false
-        }
-    }
-    
+ 
     func show() {
+        if !self.isHidden {
+            return
+        }
         isHidden = false
     }
     
     func hide() {
+        if self.isHidden {
+            return
+        }
         isHidden = true
     }
     
     func handle(state : PlayerState) {
-        switch state {
-        case .prepare:
-            show(state: .loading)
-        case .playing:
-            hide()
-        case .paused:
-            break
-        case .loading:
-            show(state: .loading)
-        case .error(let errorState):
-            handleError(state: errorState)
-        case .mode(let mode):
-            handleMode(state: mode)
-        case .network(let state):
-            handleNetwork(state: state)
-        case .seeking(_):
-            break
-        case .seekDone:
-            break
-        default:
-            break
-        }
-        
+                
+        print("indicator PlayerState:\(state)")
+
+        let state = IndicatorState(state: state)
         reloadState(state: state)
     }
     
@@ -140,33 +149,120 @@ class IndicatorView: UIView {
     }
     
     func handleNetwork(state : PlayerNetworkState) {
-        switch state {
-        case .networkUnReachable:
-            show(state: .indicator)
-        case .wwan:
-            show(state: .indicator)
-        case .wifi:
-            break
-//            show(state: .loading)
-        }
-        
         networkState = state
     }
     
-    func reloadState(state : PlayerState) {
-        if let title = indicatorTitleFor(state: state) {
-            label.text = title
+    func reloadState(state : IndicatorState) {
+        print("indicator:\(state)")
+        
+        if state == .stop {
+            isBufferFull = false
+            hide()
+            return
+        }else if state == .success || isBufferFull {
+            hide()
+            return
+        }else if state == .ignore{
+            return
+        }else {
+            show()
+        }
+        
+        if let color = indicatorBackgroundColor(state: state) {
+            backgroundColor = color
+        }
+        isUserInteractionEnabled = true
+        if let view = indicatorCustomView(state: state) {
+            customView.isHidden = false
+            indicatorLoadingView.isHidden = true
+            indicatorStackView.isHidden = true
+            
+            customView.subviews.forEach{$0.removeFromSuperview()}
+            customView.addSubview(view)
+            view.edges(to: customView)
+        }else if state == .loading {
+            isUserInteractionEnabled = false
+            indicatorLoadingView.isHidden = false
+            
+            print("loading 显示")
+            indicatorStackView.isHidden = true
+            customView.isHidden = true
+        }else {
+            customView.isHidden = true
+            indicatorLoadingView.isHidden = true
+            indicatorStackView.isHidden = false
+            
+            if let title = indicatorTitleFor(state: state) {
+                label.text = title
+                label.isHidden = false
+            }else {
+                label.isHidden = true
+            }
+            
+            if let title = indicatorLeftButtonFor(state: state) {
+                leftButton.setTitle(title, for: .normal)
+                leftButton.isHidden = false
+            }else {
+                leftButton.isHidden = true
+            }
+            
+            if let title = indicatorRightButtonFor(state: state) {
+                rightButton.setTitle(title, for: .normal)
+                rightButton.isHidden = false
+            }else {
+                rightButton.isHidden = true
+            }
+        }
+        
+    }
+    
+    func indicatorTitleFor(state : IndicatorState) -> String? {
+        switch state {
+        case .wwan:
+            return "当前为移动网络,是否继续播放"
+        case .networkUnReachable:
+            return "无网络连接"
+        case .timeout :
+            return "请求已超时,请重试"
+        case .error:
+            return "加载失败,请重试"
+        default:
+            return nil
         }
     }
     
-    func indicatorTitleFor(state : PlayerState) -> String? {
-        if state == .error(.networkUnReachable) || state == .network(.networkUnReachable) {
-            return "网络连接失败,请检查网络连接设置"
-        }else if state == .error(.timeout) {
-            return "请求超时,请重试"
-        }else if state == .error(.resourceUnavailable) {
-            return "请求资源不可用"
+    func indicatorLeftButtonFor(state : IndicatorState) -> String? {
+        switch state {
+        case .wwan:
+            return "继续播放"
+        case .error,.timeout,.networkUnReachable:
+            return "点击重试"
+        default:
+            return nil
         }
+    }
+    
+    func indicatorRightButtonFor(state : IndicatorState) -> String? {
+        switch state {
+        case .wwan:
+            return "退出播放"
+        default:
+            return nil
+        }
+    }
+    
+    func indicatorCustomView(state : IndicatorState) -> UIView? {
         return nil
     }
+    
+    func indicatorBackgroundColor(state : IndicatorState) -> UIColor? {
+        switch state {
+        case .networkUnReachable,.error:
+            return UIColor(white: 0, alpha: 1)
+        default:
+            return .clear
+        }
+    }
+    
+    
 }
