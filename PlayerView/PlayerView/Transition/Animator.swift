@@ -28,7 +28,7 @@
 
 import UIKit
 
-let playerAnimationTime : TimeInterval =   5
+let playerAnimationTime : TimeInterval =   0.5
 
 class Animator : NSObject {
     enum State {
