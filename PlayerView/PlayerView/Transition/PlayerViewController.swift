@@ -72,7 +72,7 @@ class PlayerViewController: UIViewController {
 
 extension PlayerViewController : DismissAnimation {
     func dismissAnimationWillBegin(for animator: Animator) {
-        view.backgroundColor = .red
+        view.backgroundColor = .clear
         self.containerView.center = view.center
         self.containerView.transform = .init(rotationAngle: .pi / 2)
     }
@@ -82,18 +82,18 @@ extension PlayerViewController : DismissAnimation {
         let sourceView = animator.sourceView
         let superView = animator.superView
         
-//        UIView.animate(withDuration: animator.transitionDuration(using: nil), delay: 0, options:.layoutSubviews, animations: {
-//            self.containerView.center = CGPoint(x: sourceFrame.midX, y: sourceFrame.midY)
-//            self.containerView.transform = .identity
-//            self.containerView.frame = sourceFrame
-//        }) { (_) in
-//            sourceView.removeFromSuperview()
-//            sourceView.removeConstraints()
-//            superView.addSubview(sourceView)
-//            sourceView.edges(to: superView)
-//            superView.layoutIfNeeded()
-//            complete()
-//        }
+        UIView.animate(withDuration: animator.transitionDuration(using: nil), delay: 0, options:.layoutSubviews, animations: {
+            self.containerView.center = CGPoint(x: sourceFrame.midX, y: sourceFrame.midY)
+            self.containerView.transform = .identity
+            self.containerView.frame = sourceFrame
+        }) { (_) in
+            sourceView.removeFromSuperview()
+            sourceView.removeConstraints()
+            superView.addSubview(sourceView)
+            sourceView.edges(to: superView)
+            superView.layoutIfNeeded()
+            complete()
+        }
     }
     
     func dismissAnimationDidEnd(for animator: Animator) {
