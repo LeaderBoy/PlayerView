@@ -13,7 +13,7 @@ class ViewController: UIViewController {
 //    let urlString = "http://lessimore.cn/Meet%20iPhone%20X%20%E2%80%94%20Apple.mp4"
     
 //    let urlString = "http://lessimore.cn/iPhone%20X%20%20-%20Apple%20%20-%20cnBetaCOM.mp4"
-    let urlString = "https://media.w3.org/2010/05/sintel/trailer.mp4"
+    let urlString = "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"
 
     var originalOffset = CGPoint.zero
     

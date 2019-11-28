@@ -47,7 +47,13 @@ class ControlsView : UIView {
     
     @IBOutlet weak var sliderContainerView: UIView!
     
-    var isSlide = false
+    var isSlide = false {
+        didSet {
+            if isSlide {
+                playButton(hide: true)
+            }
+        }
+    }
     var oldPosition : TimeInterval = 0
     var hideTimeInterval = 5.0
     var debouncer = Debouncer(seconds: 0.3)
@@ -118,7 +124,7 @@ class ControlsView : UIView {
         let delay = 0.0
                             
         let animation = {
-            UIView.animate(withDuration: playerAnimationTime - delay, delay: delay, options: [], animations: {
+            UIView.animate(withDuration: 0.2, delay: delay, options: [], animations: {
                 self.layoutIfNeeded()
             }, completion: nil)
         }
@@ -159,6 +165,7 @@ class ControlsView : UIView {
     func setup() {
         fromNib()
         backgroundColor = .clear
+        backButton.isHidden = true
         setupSlider()
         setupButtons()
     }
@@ -313,9 +320,6 @@ class ControlsView : UIView {
                 fullButton.isSelected = false
             }
             self.mode = mode
-            UIView.animate(withDuration: playerAnimationTime, delay: 0, options: [], animations: {
-                self.layoutIfNeeded()
-            }, completion: nil)
         case .bufferFull(let isFull):
             isBufferFull = isFull
         case .stop:
@@ -327,6 +331,7 @@ class ControlsView : UIView {
             progressView.progress = 0.0
             isSlide = false
             isBufferFull = false
+            backButton.isHidden = true
             mode = .portrait
         default:
             break
