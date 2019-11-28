@@ -137,6 +137,9 @@ extension Animator : UIViewControllerAnimatedTransitioning {
         toView.frame = containerView.bounds
         toView.transform = .identity
         
+        fromView.transform = .identity
+        fromView.frame = containerView.bounds
+        
         sourceShotView.center = toView.center
         sourceShotView.transform = .identity
         sourceShotView.frame = containerView.bounds
