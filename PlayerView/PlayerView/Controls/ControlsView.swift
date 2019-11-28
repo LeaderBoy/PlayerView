@@ -122,9 +122,11 @@ class ControlsView : UIView {
     @available(iOS 11.0, *)
     override func safeAreaInsetsDidChange() {
         let delay = 0.0
+        
+        print(safeAreaInsets)
                             
         let animation = {
-            UIView.animate(withDuration: 0.2, delay: delay, options: [], animations: {
+            UIView.animate(withDuration: playerAnimationTime, delay: delay, options: [], animations: {
                 self.layoutIfNeeded()
             }, completion: nil)
         }

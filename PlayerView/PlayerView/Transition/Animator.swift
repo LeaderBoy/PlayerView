@@ -28,7 +28,7 @@
 
 import UIKit
 
-let playerAnimationTime : TimeInterval =   0.5
+let playerAnimationTime : TimeInterval =   5
 
 class Animator : NSObject {
     enum State {
@@ -102,23 +102,26 @@ extension Animator : UIViewControllerAnimatedTransitioning {
         let containerView = context.containerView
         let toViewController = context.toViewController
         let toView = context.toView
-    
+        
         let fromView = context.fromView
+        fromView.isHidden = true
         fromView.frame = containerView.bounds
         fromView.transform = .init(rotationAngle: .pi / -2)
     
-        sourceShotView.frame = CGRect(x: 0, y: 0, width: containerView.frame.height, height: containerView.frame.width)
         sourceShotView.center = fromView.center
         sourceShotView.transform = .init(rotationAngle: .pi / -2)
+        sourceShotView.frame = containerView.bounds
         containerView.addSubview(sourceShotView)
         
-        
+
         toView.frame = containerView.bounds
         containerView.addSubview(toView)
-        
+
         if let animation = toViewController as? PresentAnimation {
             animation.presentAnimationWillBegin(for: self)
             animation.presentAnimationDidBegin(for: self) {
+                fromView.isHidden = false
+                fromView.transform = .identity
                 context.transitionContext.completeTransition(true)
             }
         }
@@ -134,21 +137,21 @@ extension Animator : UIViewControllerAnimatedTransitioning {
         let toView = context.toView
         let toAnimation = toViewController as? DismissAnimation
         
-        toView.frame = containerView.bounds
-        toView.transform = .identity
-        
-        fromView.transform = .identity
-        fromView.frame = containerView.bounds
         
         sourceShotView.center = toView.center
         sourceShotView.transform = .identity
         sourceShotView.frame = containerView.bounds
-        
         containerView.insertSubview(toView, at: 0)
-           
-                
+        
+        toView.transform = .identity
+        toView.frame = containerView.bounds
+        
+        fromView.transform = .identity
+        fromView.frame = containerView.bounds
+                        
         fromAnimation?.dismissAnimationWillBegin(for: self)
         fromAnimation?.dismissAnimationDidBegin(for: self) {
+            fromView.transform = .init(rotationAngle: .pi / 2)
             fromView.removeFromSuperview()
             fromAnimation?.dismissAnimationWillEnd(for: self)
             toAnimation?.dismissAnimationWillEnd(for: self)

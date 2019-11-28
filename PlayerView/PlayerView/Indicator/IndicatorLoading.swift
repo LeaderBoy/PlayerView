@@ -141,15 +141,33 @@ class IndicatorLoading: UIView {
         layerView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(layerView)
         
-        NSLayoutConstraint.activate([
-            layerView.widthAnchor.constraint(equalToConstant: width),
-            layerView.heightAnchor.constraint(equalToConstant: width),
-            layerView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            layerView.centerXAnchor.constraint(equalTo: centerXAnchor)
-        ])
+        if #available(iOS 11.0, *) {
+            NSLayoutConstraint.activate([
+                layerView.widthAnchor.constraint(equalToConstant: width),
+                layerView.heightAnchor.constraint(equalToConstant: width),
+                layerView.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.centerYAnchor),
+                layerView.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor)
+            ])
+        } else {
+            NSLayoutConstraint.activate([
+                layerView.widthAnchor.constraint(equalToConstant: width),
+                layerView.heightAnchor.constraint(equalToConstant: width),
+                layerView.centerYAnchor.constraint(equalTo: centerYAnchor),
+                layerView.centerXAnchor.constraint(equalTo: centerXAnchor)
+            ])
+        }
         
         layerView.backgroundColor = .clear
         self.layerView = layerView
+    }
+    
+    override func safeAreaInsetsDidChange() {
+        let animation = {
+            UIView.animate(withDuration: playerAnimationTime, delay: 0, options: [], animations: {
+                self.layoutIfNeeded()
+            }, completion: nil)
+        }
+        animation()
     }
 
 }
