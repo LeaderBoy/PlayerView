@@ -60,7 +60,7 @@ class ViewController: UIViewController {
     }
     
     override var prefersStatusBarHidden: Bool {
-        return shouldStatusBarHidden
+        return true
 
             //playerView.shouldStatusBarHidden
     }
@@ -94,17 +94,20 @@ extension ViewController : PlayerViewDelegate {
         playerVC.dismiss(animated: true, completion: nil)
     }
     func playerWillEnterFullScreen() {
-        willEnterFullScreen = true
-        shouldStatusBarHidden = true
-        setNeedsStatusBarAppearanceUpdate()
-        playerVC.modalPresentationStyle = .fullScreen
-        let animator = Animator(with: playerView)
-        let delegate = Transition(animator: animator)
-        self.delegate = delegate
-        playerVC.transitioningDelegate = delegate
-        present(playerVC, animated: true) {
-            self.playerVC.view.backgroundColor = .clear
-        }
+        
+//        playerView.animator = Animator(with: playerView)
+                
+//        willEnterFullScreen = true
+//        shouldStatusBarHidden = true
+//        setNeedsStatusBarAppearanceUpdate()
+//        playerVC.modalPresentationStyle = .fullScreen
+//        let animator = Animator(with: playerView)
+//        let delegate = Transition(animator: animator)
+//        self.delegate = delegate
+//        playerVC.transitioningDelegate = delegate
+//        present(playerVC, animated: true) {
+//            self.playerVC.view.backgroundColor = .clear
+//        }
     }
 }
 

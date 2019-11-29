@@ -157,6 +157,20 @@ protocol PlayerViewDelegate : class {
 
 public class PlayerView: UIView {
         
+    let playerVC = PlayerViewController()
+    
+    var animator : Animator?
+
+    lazy var newWindow : UIWindow = {
+        let window = UIWindow(frame: UIScreen.main.bounds)
+        window.windowLevel = .alert
+        playerVC.view.backgroundColor = .clear
+        window.rootViewController = playerVC
+        window.backgroundColor = .clear
+        return window
+    }()
+                
+        
     var dataSource : PlayerViewDataSource?
     var delegate : PlayerViewDelegate?
     
@@ -357,9 +371,17 @@ public class PlayerView: UIView {
     
     func handle(state : PlayerState) {
         if state == .mode(.landscape) {
+            
+            let animator = Animator(with: self)
             delegate?.playerWillEnterFullScreen()
+            
+            playerVC.presentAnimationWillBegin(for: animator)
+            playerVC.presentAnimationDidBegin(for: animator) {
+                
+            }
+            newWindow.makeKeyAndVisible()
         }else if state == .mode(.portrait) {
-            delegate?.playerWillExitFullScreen()
+//            delegate?.playerWillExitFullScreen()
         }
     }
 }

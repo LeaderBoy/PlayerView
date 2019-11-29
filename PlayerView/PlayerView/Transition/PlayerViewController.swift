@@ -38,12 +38,10 @@ class PlayerViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
         view.backgroundColor = .clear
-       
-        view.addSubview(containerView)
         // Do any additional setup after loading the view.
     }
+
 
 
     /*
@@ -83,16 +81,9 @@ extension PlayerViewController : DismissAnimation {
         let superView = animator.superView
         
         UIView.animate(withDuration: animator.transitionDuration(using: nil), delay: 0, options:.layoutSubviews, animations: {
-            self.containerView.center = CGPoint(x: sourceFrame.midX, y: sourceFrame.midY)
-            self.containerView.transform = .identity
-            self.containerView.frame = sourceFrame
+            
         }) { (_) in
-            sourceView.removeFromSuperview()
-            sourceView.removeConstraints()
-            superView.addSubview(sourceView)
-            sourceView.edges(to: superView)
-            superView.layoutIfNeeded()
-            complete()
+            
         }
     }
     
@@ -109,26 +100,29 @@ extension PlayerViewController : PresentAnimation {
         let sourceFrame = animator.sourceFrame
         sourceView.removeFromSuperview()
         sourceView.removeConstraints()
-        containerView.addSubview(sourceView)
-        sourceView.edges(to: containerView)
-        
-        sourceView.removeLayerAnimation()
 
-        let newCenter   = CGPoint(x: sourceFrame.midY, y: sourceFrame.midX)
-        containerView.frame    = sourceFrame
-        containerView.center   = newCenter
-        containerView.transform = .init(rotationAngle: .pi / -2)
-        containerView.layoutIfNeeded()
+        
+        sourceView.frame = CGRect(x: sourceFrame.origin.y, y: sourceFrame.origin.x, width: sourceFrame.width, height: sourceFrame.height)
+        sourceView.center = CGPoint(x: sourceFrame.midY, y: sourceFrame.midX)
+        sourceView.transform = .init(rotationAngle: .pi / -2)
+
+        self.view.addSubview(sourceView)
+
     }
     
     func presentAnimationDidBegin(for animator : Animator,complete:@escaping ()->Void) {
-        let sourveView = animator.sourceView
-        sourveView.removeLayerAnimation()
+                
+        let sourceView = animator.sourceView
+        let sourceFrame = animator.sourceFrame
+        
+        let width = UIScreen.main.bounds.width
+        let height = UIScreen.main.bounds.height
+        
         UIView.animate(withDuration: animator.transitionDuration(using: nil), delay: 0, options: .layoutSubviews, animations: {
-            let newFrame = CGRect(x: 0, y: 0, width: self.view.frame.height, height: self.view.frame.width)
-            self.containerView.frame = newFrame
-            self.containerView.center = CGPoint(x: self.view.center.x, y: self.view.center.y)
-            self.containerView.transform = .identity
+            let newFrame = CGRect(x: 0, y: 0, width: width, height: height)
+            sourceView.frame = newFrame
+            sourceView.center = CGPoint(x: height / 2.0, y: width / 2.0)
+            sourceView.transform = .identity
         }) { (_) in
             complete()
         }
