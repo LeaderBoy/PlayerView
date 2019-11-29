@@ -179,7 +179,6 @@ public class ItemObserver: NSObject {
         if let player = self.player,player.timeControlStatus == .playing {
             observedKeepUp?(true)
         }
-        
         observedLoadedTime?(bufferTime)
     }
     

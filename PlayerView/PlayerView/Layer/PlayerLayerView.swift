@@ -45,8 +45,7 @@ class PlayerLayerView: UIView {
     var isReadyToPlay = false
     var isPausedByUser = false
     var isSeekingInProgress = false
-    var targetTime : CMTime = .zero
-    
+    var chaseTime : CMTime = .zero
     
     var playerLayer : AVPlayerLayer {
         return self.layer as! AVPlayerLayer
@@ -77,49 +76,62 @@ class PlayerLayerView: UIView {
         player.pause()
     }
     
-    public func replay() {
-        seekToTime(0) { done in
-            
-        }
+    public func replay(completionHandler: ((Bool) -> Void)? = nil) {
+        seekToTime(0, completionHandler: completionHandler)
     }
     
     public func stop() {
         pause()
         player.replaceCurrentItem(with: nil)
     }
+    
     /// https://developer.apple.com/library/archive/qa/qa1820/_index.html
-    func seekToTime(_ time:TimeInterval,completionHandler: ((Bool) -> Void)? = nil) {
-        pause()
-        let newChaseTime = CMTimeMakeWithSeconds(time, preferredTimescale: 600)
-        if CMTimeCompare(newChaseTime, targetTime) != 0 {
-            targetTime = newChaseTime;
+    public func seekToTime(_ time:TimeInterval,completionHandler: ((Bool) -> Void)? = nil) {
+        
+        let timeScale = player.currentItem?.asset.duration.timescale ?? 600
+
+        let newChaseTime = CMTimeMakeWithSeconds(time, preferredTimescale: timeScale)
+        
+        // when seek to zero,it always paued even called play,
+        if newChaseTime == .zero {
+            if !self.isPausedByUser {
+                self.play()
+            }
+        }else {
+            pause()
+        }
+        
+        if CMTimeCompare(newChaseTime, chaseTime) != 0 {
+            chaseTime = newChaseTime;
             if !isSeekingInProgress {
                 trySeekToChaseTime(completionHandler: completionHandler)
+            }else {
+                print("正在seek")
             }
         }
     }
     
-    func trySeekToChaseTime(completionHandler: ((Bool) -> Void)? = nil) {
+    private func trySeekToChaseTime(completionHandler: ((Bool) -> Void)? = nil) {
         if isReadyToPlay {
             actuallySeekToTime(completionHandler: completionHandler)
         }
     }
     
-    func actuallySeekToTime(completionHandler: ((Bool) -> Void)? = nil) {
+    private func actuallySeekToTime(completionHandler: ((Bool) -> Void)? = nil) {
         isSeekingInProgress = true
-        let seekTimeInProgress = targetTime
+        let seekTimeInProgress = chaseTime
         player.seek(to: seekTimeInProgress, toleranceBefore: CMTime.zero,toleranceAfter: .zero, completionHandler:{ (isFinished:Bool) -> Void in
-            
-            print("seek执行完成")
-            if CMTimeCompare(seekTimeInProgress, self.targetTime) == 0 {
-                self.isSeekingInProgress = false
+            if CMTimeCompare(seekTimeInProgress, self.chaseTime) == 0 {
                 if !self.isPausedByUser {
+                    // prevent paused by seek
                     self.play()
-                    print("seek执行完成播放")
                 }
+                print("seek完成")
+                self.isSeekingInProgress = false
                 completionHandler?(true)
             } else {
                 self.trySeekToChaseTime(completionHandler: completionHandler)
+                print("不等于")
             }
         })
     }

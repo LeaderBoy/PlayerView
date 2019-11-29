@@ -38,8 +38,6 @@ class ViewController: UIViewController {
                 self.view.layoutIfNeeded()
             }
         }
-        print("change")
-
     }
     
     func setupTableView() {

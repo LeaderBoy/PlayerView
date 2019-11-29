@@ -121,6 +121,7 @@ public enum PlayerState : Equatable {
     case seeking(_ time : TimeInterval)
     case seekDone
     case loading
+    case finished
     case bufferFull(_ full : Bool)
     case stop
     case error(_ error  : PlayerErrorState)
@@ -174,8 +175,15 @@ public class PlayerView: UIView {
     var player : AVPlayer = {
         let p = AVPlayer()
         p.automaticallyWaitsToMinimizeStalling = false
+        // 预防息屏
+        if #available(iOS 12.0, *) {
+            p.preventsDisplaySleepDuringVideoPlayback = true
+        } else {
+            // Fallback on earlier versions
+        }
         return p
     }()
+    
     var reachability = Reachability.forInternetConnection()
     
     lazy var layerView = PlayerLayerView(player: player)
@@ -219,6 +227,7 @@ public class PlayerView: UIView {
         }
         
         let item = AVPlayerItem(url: url)
+        item.preferredForwardBufferDuration = 10
         self.item = item
         player.replaceCurrentItem(with: item)
         itemObserver.item = item
@@ -310,7 +319,8 @@ public class PlayerView: UIView {
         }
         
         itemObserver.observedPlayDone =  {[weak self] in
-            
+            guard let self = self else { return }
+            self.state = .finished
         }
         
         itemObserver.observedBufferEmpty =  {[weak self] isEmpty in
@@ -326,7 +336,7 @@ public class PlayerView: UIView {
         itemObserver.observedKeepUp =  {[weak self] isLikely in
             guard let self = self else { return }
             if isLikely {
-                self.state = .seekDone
+//                self.state = .seekDone
             }
         }
         

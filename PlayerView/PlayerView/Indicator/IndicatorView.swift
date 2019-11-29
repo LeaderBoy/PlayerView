@@ -48,7 +48,7 @@ class IndicatorView: UIView {
                 self = .loading
             case .playing,.seekDone,.bufferFull(_):
                 self = .success
-            case .stop:
+            case .stop,.finished:
                 self = .stop
             case .paused,.mode(_):
                 self = .ignore
@@ -96,7 +96,6 @@ class IndicatorView: UIView {
             default:
                 break
             }
-            
             handle(state: state)
         }
     }
@@ -133,9 +132,6 @@ class IndicatorView: UIView {
     }
     
     func handle(state : PlayerState) {
-                
-        print("indicator PlayerState:\(state)")
-
         let state = IndicatorState(state: state)
         reloadState(state: state)
     }
@@ -153,8 +149,6 @@ class IndicatorView: UIView {
     }
     
     func reloadState(state : IndicatorState) {
-        print("indicator:\(state)")
-        
         if state == .stop {
             isBufferFull = false
             hide()
@@ -171,20 +165,19 @@ class IndicatorView: UIView {
         if let color = indicatorBackgroundColor(state: state) {
             backgroundColor = color
         }
+        
         isUserInteractionEnabled = true
+        
         if let view = indicatorCustomView(state: state) {
-            customView.isHidden = false
             indicatorLoadingView.isHidden = true
             indicatorStackView.isHidden = true
-            
+            customView.isHidden = false
             customView.subviews.forEach{$0.removeFromSuperview()}
             customView.addSubview(view)
             view.edges(to: customView)
         }else if state == .loading {
             isUserInteractionEnabled = false
             indicatorLoadingView.isHidden = false
-            
-            print("loading 显示")
             indicatorStackView.isHidden = true
             customView.isHidden = true
         }else {

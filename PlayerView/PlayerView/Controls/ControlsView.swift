@@ -47,17 +47,24 @@ class ControlsView : UIView {
     
     @IBOutlet weak var sliderContainerView: UIView!
     
-    var isSlide = false {
+    public var isSliding = false {
         didSet {
-            if isSlide {
+            if isSliding {
                 playButton(hide: true)
             }
         }
     }
+    
     var oldPosition : TimeInterval = 0
     var hideTimeInterval = 5.0
     var debouncer = Debouncer(seconds: 0.3)
     var isBufferFull = false
+    
+    var isSeeking = false {
+        didSet {
+            print("")
+        }
+    }
     
     
     var state : PlayerState = .prepare {
@@ -90,10 +97,14 @@ class ControlsView : UIView {
     
     var position : TimeInterval = 0 {
         didSet {
-            if isSlide {
+            if isSliding {
                 return
             }
-            updateSliderValue(position)
+            
+            if !isSeeking {
+                print("更新了slider:\(isSeeking)")
+                updateSliderValue(position)
+            }
             updatePosition(position)
             updateShowState()
         }
@@ -178,17 +189,13 @@ class ControlsView : UIView {
     }
     
     func setupSlider() {
-        slider.addTarget(self, action: #selector(sliderTouchDragExit), for: .touchDragExit)
-        slider.addTarget(self, action: #selector(sliderTouchDown(_:)), for: .touchDown)
-        slider.addTarget(self, action: #selector(sliderTouchCancel(_:)), for: .touchCancel)
-        slider.addTarget(self, action: #selector(sliderTouchUpInside(_:)), for: .touchUpInside)
-        slider.addTarget(self, action: #selector(sliderTouchUpOutside(_:)), for: .touchUpOutside)
-        slider.addTarget(self, action: #selector(sliderTouchDragOutside(_:)), for: .touchDragOutside)
+        slider.addTarget(self, action: #selector(sliderTouchDown(_:)), for: [.touchDown,.touchDragExit,.touchDragOutside])
+        slider.addTarget(self, action: #selector(sliderTouchCancel(_:)), for: [.touchCancel,.touchUpInside,.touchUpOutside])
         slider.addTarget(self, action: #selector(sliderValueChange(_:)), for: .valueChanged)
     }
     
     @objc func sliderValueChange(_ slider:UISlider) {
-        isSlide = true
+        isSliding = true
         let time = TimeInterval(slider.value)
         oldPosition = time
         position = time
@@ -196,30 +203,14 @@ class ControlsView : UIView {
         stateUpdater?(.seeking(time))
     }
     
-    @objc func sliderTouchUpOutside(_ slider:UISlider) {
-        isSlide = false
-    }
-    
-    @objc func sliderTouchUpInside(_ slider:UISlider) {
-        isSlide = false
-    }
-    
     @objc func sliderTouchCancel(_ slider:UISlider) {
-        isSlide = false
+        isSliding = false
     }
-    
-    @objc func sliderTouchDragOutside(_ slider:UISlider) {
-        isSlide = true
-    }
-    
+
     @objc func sliderTouchDown(_ slider:UISlider) {
-        isSlide = true
+        isSliding = true
     }
-    
-    @objc func sliderTouchDragExit(_ slider:UISlider) {
-        isSlide = true
-    }
-    
+
     @objc func switchHiddenState(gesture : UIGestureRecognizer) {
         if ignore(gesture: gesture) {
             return
@@ -298,7 +289,6 @@ class ControlsView : UIView {
     }
     
     func handleState(state : PlayerState) {
-        print("controls:\(state)")
         playButton(hide:false)
         switch state {
         case .prepare:
@@ -308,8 +298,13 @@ class ControlsView : UIView {
             playButton(selected: true)
         case .paused:
             playButton(selected: false)
-        case .loading,.seeking(_):
+        case .loading:
             playButton(hide:true)
+        case .seeking(_):
+            isSeeking = true
+            playButton(hide:true)
+        case .seekDone:
+            isSeeking = false
         case .error(_):
             hide()
         case .mode(let mode):
@@ -331,7 +326,7 @@ class ControlsView : UIView {
             oldPosition = 0
             bufferTime = 0
             progressView.progress = 0.0
-            isSlide = false
+            isSliding = false
             isBufferFull = false
             backButton.isHidden = true
             mode = .portrait
