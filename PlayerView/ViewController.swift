@@ -18,6 +18,7 @@ class ViewController: UIViewController {
     var originalOffset = CGPoint.zero
     
     var willEnterFullScreen = false
+    var shouldStatusBarHidden = false
     
     var delegate : Transition!
     
@@ -59,8 +60,8 @@ class ViewController: UIViewController {
     }
     
     override var prefersStatusBarHidden: Bool {
-        return false
-            
+        return shouldStatusBarHidden
+
             //playerView.shouldStatusBarHidden
     }
     
@@ -75,8 +76,10 @@ class ViewController: UIViewController {
     override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
         if newCollection.verticalSizeClass == .regular {
             tableView.contentOffset = originalOffset
+            
         }else {
             originalOffset = tableView.contentOffset
+            
         }
     }
     
@@ -86,10 +89,14 @@ class ViewController: UIViewController {
 extension ViewController : PlayerViewDelegate {
     func playerWillExitFullScreen() {
         willEnterFullScreen = false
+        shouldStatusBarHidden = false
+        setNeedsStatusBarAppearanceUpdate()
         playerVC.dismiss(animated: true, completion: nil)
     }
     func playerWillEnterFullScreen() {
         willEnterFullScreen = true
+        shouldStatusBarHidden = true
+        setNeedsStatusBarAppearanceUpdate()
         playerVC.modalPresentationStyle = .fullScreen
         let animator = Animator(with: playerView)
         let delegate = Transition(animator: animator)
