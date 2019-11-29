@@ -155,21 +155,31 @@ protocol PlayerViewDelegate : class {
     func playerWillExitFullScreen()
 }
 
+
 public class PlayerView: UIView {
-        
-    let playerVC = PlayerViewController()
+    let lanVC = PlayerViewController()
+    let porVc = PlayerViewController()
     
     var animator : Animator?
 
-    lazy var newWindow : UIWindow = {
+    lazy var lanWindow : UIWindow = {
         let window = UIWindow(frame: UIScreen.main.bounds)
         window.windowLevel = .alert
-        playerVC.view.backgroundColor = .clear
-        window.rootViewController = playerVC
+        lanVC.orientation = .landscapeRight
+        window.rootViewController = lanVC
         window.backgroundColor = .clear
         return window
     }()
-                
+        
+    
+    lazy var porWindow : UIWindow = {
+        let window = UIWindow(frame: UIScreen.main.bounds)
+        window.windowLevel = .alert
+        porVc.orientation = .portrait
+        window.rootViewController = porVc
+        window.backgroundColor = .clear
+        return window
+    }()
         
     var dataSource : PlayerViewDataSource?
     var delegate : PlayerViewDelegate?
@@ -371,16 +381,45 @@ public class PlayerView: UIView {
     
     func handle(state : PlayerState) {
         if state == .mode(.landscape) {
-            
+                        
             let animator = Animator(with: self)
             delegate?.playerWillEnterFullScreen()
             
-            playerVC.presentAnimationWillBegin(for: animator)
-            playerVC.presentAnimationDidBegin(for: animator) {
+            lanVC.presentAnimationWillBegin(for: animator)
+            lanVC.presentAnimationDidBegin(for: animator) {
                 
             }
-            newWindow.makeKeyAndVisible()
+            
+            lanWindow.makeKeyAndVisible()
+            
+            self.animator = animator
         }else if state == .mode(.portrait) {
+            
+            let width = UIScreen.main.bounds.width
+            let height = UIScreen.main.bounds.height
+            let porView = porVc.view!
+//            self.removeFromSuperview()
+//            self.frame = CGRect(x: 0, y: 0, width: width, height: height)
+            self.transform = .init(rotationAngle: .pi / 2)
+            self.center = CGPoint(x: height / 2.0, y: width / 2.0)
+            self.removeLayerAnimation()
+//
+            porView.addSubview(self)
+            lanWindow.isHidden = true
+            porWindow.makeKeyAndVisible()
+                        
+            porVc.dismissAnimationDidBegin(for: animator!, animating: {
+//
+            }) {
+                print("完成")
+                self.porWindow.isHidden = true
+            }
+            
+            
+//            dismissAnimationDidBegin(for: animator!) {
+//                self.newWindow.isHidden = true
+//            }
+            
 //            delegate?.playerWillExitFullScreen()
         }
     }

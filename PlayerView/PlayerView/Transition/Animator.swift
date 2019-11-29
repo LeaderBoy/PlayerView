@@ -64,7 +64,7 @@ protocol PresentAnimation {
 
 protocol DismissAnimation {
     func dismissAnimationWillBegin(for animator : Animator)
-    func dismissAnimationDidBegin(for animator : Animator,complete:@escaping ()->Void)
+    func dismissAnimationDidBegin(for animator : Animator,animating: (()->Void)?,complete:@escaping ()->Void)
     func dismissAnimationWillEnd(for animator : Animator)
     func dismissAnimationDidEnd(for animator : Animator)
 

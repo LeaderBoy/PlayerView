@@ -29,6 +29,10 @@
 import UIKit
 
 class PlayerViewController: UIViewController {
+    
+    
+    
+    var orientation : UIInterfaceOrientationMask = .landscapeRight
 
     var containerView: UIView = {
         let v = UIView()
@@ -63,29 +67,37 @@ class PlayerViewController: UIViewController {
     }
         
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        return UIInterfaceOrientationMask.landscapeRight
+        return orientation
     }
 
 }
 
 extension PlayerViewController : DismissAnimation {
+    
+    
     func dismissAnimationWillBegin(for animator: Animator) {
-        view.backgroundColor = .clear
-        self.containerView.center = view.center
-        self.containerView.transform = .init(rotationAngle: .pi / 2)
+        orientation = .portrait
     }
     
-    func dismissAnimationDidBegin(for animator: Animator, complete: @escaping () -> Void) {
+    func dismissAnimationDidBegin(for animator: Animator, animating: (() -> Void)?, complete: @escaping () -> Void) {
         let sourceFrame = animator.sourceFrame
         let sourceView = animator.sourceView
         let superView = animator.superView
         
         UIView.animate(withDuration: animator.transitionDuration(using: nil), delay: 0, options:.layoutSubviews, animations: {
-            
+            animating?()
+            sourceView.frame = CGRect(x: sourceFrame.origin.x, y: sourceFrame.origin.y, width: sourceFrame.height, height: sourceFrame.width)
+            sourceView.center = CGPoint(x: sourceFrame.midX, y: sourceFrame.midY)
+            sourceView.transform = .identity
         }) { (_) in
-            
+            sourceView.removeFromSuperview()
+            sourceView.transform = .identity
+            superView.addSubview(sourceView)
+            sourceView.edges(to: superView)
+            complete()
         }
     }
+
     
     func dismissAnimationDidEnd(for animator: Animator) {
         self.containerView.transform = .identity
