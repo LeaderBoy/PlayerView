@@ -91,8 +91,8 @@ extension PlayerViewController : DismissAnimation {
             sourceView.transform = .identity
         }) { (_) in
             sourceView.removeFromSuperview()
-            sourceView.transform = .identity
             superView.addSubview(sourceView)
+            sourceView.transform = .identity
             sourceView.edges(to: superView)
             complete()
         }

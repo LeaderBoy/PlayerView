@@ -13,7 +13,7 @@ class ViewController: UIViewController {
 //    let urlString = "http://lessimore.cn/Meet%20iPhone%20X%20%E2%80%94%20Apple.mp4"
     
 //    let urlString = "http://lessimore.cn/iPhone%20X%20%20-%20Apple%20%20-%20cnBetaCOM.mp4"
-    let urlString = "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"
+    let urlString = "http://vfx.mtime.cn/Video/2019/06/27/mp4/190627231412433967.mp4"
 
     var originalOffset = CGPoint.zero
     
@@ -30,15 +30,6 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         playerView.delegate = self
         setupTableView()
-    }
-    
-    @available(iOS 11.0, *)
-    override func viewSafeAreaInsetsDidChange() {
-        if willEnterFullScreen {
-            UIView.animate(withDuration: playerAnimationTime) {
-                self.view.layoutIfNeeded()
-            }
-        }
     }
     
     func setupTableView() {
@@ -60,7 +51,7 @@ class ViewController: UIViewController {
     }
     
     override var prefersStatusBarHidden: Bool {
-        return true
+        return false
 
             //playerView.shouldStatusBarHidden
     }
@@ -72,17 +63,6 @@ class ViewController: UIViewController {
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return UIInterfaceOrientationMask.portrait
     }
-    
-    override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
-        if newCollection.verticalSizeClass == .regular {
-            tableView.contentOffset = originalOffset
-            
-        }else {
-            originalOffset = tableView.contentOffset
-            
-        }
-    }
-    
 }
 
 // MARK: - PlayerViewDelegate

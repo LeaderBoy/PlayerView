@@ -18,16 +18,16 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5sx-Wc-UwD">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="201"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="180"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="A6h-g5-Ct6">
-                                <rect key="frame" x="139" y="90" width="42" height="21"/>
+                                <rect key="frame" x="139" y="79.5" width="42" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cGP-gw-bdV">
-                                <rect key="frame" x="137" y="85.5" width="46" height="30"/>
+                                <rect key="frame" x="137" y="75" width="46" height="30"/>
                                 <state key="normal" title="Button"/>
                                 <connections>
                                     <action selector="click:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="YNU-NU-MXC"/>
@@ -38,15 +38,15 @@
                         <constraints>
                             <constraint firstItem="cGP-gw-bdV" firstAttribute="centerY" secondItem="5sx-Wc-UwD" secondAttribute="centerY" id="1jh-zW-mFx"/>
                             <constraint firstItem="A6h-g5-Ct6" firstAttribute="centerX" secondItem="5sx-Wc-UwD" secondAttribute="centerX" id="4Ln-Zo-5Gf"/>
+                            <constraint firstAttribute="width" secondItem="5sx-Wc-UwD" secondAttribute="height" multiplier="16:9" id="T7f-80-sHJ"/>
                             <constraint firstItem="A6h-g5-Ct6" firstAttribute="centerY" secondItem="5sx-Wc-UwD" secondAttribute="centerY" id="Z4U-lw-TBI"/>
-                            <constraint firstAttribute="height" priority="999" constant="200" id="t0i-1y-5ws"/>
                             <constraint firstItem="cGP-gw-bdV" firstAttribute="centerX" secondItem="5sx-Wc-UwD" secondAttribute="centerX" id="zAw-UM-cuX"/>
                         </constraints>
                     </view>
                 </subviews>
                 <constraints>
                     <constraint firstItem="5sx-Wc-UwD" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="4CU-Aw-E1b"/>
-                    <constraint firstAttribute="bottom" secondItem="5sx-Wc-UwD" secondAttribute="bottom" id="4d9-LF-naC"/>
+                    <constraint firstAttribute="bottom" secondItem="5sx-Wc-UwD" secondAttribute="bottom" priority="999" id="4d9-LF-naC"/>
                     <constraint firstAttribute="trailing" secondItem="5sx-Wc-UwD" secondAttribute="trailing" id="5Aj-he-IbI"/>
                     <constraint firstItem="5sx-Wc-UwD" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="S3i-XP-o2B"/>
                 </constraints>

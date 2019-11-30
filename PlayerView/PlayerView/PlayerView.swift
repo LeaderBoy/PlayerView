@@ -404,9 +404,10 @@ public class PlayerView: UIView {
             self.center = CGPoint(x: height / 2.0, y: width / 2.0)
             self.removeLayerAnimation()
 //
-            porView.addSubview(self)
-            lanWindow.isHidden = true
             porWindow.makeKeyAndVisible()
+            porView.addSubview(self)
+
+            lanWindow.isHidden = true
                         
             porVc.dismissAnimationDidBegin(for: animator!, animating: {
 //
