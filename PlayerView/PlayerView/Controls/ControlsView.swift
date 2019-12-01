@@ -32,7 +32,7 @@ import AVKit
 
 class ControlsView : UIView {
     
-    var stateUpdater : PlayerStateUpdater?
+    var stateUpdater : StateUpdater?
         
     @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var playButton: UIButton!
@@ -65,8 +65,6 @@ class ControlsView : UIView {
             print("")
         }
     }
-    
-    
     var state : PlayerState = .prepare {
         didSet {
             handleState(state: state)
@@ -181,6 +179,7 @@ class ControlsView : UIView {
         backButton.isHidden = true
         setupSlider()
         setupButtons()
+
     }
     
     func setupButtons() {
@@ -249,6 +248,8 @@ class ControlsView : UIView {
         }else {
             stateUpdater?(.playing)
         }
+        
+        self.publish(.playing)
     }
     
     @IBAction func back(_ sender: UIButton) {
@@ -354,3 +355,11 @@ extension UISlider {
         }
     }
 }
+
+extension ControlsView : StateSubscriber {
+    func receive(_ value: PlayerState) {
+        print("接收状态改变:\(value)")
+    }
+}
+
+extension ControlsView : StatePublisher {}

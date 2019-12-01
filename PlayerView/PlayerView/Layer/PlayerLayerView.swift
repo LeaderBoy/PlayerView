@@ -38,7 +38,7 @@ class PlayerLayerView: UIView {
         }
     }
     
-    var stateUpdater : PlayerStateUpdater?
+    var stateUpdater : StateUpdater?
     
     var player : AVPlayer
     

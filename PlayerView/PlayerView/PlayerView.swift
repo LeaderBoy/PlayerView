@@ -142,18 +142,23 @@ public enum PlayerState : Equatable {
 }
 
 
+
+
+
+
 protocol PlayerViewDataSource {
     func playerControlsView() -> UIView?
     func playerIndicatorTitleForState(_ state : PlayerState) -> String?
 }
 
 
-typealias PlayerStateUpdater = (PlayerState) -> Void
+typealias StateUpdater = (PlayerState) -> Void
 
 protocol PlayerViewDelegate : class {
     func playerWillEnterFullScreen()
     func playerWillExitFullScreen()
 }
+
 
 
 public class PlayerView: UIView {
@@ -184,7 +189,7 @@ public class PlayerView: UIView {
     var dataSource : PlayerViewDataSource?
     var delegate : PlayerViewDelegate?
     
-    var stateUpdater : PlayerStateUpdater?
+    var stateUpdater : StateUpdater?
     
     public lazy var itemObserver = ItemObserver()
     public var state : PlayerState = .prepare {
@@ -410,11 +415,12 @@ public class PlayerView: UIView {
             lanWindow.isHidden = true
                         
             porVc.dismissAnimationDidBegin(for: animator!, animating: {
-//
             }) {
                 print("完成")
                 self.porWindow.isHidden = true
             }
+            
+//            porVc.dismissAnimationWillEnd(for: <#T##Animator#>)
             
             
 //            dismissAnimationDidBegin(for: animator!) {

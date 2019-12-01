@@ -137,23 +137,23 @@ public class Reachability: NSObject {
             return false
         }
         
-        let weakifiedReachability = Weak(reachability: self)
-        let opaqueWeakifiedReachability = Unmanaged<Weak>.passUnretained(weakifiedReachability).toOpaque()
+        let weakifiedReachability = ReachabilityWeak(reachability: self)
+        let opaqueWeakifiedReachability = Unmanaged<ReachabilityWeak>.passUnretained(weakifiedReachability).toOpaque()
      
         var context = SCNetworkReachabilityContext(
             version: 0,
             info: UnsafeMutableRawPointer(opaqueWeakifiedReachability),
             retain: { (info: UnsafeRawPointer) -> UnsafeRawPointer in
-                let unmanagedWeakifiedReachability = Unmanaged<Weak>.fromOpaque(info)
+                let unmanagedWeakifiedReachability = Unmanaged<ReachabilityWeak>.fromOpaque(info)
                 _ = unmanagedWeakifiedReachability.retain()
                 return UnsafeRawPointer(unmanagedWeakifiedReachability.toOpaque())
             },
             release: { (info: UnsafeRawPointer) -> Void in
-                let unmanagedWeakifiedReachability = Unmanaged<Weak>.fromOpaque(info)
+                let unmanagedWeakifiedReachability = Unmanaged<ReachabilityWeak>.fromOpaque(info)
                 unmanagedWeakifiedReachability.release()
             },
             copyDescription: { (info: UnsafeRawPointer) -> Unmanaged<CFString> in
-                let unmanagedWeakifiedReachability = Unmanaged<Weak>.fromOpaque(info)
+                let unmanagedWeakifiedReachability = Unmanaged<ReachabilityWeak>.fromOpaque(info)
                 let weakifiedReachability = unmanagedWeakifiedReachability.takeUnretainedValue()
                 let description = weakifiedReachability.reachability?.description ?? "nil"
                 return Unmanaged.passRetained(description as CFString)
@@ -162,7 +162,7 @@ public class Reachability: NSObject {
      
         guard let reachability = networkReachability, SCNetworkReachabilitySetCallback(reachability, { (target: SCNetworkReachability, flags: SCNetworkReachabilityFlags, info: UnsafeMutableRawPointer?) in
             if let currentInfo = info {
-                let infoObject = Unmanaged<Weak>.fromOpaque(currentInfo).takeUnretainedValue()
+                let infoObject = Unmanaged<ReachabilityWeak>.fromOpaque(currentInfo).takeUnretainedValue()
                 
                 if let weakReachability = infoObject.reachability {
                     NotificationCenter.default.post(name: .ReachabilityDidChanged, object: weakReachability)
@@ -190,7 +190,7 @@ public class Reachability: NSObject {
      
 }
 
-private class Weak {
+private class ReachabilityWeak {
     weak var reachability: Reachability?
     init(reachability: Reachability) {
         self.reachability = reachability

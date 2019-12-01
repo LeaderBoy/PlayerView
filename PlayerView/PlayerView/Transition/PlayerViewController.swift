@@ -85,15 +85,15 @@ extension PlayerViewController : DismissAnimation {
         let superView = animator.superView
         
         UIView.animate(withDuration: animator.transitionDuration(using: nil), delay: 0, options:.layoutSubviews, animations: {
-            animating?()
             sourceView.frame = CGRect(x: sourceFrame.origin.x, y: sourceFrame.origin.y, width: sourceFrame.height, height: sourceFrame.width)
             sourceView.center = CGPoint(x: sourceFrame.midX, y: sourceFrame.midY)
             sourceView.transform = .identity
         }) { (_) in
-            sourceView.removeFromSuperview()
+//            sourceView.removeFromSuperview()
             superView.addSubview(sourceView)
             sourceView.transform = .identity
             sourceView.edges(to: superView)
+            superView.layoutIfNeeded()
             complete()
         }
     }
