@@ -30,144 +30,24 @@ import UIKit
 import AVKit
 
 
-extension Error {
-    func isTimeout() -> Bool {
-        let nsError = self as NSError
-        return nsError.isTimeout()
-    }
-    
-    func isInternetUnavailable() -> Bool {
-        let nsError = self as NSError
-        return nsError.isInternetUnavailable()
-    }
-    
-    func isResourceUnavailable() -> Bool {
-        let nsError = self as NSError
-        return nsError.isResourceUnavailable()
-    }
-}
-
-extension NSError {
-    func isURLErrorDomain() -> Bool {
-        return self.domain == NSURLErrorDomain
-    }
-    
-    func isTimeout() -> Bool {
-        return self.code == NSURLErrorTimedOut
-    }
-    
-    func isInternetUnavailable() -> Bool {
-        return self.code == NSURLErrorNotConnectedToInternet
-    }
-    
-    func isUnsupportedURL() -> Bool {
-        return self.code == NSURLErrorUnsupportedURL
-    }
-    
-    func isResourceUnavailable() -> Bool {
-        self.code == NSURLErrorResourceUnavailable
-    }
-}
-
-
-/// error state
-public enum PlayerErrorState : Equatable {
-    public static func == (lhs: PlayerErrorState, rhs: PlayerErrorState) -> Bool {
-        switch (lhs,rhs) {
-            case (.networkUnReachable,.networkUnReachable): return true
-            case (.timeout,.timeout): return true
-            case (.resourceUnavailable,.resourceUnavailable): return true
-            case (.error(let l as NSError),.error(let r as NSError)) where l.code == r.code : return true
-            case (_): return false
-        }
-    }
-    
-    case networkUnReachable
-    case timeout
-    case resourceUnavailable
-    case error(_ error : Error)
-    
-    init(error : Error) {
-        if error.isInternetUnavailable() {
-            self = .networkUnReachable
-        }else if error.isTimeout() {
-            self = .timeout
-        }else if error.isResourceUnavailable(){
-            self = .resourceUnavailable
-        }else {
-            self = .error(error)
-        }
-    }
-}
-
-public enum PlayerNetworkState {
-    case wwan
-    case wifi
-    case networkUnReachable
-}
-
-/// full screen or not
-public enum PlayerModeState {
-    case landscape
-    case portraitFull
-    case portrait
-}
-
-/// player state
-public enum PlayerState : Equatable {
-    case prepare
-    case playing
-    case paused
-    case seeking(_ time : TimeInterval)
-    case seekDone
-    case loading
-    case finished
-    case bufferFull(_ full : Bool)
-    case stop
-    case error(_ error  : PlayerErrorState)
-    case mode(_ mode    : PlayerModeState)
-    case network(_ net  : PlayerNetworkState)
-    
-    public static func == (lhs : Self,rhs : Self) -> Bool {
-        switch (lhs,rhs) {
-        case (.prepare,.prepare): return true
-        case (.playing,.playing): return true
-        case (.paused,.paused): return true
-        case (.error(let l),.error(let r)) where l == r : return true
-        case (.mode(let l),.mode(let r))where l == r : return true
-        case (.network(let l),.network(let r))where l == r : return true
-        case (_):return false
-        }
-    }
-}
-
-
-
-
-
-
-protocol PlayerViewDataSource {
+public protocol PlayerViewDataSource : class {
     func playerControlsView() -> UIView?
     func playerIndicatorTitleForState(_ state : PlayerState) -> String?
 }
 
-
-typealias StateUpdater = (PlayerState) -> Void
-
-protocol PlayerViewDelegate : class {
+public protocol PlayerViewDelegate : class {
     func playerWillEnterFullScreen()
     func playerWillExitFullScreen()
 }
 
 
-
 public class PlayerView: UIView {
-    let lanVC = PlayerViewController()
-    let porVc = PlayerViewController()
+    private let lanVC = PlayerViewController()
+    private let porVc = PlayerViewController()
     
     var animator : Animator?
 
-    lazy var lanWindow : UIWindow = {
+    private lazy var lanWindow : UIWindow = {
         let window = UIWindow(frame: UIScreen.main.bounds)
         window.windowLevel = .alert
         lanVC.orientation = .landscapeRight
@@ -176,8 +56,7 @@ public class PlayerView: UIView {
         return window
     }()
         
-    
-    lazy var porWindow : UIWindow = {
+    private lazy var porWindow : UIWindow = {
         let window = UIWindow(frame: UIScreen.main.bounds)
         window.windowLevel = .alert
         porVc.orientation = .portrait
@@ -186,22 +65,13 @@ public class PlayerView: UIView {
         return window
     }()
         
-    var dataSource : PlayerViewDataSource?
-    var delegate : PlayerViewDelegate?
-    
-    var stateUpdater : StateUpdater?
-    
+    weak public var dataSource : PlayerViewDataSource?
+    weak public var delegate : PlayerViewDelegate?
+        
     public lazy var itemObserver = ItemObserver()
-    public var state : PlayerState = .prepare {
-        didSet {
-            indicatorView.state = state
-            layerView.state = state
-            controlsView.state = state
-            handle(state: state)
-        }
-    }
+    public var state : PlayerState = .unknown
     
-    var player : AVPlayer = {
+    private var player : AVPlayer = {
         let p = AVPlayer()
         p.automaticallyWaitsToMinimizeStalling = false
         // 预防息屏
@@ -213,15 +83,15 @@ public class PlayerView: UIView {
         return p
     }()
     
-    var reachability = Reachability.forInternetConnection()
+    public var reachability = Reachability.forInternetConnection()
     
     lazy var layerView = PlayerLayerView(player: player)
-    var indicatorView = IndicatorView()
-    var controlsView  = ControlsView()
+    lazy var indicatorView = IndicatorView()
+    lazy var controlsView  = ControlsView()
     
-    var shouldStatusBarHidden = false
+//    public var shouldStatusBarHidden = false
     
-    var item : AVPlayerItem?
+    public var item : AVPlayerItem?
         
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -233,7 +103,7 @@ public class PlayerView: UIView {
         setup()
     }
     
-    init(dataSource : PlayerViewDataSource,delegate : PlayerViewDelegate?) {
+    init(dataSource : PlayerViewDataSource?,delegate : PlayerViewDelegate?) {
         self.dataSource = dataSource
         self.delegate = delegate
         super.init(frame: .zero)
@@ -242,7 +112,6 @@ public class PlayerView: UIView {
     
     func setup() {
         backgroundColor = .black
-        state = .prepare
         addSubViews()
         addGestures()
         reachabilityCallBack()
@@ -270,16 +139,6 @@ public class PlayerView: UIView {
         addSubview(controlsView)
         addSubview(indicatorView)
         
-        controlsView.stateUpdater = { [weak self] state in
-            guard let self = self else { return }
-            self.state = state
-        }
-        
-        layerView.stateUpdater = { [weak self] state in
-            guard let self = self else { return }
-            self.state = state
-        }
-                
         controlsView.edges(to: self)
         indicatorView.edges(to: self)
         layerView.edges(to: self)
@@ -419,15 +278,6 @@ public class PlayerView: UIView {
                 print("完成")
                 self.porWindow.isHidden = true
             }
-            
-//            porVc.dismissAnimationWillEnd(for: <#T##Animator#>)
-            
-            
-//            dismissAnimationDidBegin(for: animator!) {
-//                self.newWindow.isHidden = true
-//            }
-            
-//            delegate?.playerWillExitFullScreen()
         }
     }
 }
@@ -439,5 +289,11 @@ extension PlayerView : UIGestureRecognizerDelegate {
             return false
         }
         return true
+    }
+}
+
+extension PlayerView : StateSubscriber {
+    func receive(_ value: PlayerState) {
+        handle(state: state)
     }
 }

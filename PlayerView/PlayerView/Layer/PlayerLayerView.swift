@@ -32,14 +32,7 @@ import AVKit
 
 class PlayerLayerView: UIView {
     
-    var state : PlayerState = .prepare {
-        didSet {
-            handleState(state)
-        }
-    }
-    
-    var stateUpdater : StateUpdater?
-    
+    var state : PlayerState = .unknown
     var player : AVPlayer
     
     var isReadyToPlay = false
@@ -126,12 +119,10 @@ class PlayerLayerView: UIView {
                     // prevent paused by seek
                     self.play()
                 }
-                print("seek完成")
                 self.isSeekingInProgress = false
                 completionHandler?(true)
             } else {
                 self.trySeekToChaseTime(completionHandler: completionHandler)
-                print("不等于")
             }
         })
     }
@@ -151,7 +142,7 @@ class PlayerLayerView: UIView {
                 guard let self = self else {
                     return
                 }
-                self.stateUpdater?(.seekDone)
+                self.publish(.seekDone)
             }
         default:
             break
@@ -166,3 +157,11 @@ class PlayerLayerView: UIView {
         }
     }
 }
+
+extension PlayerLayerView : StateSubscriber {
+    func receive(_ value: PlayerState) {
+        handleState(state)
+    }
+}
+
+extension PlayerLayerView : StatePublisher {}

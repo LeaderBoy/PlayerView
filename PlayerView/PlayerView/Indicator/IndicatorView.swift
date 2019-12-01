@@ -44,7 +44,7 @@ class IndicatorView: UIView {
         
         init(state : PlayerState) {
             switch state {
-            case .loading,.prepare,.seeking(_):
+            case .loading,.prepare,.seeking(_),.unknown:
                 self = .loading
             case .playing,.seekDone,.bufferFull(_):
                 self = .success

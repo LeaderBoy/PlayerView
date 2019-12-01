@@ -30,10 +30,19 @@ import UIKit
 import AVKit
 
 
+@IBDesignable
+extension UISlider {
+    @IBInspectable var thumbImage : UIImage? {
+        set {
+            setThumbImage(newValue, for: .normal)
+        }
+        get {
+            return currentThumbImage
+        }
+    }
+}
+
 class ControlsView : UIView {
-    
-    var stateUpdater : StateUpdater?
-        
     @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var playButton: UIButton!
     @IBOutlet weak var startLabel: UILabel!
@@ -54,22 +63,10 @@ class ControlsView : UIView {
             }
         }
     }
-    
-    var oldPosition : TimeInterval = 0
-    var hideTimeInterval = 5.0
-    var debouncer = Debouncer(seconds: 0.3)
     var isBufferFull = false
-    
-    var isSeeking = false {
-        didSet {
-            print("")
-        }
-    }
-    var state : PlayerState = .prepare {
-        didSet {
-            handleState(state: state)
-        }
-    }
+    var isSeeking = false
+    var hideTimeInterval = 5.0
+    var oldPosition : TimeInterval = 0
     
     var mode : PlayerModeState = .portrait
     
@@ -100,7 +97,6 @@ class ControlsView : UIView {
             }
             
             if !isSeeking {
-                print("更新了slider:\(isSeeking)")
                 updateSliderValue(position)
             }
             updatePosition(position)
@@ -108,8 +104,8 @@ class ControlsView : UIView {
         }
     }
     
-    var finalSafeAreaInsets : UIEdgeInsets = .zero
-    
+    var state : PlayerState = .unknown
+           
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
@@ -131,55 +127,37 @@ class ControlsView : UIView {
     @available(iOS 11.0, *)
     override func safeAreaInsetsDidChange() {
         let delay = 0.0
-        
-        print(safeAreaInsets)
-                            
         let animation = {
             UIView.animate(withDuration: playerAnimationTime, delay: delay, options: [], animations: {
                 self.layoutIfNeeded()
             }, completion: nil)
         }
-        
         animation()
-
-        // from small to full
-        /*
-         from:
-         UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 0.0)
-         or from:
-         UIEdgeInsets(top: 44.0, left: 0.0, bottom: 0.0, right: 0.0)
-         or from
-         UIEdgeInsets(top: 44.0, left: 0.0, bottom: 0.0, right: 34.0)
-         or from
-         UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 34.0)
-         to:
-         UIEdgeInsets(top: 0.0, left: 44.0, bottom: 20.999999999999943, right: 44.0)
-         */
-        
-        
-        // from full to small
-        /*
-         from:
-         UIEdgeInsets(top: 0.0, left: 44.0, bottom: 20.999999999999943, right: 44.0)
-         to:
-         UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 0.0)
-         or to:
-         UIEdgeInsets(top: 44.0, left: 0.0, bottom: 0.0, right: 0.0)
-         or to
-         UIEdgeInsets(top: 44.0, left: 0.0, bottom: 0.0, right: 34.0)
-         or to
-         UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 34.0)
-         */
     }
     
 
     func setup() {
         fromNib()
         backgroundColor = .clear
-        backButton.isHidden = true
+        initialVariables()
         setupSlider()
         setupButtons()
-
+        becomeSubscriber()
+    }
+    
+    func initialVariables() {
+        isSliding = false
+        isSeeking = false
+        isBufferFull = false
+        duration = 0
+        position = 0
+        oldPosition = 0
+        bufferTime = 0
+        state = .unknown
+        mode = .portrait
+        // UI
+        backButton.isHidden = true
+        playButton(hide: true)
     }
     
     func setupButtons() {
@@ -193,13 +171,35 @@ class ControlsView : UIView {
         slider.addTarget(self, action: #selector(sliderValueChange(_:)), for: .valueChanged)
     }
     
+    
+    // MARK: - Event
+    @IBAction func play(_ sender: UIButton) {
+        if sender.isSelected {
+            publish(.paused)
+        }else {
+            publish(.playing)
+        }
+    }
+    
+    @IBAction func back(_ sender: UIButton) {
+        publish(.mode(.portrait))
+    }
+    
+    @IBAction func full(_ sender: UIButton) {
+        if sender.isSelected {
+            publish(.mode(.portrait))
+        }else {
+            publish(.mode(.landscape))
+        }
+    }
+    
     @objc func sliderValueChange(_ slider:UISlider) {
         isSliding = true
         let time = TimeInterval(slider.value)
         oldPosition = time
         position = time
         updatePosition(time)
-        stateUpdater?(.seeking(time))
+        publish(.seeking(time))
     }
     
     @objc func sliderTouchCancel(_ slider:UISlider) {
@@ -232,35 +232,13 @@ class ControlsView : UIView {
     
     func updateShowState() {
         if (self.isHidden) {
-            oldPosition = position;
+            oldPosition = position
         } else {
-            let drop = abs(round(position - oldPosition));
+            let drop = abs(round(position - oldPosition))
             if (drop >= hideTimeInterval) {
-                oldPosition = position;
+                oldPosition = position
                 hide()
             }
-        }
-    }
-    
-    @IBAction func play(_ sender: UIButton) {
-        if sender.isSelected {
-            stateUpdater?(.paused)
-        }else {
-            stateUpdater?(.playing)
-        }
-        
-        self.publish(.playing)
-    }
-    
-    @IBAction func back(_ sender: UIButton) {
-        stateUpdater?(.mode(.portrait))
-    }
-    
-    @IBAction func full(_ sender: UIButton) {
-        if sender.isSelected {
-            stateUpdater?(.mode(.portrait))
-        }else {
-            stateUpdater?(.mode(.landscape))
         }
     }
     
@@ -344,21 +322,12 @@ class ControlsView : UIView {
     }
 }
 
-@IBDesignable
-extension UISlider {
-    @IBInspectable var thumbImage : UIImage? {
-        set {
-            setThumbImage(newValue, for: .normal)
-        }
-        get {
-            return currentThumbImage
-        }
-    }
-}
-
 extension ControlsView : StateSubscriber {
     func receive(_ value: PlayerState) {
-        print("接收状态改变:\(value)")
+        if value == state {
+            return
+        }
+        handleState(state: value)
     }
 }
 
