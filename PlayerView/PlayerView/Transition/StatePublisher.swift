@@ -29,15 +29,23 @@
 import Foundation
 
 
-protocol StateSubscriber : Subscriber {
+public protocol StateSubscriber : Subscriber {
     associatedtype Input = PlayerState
 }
 
-extension StateSubscriber where Input == PlayerState {
+extension Subscriber {
     func becomeSubscriber() {
-        PlayerStatePublisher.shared.receive(subscriber: self)
+        EventBus.shared.add(subscriber: self, event: Input.self) { (input) in
+            self.receive(input)
+        }
     }
 }
+
+//extension StateSubscriber where Input == PlayerState {
+//    func becomeSubscriber() {
+//        PlayerStatePublisher.shared.receive(subscriber: self)
+//    }
+//}
 
 protocol StatePublisher : AnyObject, Publisher {
     associatedtype Output = PlayerState

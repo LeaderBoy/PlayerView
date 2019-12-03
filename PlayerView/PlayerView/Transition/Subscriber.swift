@@ -29,7 +29,7 @@
 import Foundation
 
 
-protocol Subscriber : AnyObject {
+public protocol Subscriber : AnyObject {
     associatedtype Input
     func receive(_ value : Input)
 }
@@ -64,6 +64,9 @@ struct SubscribedValue<T> {
         subscriptions = subscriptions.filter {$0.object.value != nil}
     }
 }
+
+
+
 
 
 

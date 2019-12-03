@@ -29,7 +29,7 @@
 import Foundation
 
 
-protocol Publisher {
+public protocol Publisher {
     associatedtype Output
     func publish(_ value : Output)
 //    func receive<S>(subscriber : S) where S : Subscriber,Self.Output == S.Input

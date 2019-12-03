@@ -293,7 +293,7 @@ extension PlayerView : UIGestureRecognizerDelegate {
 }
 
 extension PlayerView : StateSubscriber {
-    func receive(_ value: PlayerState) {
+    public func receive(_ value: PlayerState) {
         handle(state: state)
     }
 }

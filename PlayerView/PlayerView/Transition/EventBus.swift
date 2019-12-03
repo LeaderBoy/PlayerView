@@ -29,43 +29,64 @@
 import Foundation
 
 
+struct Subsctiption<T> : Hashable {
+    var weakBox : WeakBox
+    var handler : (T) -> Void
+    
+    // Equalable
+    static func == (lhs: Subsctiption, rhs: Subsctiption) -> Bool {
+        return lhs.weakBox.object === rhs.weakBox.object
+    }
+    // Hashable
+    func hash(into hasher: inout Hasher) {
+        if let obj = weakBox.object {
+            hasher.combine(ObjectIdentifier(obj))
+        }
+    }
+    
+}
+
+
 public class EventBus {
     // global obj
     public static let shared = EventBus()
     // subscriber's set
-    typealias WeakSet = Set<WeakBox>
+    typealias WeakSet = Set<Subsctiption>
     // store subscriber
     private var subscribed : [ObjectIdentifier:WeakSet] = [:]
     
-    public func add<T>(subscriber :T,for type : T.Type,closure : (T) ->Void) {
-        let identifier = ObjectIdentifier(type)
-        let weakSet = subscribed[identifier] ?? []
-        self.subscribed[identifier] = cleanup(set: weakSet)
+    public func add<S : AnyObject,T:AnyObject>(subscriber :S,with handler :@escaping (T) ->Void) {
+        let identifier = ObjectIdentifier(T.self)
+        var weakSet = subscribed[identifier] ?? []
+        let subsctiption = Subsctiption(weakBox: WeakBox(subscriber),handler: handler)
+        weakSet.insert(subsctiption)
+        subscribed[identifier] = weakSet
     }
     
-    public func notify<T>(type : T.Type,closure : (T) ->Void) {
-        let identifier = ObjectIdentifier(type)
-        if let subscribers = subscribed[identifier] {
-            for subscriber in subscribers.lazy.compactMap({ $0.object as? T }) {
-                closure(subscriber)
-            }
-        }
-    }
-    
-    public func has<T>(subscriber : T,for type : T.Type) -> Bool {
-//        guard !(type(of: subscriber as Any) is AnyClass) else {
-//            return false
+//    public func notify<T:AnyObject>(value : T) {
+//        let type = T.self
+//        let identifier = ObjectIdentifier(type)
+//        if let subscribers = subscribed[identifier] {
+//            for subscriber in subscribers where subscriber.weakBox.object != nil {
+//                subscriber.handler(value)
+//            }
 //        }
-        if let weakSet = subscribed[ObjectIdentifier(type)]  {
-            return weakSet.contains {$0 == subscriber as AnyObject}
-        }
-        return false
-    }
+//    }
     
-    private func cleanup(set : WeakSet) -> WeakSet? {
-        let newSet = set.filter {$0.object != nil}
-        return newSet.isEmpty ? nil : newSet
-    }
+//    public func has<T>(subscriber : T,for type : T.Type) -> Bool {
+////        guard !(type(of: subscriber as Any) is AnyClass) else {
+////            return false
+////        }
+//        if let weakSet = subscribed[ObjectIdentifier(type)]  {
+//            return weakSet.contains {$0 == subscriber as AnyObject}
+//        }
+//        return false
+//    }
+    
+//    private func cleanup(set : WeakSet) -> WeakSet? {
+//        let newSet = set.filter {$0.object != nil}
+//        return newSet.isEmpty ? nil : newSet
+//    }
 }
 
 // weakly holdly an object,such as a subscriber
