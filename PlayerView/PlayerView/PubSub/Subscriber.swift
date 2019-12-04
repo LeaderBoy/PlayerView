@@ -47,6 +47,14 @@ extension StateSubscriber {
 }
 
 
+public protocol ItemSubscriber {
+    /// Receive various state
+    /// - Parameter value: player current state
+    func receive(_ itemState : PlayerState)
+}
+
+
+
 
 
 

@@ -110,18 +110,22 @@ public class PlayerView: UIView {
         setup()
     }
     
+    deinit {
+        reachability?.stopNotifier()
+    }
+    
     func setup() {
         backgroundColor = .black
         addSubViews()
         addGestures()
         reachabilityCallBack()
         observerCallBack()
+        becomeSubscriber()
     }
     
     public func prepare(url : URL) {
-        
         if item != nil {
-            self.state = .stop
+            publish(.stop)
         }
         
         let item = AVPlayerItem(url: url)
@@ -131,7 +135,8 @@ public class PlayerView: UIView {
         itemObserver.item = item
         itemObserver.player = player
         layerView.play()
-        state = .loading
+        // loading
+        publish(.prepare)
     }
     
     func addSubViews() {
@@ -142,7 +147,6 @@ public class PlayerView: UIView {
         controlsView.edges(to: self)
         indicatorView.edges(to: self)
         layerView.edges(to: self)
-        
     }
     
     func addGestures() {
@@ -169,11 +173,11 @@ public class PlayerView: UIView {
     func handleReachability(status : Reachability.Status) {
         switch status {
         case .unReachable:
-            self.state = .network(.networkUnReachable)
+            publish(.network(.networkUnReachable))
         case .wifi:
-            self.state = .network(.wifi)
+            publish(.network(.wifi))
         case .wwan:
-            self.state = .network(.wwan)
+            publish(.network(.wwan))
         }
     }
     
@@ -183,6 +187,7 @@ public class PlayerView: UIView {
             switch status {
             case .readyToPlay:
                 self.layerView.isReadyToPlay = true
+                self.publish(.playing)
             case .failed:
                print("播放失败")
             default:
@@ -208,17 +213,17 @@ public class PlayerView: UIView {
         
         itemObserver.observedPlayDone =  {[weak self] in
             guard let self = self else { return }
-            self.state = .finished
+            self.publish(.finished)
         }
         
         itemObserver.observedBufferEmpty =  {[weak self] isEmpty in
             guard let self = self else { return }
-            self.state = .loading
+            self.publish(.loading)
         }
         
         itemObserver.observedBufferFull =  {[weak self] isFull in
             guard let self = self else { return }
-            self.state = .bufferFull(isFull)
+            self.publish(.bufferFull(isFull))
         }
         
         itemObserver.observedKeepUp =  {[weak self] isLikely in
@@ -230,9 +235,7 @@ public class PlayerView: UIView {
         
         itemObserver.observedError =  {[weak self] error in
             guard let self = self else { return }
-            let error = PlayerErrorState(error: error)
-            print(error)
-            self.state = .error(error)
+            self.publish(.error(error))
         }
     }
     
@@ -275,7 +278,6 @@ public class PlayerView: UIView {
                         
             porVc.dismissAnimationDidBegin(for: animator!, animating: {
             }) {
-                print("完成")
                 self.porWindow.isHidden = true
             }
         }
@@ -291,3 +293,15 @@ extension PlayerView : UIGestureRecognizerDelegate {
         return true
     }
 }
+
+
+extension PlayerView : StateSubscriber {
+    public func receive(_ value: PlayerState) {
+        if state == value {
+            return
+        }
+        handle(state: value)
+    }
+}
+
+extension PlayerView : StatePublisher {}

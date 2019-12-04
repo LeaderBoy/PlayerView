@@ -28,41 +28,11 @@
 
 import Foundation
 
-
-/// error state
-public enum PlayerErrorState : Equatable {
-    public static func == (lhs: PlayerErrorState, rhs: PlayerErrorState) -> Bool {
-        switch (lhs,rhs) {
-            case (.networkUnReachable,.networkUnReachable): return true
-            case (.timeout,.timeout): return true
-            case (.resourceUnavailable,.resourceUnavailable): return true
-            case (.error(let l as NSError),.error(let r as NSError)) where l.code == r.code : return true
-            case (_): return false
-        }
-    }
-    
-    case networkUnReachable
-    case timeout
-    case resourceUnavailable
-    case error(_ error : Error)
-    
-    init(error : Error) {
-        if error.isInternetUnavailable() {
-            self = .networkUnReachable
-        }else if error.isTimeout() {
-            self = .timeout
-        }else if error.isResourceUnavailable(){
-            self = .resourceUnavailable
-        }else {
-            self = .error(error)
-        }
-    }
-}
-
 public enum PlayerNetworkState {
     case wwan
     case wifi
     case networkUnReachable
+    case timeout
 }
 
 /// full screen or not
@@ -83,7 +53,7 @@ public enum PlayerState : Equatable {
     case finished
     case bufferFull(_ full : Bool)
     case stop
-    case error(_ error  : PlayerErrorState)
+    case error(_ error  : Error)
     case mode(_ mode    : PlayerModeState)
     case network(_ net  : PlayerNetworkState)
     case unknown
@@ -93,9 +63,16 @@ public enum PlayerState : Equatable {
         case (.prepare,.prepare): return true
         case (.playing,.playing): return true
         case (.paused,.paused): return true
-        case (.error(let l),.error(let r)) where l == r : return true
+        case (.seeking(let l),.seeking(let r)) where l == r : return true
+        case (.seekDone,.seekDone): return true
+        case (.loading,.loading): return true
+        case (.finished,.finished): return true
+        case (.bufferFull(let l),.bufferFull(let r)) where l == r : return true
+        case (.stop,.stop): return true
+        case (.error(let l as NSError),.error(let r as NSError)) where l.code == r.code : return true
         case (.mode(let l),.mode(let r))where l == r : return true
         case (.network(let l),.network(let r))where l == r : return true
+        case (.unknown,.unknown): return true
         case (_):return false
         }
     }
@@ -140,3 +117,4 @@ extension NSError {
         self.code == NSURLErrorResourceUnavailable
     }
 }
+

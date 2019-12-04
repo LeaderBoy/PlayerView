@@ -54,6 +54,8 @@ class ControlsView : UIView {
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var containerLeftLayout: NSLayoutConstraint!
     
+    
+    @IBOutlet weak var loadingView: IndicatorLoading!
     @IBOutlet weak var sliderContainerView: UIView!
     
     public var isSliding = false {
@@ -157,7 +159,7 @@ class ControlsView : UIView {
         mode = .portrait
         // UI
         backButton.isHidden = true
-        playButton(hide: true)
+        playButton(hide: false)
     }
     
     func setupButtons() {
@@ -255,33 +257,55 @@ class ControlsView : UIView {
         }
     }
     
-    func playButton(hide : Bool) {
-        if playButton.isHidden != hide && !isBufferFull {
-            playButton.isHidden = hide
+    fileprivate func playButton(state : PlayerState) {
+        switch state {
+        case .prepare:
+            playButton(selected: true)
+            playButton(hide: true)
+        case .playing:
+            playButton(selected: true)
+            playButton(hide: false)
+        case .paused:
+            playButton(selected: false)
+            playButton(hide: false)
+        case .seeking(_):
+            playButton(hide: true)
+        case .seekDone:
+            playButton(hide: false)
+        case .loading:
+            playButton(hide: true)
+        case .finished,.stop:
+            playButton(selected: true)
+            playButton(hide: false)
+        case .bufferFull(_),.error(_),.mode(_),.network(_),.unknown:
+            break
         }
     }
     
-    func playButton(selected : Bool) {
+    fileprivate func playButton(selected : Bool) {
         if playButton.isSelected != selected {
             playButton.isSelected = selected
         }
     }
     
-    func handleState(state : PlayerState) {
-        playButton(hide:false)
+    fileprivate func playButton(hide : Bool) {
+        if isBufferFull {
+            playButton.isHidden = false
+            loadingView.isHidden = true
+            return
+        }
+        
+        if playButton.isHidden != hide {
+            playButton.isHidden = hide
+            loadingView.isHidden = !hide
+        }
+    }
+    
+    fileprivate func handleState(state : PlayerState) {
+        playButton(state: state)
         switch state {
-        case .prepare:
-            playButton(hide:true)
-            playButton(selected: true)
-        case .playing:
-            playButton(selected: true)
-        case .paused:
-            playButton(selected: false)
-        case .loading:
-            playButton(hide:true)
         case .seeking(_):
             isSeeking = true
-            playButton(hide:true)
         case .seekDone:
             isSeeking = false
         case .error(_):
@@ -299,7 +323,6 @@ class ControlsView : UIView {
         case .bufferFull(let isFull):
             isBufferFull = isFull
         case .stop:
-            playButton(selected: true)
             duration = 0
             position = 0
             oldPosition = 0
@@ -327,7 +350,7 @@ extension ControlsView : StateSubscriber {
         if state == value {
             return
         }
-        handleState(state: state)
+        handleState(state: value)
     }
 }
 

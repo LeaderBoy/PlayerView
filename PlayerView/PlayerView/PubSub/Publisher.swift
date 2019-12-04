@@ -41,7 +41,7 @@ public protocol StatePublisher {
 extension StatePublisher {
     /// The default implementation,don't implement't it again
     /// - Parameter value: player current state
-    func publish(_ value: PlayerState) {
+    public func publish(_ value: PlayerState) {
         EventBus.shared.notify(event: StateSubscriber.self) { (subscriber) in
             subscriber.receive(value)
         }

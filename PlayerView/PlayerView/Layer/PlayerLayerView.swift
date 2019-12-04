@@ -59,6 +59,7 @@ class PlayerLayerView: UIView {
         super.init(frame: .zero)
         playerLayer.player = player
         playerLayer.videoGravity = .resizeAspectFill
+        becomeSubscriber()
     }
     
     public func play() {
@@ -80,11 +81,8 @@ class PlayerLayerView: UIView {
     
     /// https://developer.apple.com/library/archive/qa/qa1820/_index.html
     public func seekToTime(_ time:TimeInterval,completionHandler: ((Bool) -> Void)? = nil) {
-        
         let timeScale = player.currentItem?.asset.duration.timescale ?? 600
-
         let newChaseTime = CMTimeMakeWithSeconds(time, preferredTimescale: timeScale)
-        
         // when seek to zero,it always paued even called play,
         if newChaseTime == .zero {
             if !self.isPausedByUser {
@@ -127,7 +125,7 @@ class PlayerLayerView: UIView {
         })
     }
     
-    func handleState(_ state : PlayerState) {
+    func handle(state : PlayerState) {
         switch state {
         case .prepare:
             break
@@ -142,7 +140,7 @@ class PlayerLayerView: UIView {
                 guard let self = self else {
                     return
                 }
-                self.state = (.seekDone)
+                self.publish(.seekDone)
             }
         default:
             break
@@ -157,3 +155,15 @@ class PlayerLayerView: UIView {
         }
     }
 }
+
+
+extension PlayerLayerView : StateSubscriber {
+    func receive(_ value: PlayerState) {
+        if state == value {
+            return
+        }
+        handle(state:value)
+    }
+}
+
+extension PlayerLayerView : StatePublisher {}

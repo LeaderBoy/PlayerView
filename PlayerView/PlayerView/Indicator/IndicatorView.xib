@@ -11,7 +11,6 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="IndicatorView" customModule="PlayerView" customModuleProvider="target">
             <connections>
                 <outlet property="customView" destination="5sX-Sr-QRK" id="dv1-de-nld"/>
-                <outlet property="indicatorLoadingView" destination="ZLa-Cs-992" id="Y6E-W1-zWq"/>
                 <outlet property="indicatorStackView" destination="CtF-cV-bIg" id="MZh-1M-gHZ"/>
                 <outlet property="indicatorView" destination="lpk-aW-Yll" id="pEE-AT-gAI"/>
                 <outlet property="label" destination="DZR-le-QH8" id="WMa-2j-Ewk"/>
@@ -31,10 +30,6 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lpk-aW-Yll">
                     <rect key="frame" x="0.0" y="44" width="414" height="223"/>
                     <subviews>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZLa-Cs-992" customClass="IndicatorLoading" customModule="PlayerView" customModuleProvider="target">
-                            <rect key="frame" x="0.0" y="0.0" width="414" height="223"/>
-                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        </view>
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" alignment="center" spacing="30" translatesAutoresizingMaskIntoConstraints="NO" id="CtF-cV-bIg">
                             <rect key="frame" x="0.0" y="71.5" width="414" height="80.5"/>
                             <subviews>
@@ -62,13 +57,9 @@
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
-                        <constraint firstItem="ZLa-Cs-992" firstAttribute="leading" secondItem="lpk-aW-Yll" secondAttribute="leading" id="7S4-29-5ku"/>
-                        <constraint firstItem="ZLa-Cs-992" firstAttribute="top" secondItem="lpk-aW-Yll" secondAttribute="top" id="8bu-mv-8xx"/>
                         <constraint firstAttribute="trailing" secondItem="CtF-cV-bIg" secondAttribute="trailing" id="Aez-Pf-fBr"/>
                         <constraint firstItem="CtF-cV-bIg" firstAttribute="centerY" secondItem="lpk-aW-Yll" secondAttribute="centerY" id="ESx-a6-gyz"/>
                         <constraint firstItem="CtF-cV-bIg" firstAttribute="leading" secondItem="lpk-aW-Yll" secondAttribute="leading" id="UIY-3E-0Ik"/>
-                        <constraint firstAttribute="bottom" secondItem="ZLa-Cs-992" secondAttribute="bottom" id="UQ5-nl-e5x"/>
-                        <constraint firstAttribute="trailing" secondItem="ZLa-Cs-992" secondAttribute="trailing" id="bwN-zl-SkQ"/>
                     </constraints>
                 </view>
             </subviews>

@@ -52,14 +52,13 @@ class IndicatorView: UIView {
                 self = .stop
             case .paused,.mode(_):
                 self = .ignore
-            case .error(let e):
-                switch e {
-                case .resourceUnavailable,.error(_):
-                    self = .error
-                case .networkUnReachable:
-                    self = .networkUnReachable
-                case .timeout:
+            case .error(let e as NSError):
+                if e.isTimeout() {
                     self = .timeout
+                }else if e.isInternetUnavailable() {
+                    self = .networkUnReachable
+                }else {
+                    self = .error
                 }
             case .network(let e):
                 switch e {
@@ -69,6 +68,8 @@ class IndicatorView: UIView {
                     self = .wwan
                 case .wifi:
                     self = .success
+                case .timeout:
+                    self = .timeout
                 }
             }
         }
@@ -78,7 +79,6 @@ class IndicatorView: UIView {
     @IBOutlet weak var indicatorView: UIView!
     @IBOutlet weak var indicatorStackView: UIStackView!
     
-    @IBOutlet weak var indicatorLoadingView: IndicatorLoading!
     @IBOutlet weak var label: UILabel!
     
     @IBOutlet weak var leftButton: UIButton!    
@@ -135,11 +135,7 @@ class IndicatorView: UIView {
         let state = IndicatorState(state: state)
         reloadState(state: state)
     }
-    
-    func handleError(state : PlayerErrorState) {
-        
-    }
-    
+
     func handleMode(state : PlayerModeState) {
         
     }
@@ -169,7 +165,6 @@ class IndicatorView: UIView {
         isUserInteractionEnabled = true
         
         if let view = indicatorCustomView(state: state) {
-            indicatorLoadingView.isHidden = true
             indicatorStackView.isHidden = true
             customView.isHidden = false
             customView.subviews.forEach{$0.removeFromSuperview()}
@@ -177,12 +172,10 @@ class IndicatorView: UIView {
             view.edges(to: customView)
         }else if state == .loading {
             isUserInteractionEnabled = false
-            indicatorLoadingView.isHidden = false
             indicatorStackView.isHidden = true
             customView.isHidden = true
         }else {
             customView.isHidden = true
-            indicatorLoadingView.isHidden = true
             indicatorStackView.isHidden = false
             
             if let title = indicatorTitleFor(state: state) {
