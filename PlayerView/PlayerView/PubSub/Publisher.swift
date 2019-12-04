@@ -28,12 +28,27 @@
 
 import Foundation
 
-
-public protocol Publisher {
-    associatedtype Output
-    func publish(_ value : Output)
-//    func receive<S>(subscriber : S) where S : Subscriber,Self.Output == S.Input
+/// A publisher protocol about dispatch player's current state
+/// How to use:
+/// first : Follow StatePublisher protocol
+/// second : when you need to change player's state,just call publish(.yourstate)
+public protocol StatePublisher {
+    /// dispatch player's current state
+    /// - Parameter value: player state
+    func publish(_ value : PlayerState)
 }
+
+extension StatePublisher {
+    /// The default implementation,don't implement't it again
+    /// - Parameter value: player current state
+    func publish(_ value: PlayerState) {
+        EventBus.shared.notify(event: StateSubscriber.self) { (subscriber) in
+            subscriber.receive(value)
+        }
+    }
+}
+
+
 
 
 

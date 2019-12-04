@@ -28,40 +28,21 @@
 
 import Foundation
 
-
-public protocol Subscriber {
-    associatedtype Input
-    func receive(_ value : Input)
+/// A publisher protocol about receive player's current state
+/// How to use:
+/// first  : Follow StateSubscriber protocol
+/// second : register as an observer by calling becomeSubscriber()
+/// third  : handle the player's state yourself
+public protocol StateSubscriber {
+    /// Receive various state
+    /// - Parameter value: player current state
+    func receive(_ value : PlayerState)
 }
 
-/// weakly hold an object
-struct Weak<Object : AnyObject> {
-    weak var value : Object?
-}
-
-struct SubscribedValue<T> {
-    typealias Subsctiption = (object : Weak<AnyObject>,handler :(T) -> Void)
-    
-    private var subscriptions : [Subsctiption] = []
-    
-    var value : T {
-        didSet {
-            for (object,handler) in subscriptions where object.value != nil {
-                handler(value)
-            }
-        }
-    }
-    
-    init(value : T) {
-        self.value = value
-    }
-    
-    mutating func subscribe(_ object : AnyObject,with handler :@escaping (T) ->Void) {
-        subscriptions.append((Weak(value: object),handler))
-    }
-    
-    mutating func cleanupSubscriptions() {
-        subscriptions = subscriptions.filter {$0.object.value != nil}
+extension StateSubscriber {
+    /// Register as an observer,so you can receive state change
+    func becomeSubscriber() {
+        EventBus.shared.add(subscriber: self, for: StateSubscriber.self)
     }
 }
 

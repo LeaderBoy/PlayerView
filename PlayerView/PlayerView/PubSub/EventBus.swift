@@ -29,47 +29,45 @@
 import Foundation
 
 public class EventBus {
-    // global obj
+    /// global obj
     public static let shared = EventBus()
-    // subscriber's set
+    /// weakBox's set
     typealias WeakSet = Set<WeakBox>
-    // store subscriber
+    /// a Dictionary for store weakSet
     private var subscribed : [ObjectIdentifier:WeakSet] = [:]
     
-    public func add<T : Subscriber,V>(subscriber :T,for event : V.Type) where V == T.Input {
+    /// Add subscriber and event type
+    /// - Parameter subscriber: subscriber,subscriber must be AnyObject
+    /// - Parameter event: with the purpose of get unique identifier by ObjectIdentifier(x: Any.Type)
+    public func add<T,E>(subscriber :T,for event : E.Type) {
         let identifier = ObjectIdentifier(event)
-        var set = subscribed[identifier] ?? []
+        var weakSet = subscribed[identifier] ?? []
         let weakBox = WeakBox(subscriber as AnyObject)
-        set.insert(weakBox)
-        subscribed[identifier] = set
+        weakSet.insert(weakBox)
+        subscribed[identifier] = update(set: weakSet)
     }
     
-    public func notify<T : Subscriber,V>(value : V, closure: @escaping (T) -> ()) where V == T.Input {
-        let identifier = ObjectIdentifier(V.self)
+    /// notify event register to excute closure
+    /// - Parameter event: event type
+    /// - Parameter closure: a closure that the register should excute
+    public func notify<T>(event:T.Type, closure: @escaping (T) -> ()) {
+        let identifier = ObjectIdentifier(event)
         if let subscribers = subscribed[identifier] {
             for subscriber in subscribers.lazy.compactMap({$0.object as? T}) {
-                subscriber.receive(value)
+                closure(subscriber)
             }
         }
     }
     
-//    public func has<T>(subscriber : T,for type : T.Type) -> Bool {
-////        guard !(type(of: subscriber as Any) is AnyClass) else {
-////            return false
-////        }
-//        if let weakSet = subscribed[ObjectIdentifier(type)]  {
-//            return weakSet.contains {$0 == subscriber as AnyObject}
-//        }
-//        return false
-//    }
-    
-//    private func cleanup(set : WeakSet) -> WeakSet? {
-//        let newSet = set.filter {$0.object != nil}
-//        return newSet.isEmpty ? nil : newSet
-//    }
+    /// clean up nil object from subscribed
+    /// - Parameter set: a new WeakSet without nil object
+    fileprivate func update(set: WeakSet) -> WeakSet? {
+        let newSet = set.filter { $0.object != nil }
+        return newSet.isEmpty ? nil : newSet
+    }
 }
 
-// weakly holdly an object,such as a subscriber
+/// weakly holdly an object to prevent retain cycle,such as a subscriber
 struct WeakBox {
     weak var object : AnyObject?
     init(_ object : AnyObject) {
@@ -77,7 +75,7 @@ struct WeakBox {
     }
 }
 
-//
+/// WeakBox is nested in Set,so it need to follow Hashable protocol
 extension WeakBox : Hashable {
     // Equalable
     static func == (lhs: WeakBox, rhs: WeakBox) -> Bool {
@@ -94,5 +92,4 @@ extension WeakBox : Hashable {
             hasher.combine(ObjectIdentifier(obj))
         }
     }
-    
 }
