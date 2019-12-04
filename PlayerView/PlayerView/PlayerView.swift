@@ -291,9 +291,3 @@ extension PlayerView : UIGestureRecognizerDelegate {
         return true
     }
 }
-
-extension PlayerView : StateSubscriber {
-    public func receive(_ value: PlayerState) {
-        handle(state: state)
-    }
-}

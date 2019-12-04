@@ -29,7 +29,7 @@
 import Foundation
 
 
-public protocol Subscriber : AnyObject {
+public protocol Subscriber {
     associatedtype Input
     func receive(_ value : Input)
 }

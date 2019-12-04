@@ -142,7 +142,7 @@ class PlayerLayerView: UIView {
                 guard let self = self else {
                     return
                 }
-                self.publish(.seekDone)
+                self.state = (.seekDone)
             }
         default:
             break
@@ -157,11 +157,3 @@ class PlayerLayerView: UIView {
         }
     }
 }
-
-extension PlayerLayerView : StateSubscriber {
-    func receive(_ value: PlayerState) {
-        handleState(state)
-    }
-}
-
-extension PlayerLayerView : StatePublisher {}

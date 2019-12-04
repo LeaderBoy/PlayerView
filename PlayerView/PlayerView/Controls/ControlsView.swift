@@ -322,13 +322,30 @@ class ControlsView : UIView {
     }
 }
 
-extension ControlsView : StateSubscriber {
+extension ControlsView : Subscriber {
+    typealias Input = PlayerState
     func receive(_ value: PlayerState) {
-        if value == state {
-            return
-        }
-        handleState(state: value)
+        print("接收\(value)")
     }
 }
 
-extension ControlsView : StatePublisher {}
+
+protocol Receiveable {
+    func receiveable(_ value: PlayerState)
+}
+
+extension Subscriber {
+    func becomeSubscriber() {
+        EventBus.shared.add(subscriber: self, for: Self.Input.self)
+    }
+}
+
+extension ControlsView : Publisher {
+    typealias Output = PlayerState
+    
+    func publish(_ value : Output) {
+        EventBus.shared.notify(value: value) { (s : Self) in
+            
+        }
+    }
+}

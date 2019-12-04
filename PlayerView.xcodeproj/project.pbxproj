@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		520595822385938300BBEF77 /* IndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 520595812385938300BBEF77 /* IndicatorView.swift */; };
 		520595842385939500BBEF77 /* IndicatorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520595832385939500BBEF77 /* IndicatorView.xib */; };
-		52481B2323937ABC00588A8E /* StatePublisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52481B2223937ABC00588A8E /* StatePublisher.swift */; };
 		5292111A2388256800DF1101 /* VideoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 529211182388256800DF1101 /* VideoCell.swift */; };
 		5292111B2388256800DF1101 /* VideoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 529211192388256800DF1101 /* VideoCell.xib */; };
 		529E2D18239226BB0026055D /* Subscriber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 529E2D17239226BB0026055D /* Subscriber.swift */; };
@@ -53,7 +52,6 @@
 /* Begin PBXFileReference section */
 		520595812385938300BBEF77 /* IndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndicatorView.swift; sourceTree = "<group>"; };
 		520595832385939500BBEF77 /* IndicatorView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = IndicatorView.xib; sourceTree = "<group>"; };
-		52481B2223937ABC00588A8E /* StatePublisher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatePublisher.swift; sourceTree = "<group>"; };
 		529211182388256800DF1101 /* VideoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCell.swift; sourceTree = "<group>"; };
 		529211192388256800DF1101 /* VideoCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VideoCell.xib; sourceTree = "<group>"; };
 		529E2D17239226BB0026055D /* Subscriber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Subscriber.swift; sourceTree = "<group>"; };
@@ -116,6 +114,16 @@
 			path = Indicator;
 			sourceTree = "<group>";
 		};
+		5286A21E239797120028D898 /* PubSub */ = {
+			isa = PBXGroup;
+			children = (
+				529E2D17239226BB0026055D /* Subscriber.swift */,
+				529E2D19239229E50026055D /* Publisher.swift */,
+				52D7421D239550E70068C08D /* EventBus.swift */,
+			);
+			path = PubSub;
+			sourceTree = "<group>";
+		};
 		52A797292386A7340043EB99 /* Transition */ = {
 			isa = PBXGroup;
 			children = (
@@ -124,10 +132,6 @@
 				52A7972C2386A7BA0043EB99 /* Animator.swift */,
 				52A7972A2386A75A0043EB99 /* TransitionContext.swift */,
 				52A7972E2386AB9B0043EB99 /* Transition.swift */,
-				529E2D17239226BB0026055D /* Subscriber.swift */,
-				529E2D19239229E50026055D /* Publisher.swift */,
-				52D7421D239550E70068C08D /* EventBus.swift */,
-				52481B2223937ABC00588A8E /* StatePublisher.swift */,
 				52D7421B239412F90068C08D /* PlayerState.swift */,
 			);
 			path = Transition;
@@ -181,6 +185,7 @@
 			children = (
 				52F8969E2385136D00D87D9E /* PlayerView.swift */,
 				52F63B422388FC2800EBC36D /* Debouncer.swift */,
+				5286A21E239797120028D898 /* PubSub */,
 				52A797292386A7340043EB99 /* Transition */,
 				52F896A2238513AA00D87D9E /* Layer */,
 				52F896B423866B4400D87D9E /* Controls */,
@@ -333,7 +338,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				52A7972F2386AB9B0043EB99 /* Transition.swift in Sources */,
-				52481B2323937ABC00588A8E /* StatePublisher.swift in Sources */,
 				52D7421C239412F90068C08D /* PlayerState.swift in Sources */,
 				5292111A2388256800DF1101 /* VideoCell.swift in Sources */,
 				52A7973C238E15B90043EB99 /* IndicatorLoading.swift in Sources */,

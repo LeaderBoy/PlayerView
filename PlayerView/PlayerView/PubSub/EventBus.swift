@@ -28,50 +28,30 @@
 
 import Foundation
 
-
-struct Subsctiption<T> : Hashable {
-    var weakBox : WeakBox
-    var handler : (T) -> Void
-    
-    // Equalable
-    static func == (lhs: Subsctiption, rhs: Subsctiption) -> Bool {
-        return lhs.weakBox.object === rhs.weakBox.object
-    }
-    // Hashable
-    func hash(into hasher: inout Hasher) {
-        if let obj = weakBox.object {
-            hasher.combine(ObjectIdentifier(obj))
-        }
-    }
-    
-}
-
-
 public class EventBus {
     // global obj
     public static let shared = EventBus()
     // subscriber's set
-    typealias WeakSet = Set<Subsctiption>
+    typealias WeakSet = Set<WeakBox>
     // store subscriber
     private var subscribed : [ObjectIdentifier:WeakSet] = [:]
     
-    public func add<S : AnyObject,T:AnyObject>(subscriber :S,with handler :@escaping (T) ->Void) {
-        let identifier = ObjectIdentifier(T.self)
-        var weakSet = subscribed[identifier] ?? []
-        let subsctiption = Subsctiption(weakBox: WeakBox(subscriber),handler: handler)
-        weakSet.insert(subsctiption)
-        subscribed[identifier] = weakSet
+    public func add<T : Subscriber,V>(subscriber :T,for event : V.Type) where V == T.Input {
+        let identifier = ObjectIdentifier(event)
+        var set = subscribed[identifier] ?? []
+        let weakBox = WeakBox(subscriber as AnyObject)
+        set.insert(weakBox)
+        subscribed[identifier] = set
     }
     
-//    public func notify<T:AnyObject>(value : T) {
-//        let type = T.self
-//        let identifier = ObjectIdentifier(type)
-//        if let subscribers = subscribed[identifier] {
-//            for subscriber in subscribers where subscriber.weakBox.object != nil {
-//                subscriber.handler(value)
-//            }
-//        }
-//    }
+    public func notify<T : Subscriber,V>(value : V, closure: @escaping (T) -> ()) where V == T.Input {
+        let identifier = ObjectIdentifier(V.self)
+        if let subscribers = subscribed[identifier] {
+            for subscriber in subscribers.lazy.compactMap({$0.object as? T}) {
+                subscriber.receive(value)
+            }
+        }
+    }
     
 //    public func has<T>(subscriber : T,for type : T.Type) -> Bool {
 ////        guard !(type(of: subscriber as Any) is AnyClass) else {
