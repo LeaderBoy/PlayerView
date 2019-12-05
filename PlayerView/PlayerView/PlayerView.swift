@@ -248,38 +248,11 @@ public class PlayerView: UIView {
     
     func handle(state : PlayerState) {
         if state == .mode(.landscape) {
-                        
             let animator = Animator(with: self)
-            delegate?.playerWillEnterFullScreen()
-            
-            lanVC.presentAnimationWillBegin(for: animator)
-            lanVC.presentAnimationDidBegin(for: animator) {
-                
-            }
-            
-            lanWindow.makeKeyAndVisible()
-            
+            animator.present()
             self.animator = animator
         }else if state == .mode(.portrait) {
-            
-            let width = UIScreen.main.bounds.width
-            let height = UIScreen.main.bounds.height
-            let porView = porVc.view!
-//            self.removeFromSuperview()
-//            self.frame = CGRect(x: 0, y: 0, width: width, height: height)
-            self.transform = .init(rotationAngle: .pi / 2)
-            self.center = CGPoint(x: height / 2.0, y: width / 2.0)
-            self.removeLayerAnimation()
-//
-            porWindow.makeKeyAndVisible()
-            porView.addSubview(self)
-
-            lanWindow.isHidden = true
-                        
-            porVc.dismissAnimationDidBegin(for: animator!, animating: {
-            }) {
-                self.porWindow.isHidden = true
-            }
+            animator!.dismiss()
         }
     }
 }

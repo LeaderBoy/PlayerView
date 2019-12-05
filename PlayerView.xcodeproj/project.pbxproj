@@ -15,9 +15,7 @@
 		529E2D1A239229E50026055D /* Publisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 529E2D19239229E50026055D /* Publisher.swift */; };
 		52A797272386A4CB0043EB99 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A797252386A4CB0043EB99 /* PlayerViewController.swift */; };
 		52A797282386A4CB0043EB99 /* PlayerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52A797262386A4CB0043EB99 /* PlayerViewController.xib */; };
-		52A7972B2386A75A0043EB99 /* TransitionContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A7972A2386A75A0043EB99 /* TransitionContext.swift */; };
 		52A7972D2386A7BA0043EB99 /* Animator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A7972C2386A7BA0043EB99 /* Animator.swift */; };
-		52A7972F2386AB9B0043EB99 /* Transition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A7972E2386AB9B0043EB99 /* Transition.swift */; };
 		52A7973123878A640043EB99 /* UIView + FullAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A7973023878A640043EB99 /* UIView + FullAnimation.swift */; };
 		52A7973C238E15B90043EB99 /* IndicatorLoading.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A7973B238E15B90043EB99 /* IndicatorLoading.swift */; };
 		52D7421C239412F90068C08D /* PlayerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52D7421B239412F90068C08D /* PlayerState.swift */; };
@@ -57,9 +55,7 @@
 		529E2D19239229E50026055D /* Publisher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Publisher.swift; sourceTree = "<group>"; };
 		52A797252386A4CB0043EB99 /* PlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
 		52A797262386A4CB0043EB99 /* PlayerViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PlayerViewController.xib; sourceTree = "<group>"; };
-		52A7972A2386A75A0043EB99 /* TransitionContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransitionContext.swift; sourceTree = "<group>"; };
 		52A7972C2386A7BA0043EB99 /* Animator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animator.swift; sourceTree = "<group>"; };
-		52A7972E2386AB9B0043EB99 /* Transition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transition.swift; sourceTree = "<group>"; };
 		52A7973023878A640043EB99 /* UIView + FullAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView + FullAnimation.swift"; sourceTree = "<group>"; };
 		52A7973B238E15B90043EB99 /* IndicatorLoading.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndicatorLoading.swift; sourceTree = "<group>"; };
 		52D7421B239412F90068C08D /* PlayerState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerState.swift; sourceTree = "<group>"; };
@@ -122,17 +118,14 @@
 			path = PubSub;
 			sourceTree = "<group>";
 		};
-		52A797292386A7340043EB99 /* Transition */ = {
+		52A797292386A7340043EB99 /* Animation */ = {
 			isa = PBXGroup;
 			children = (
 				52A797252386A4CB0043EB99 /* PlayerViewController.swift */,
 				52A797262386A4CB0043EB99 /* PlayerViewController.xib */,
 				52A7972C2386A7BA0043EB99 /* Animator.swift */,
-				52A7972A2386A75A0043EB99 /* TransitionContext.swift */,
-				52A7972E2386AB9B0043EB99 /* Transition.swift */,
-				52D7421B239412F90068C08D /* PlayerState.swift */,
 			);
-			path = Transition;
+			path = Animation;
 			sourceTree = "<group>";
 		};
 		52F8966F2385123D00D87D9E = {
@@ -182,8 +175,9 @@
 			isa = PBXGroup;
 			children = (
 				52F8969E2385136D00D87D9E /* PlayerView.swift */,
+				52D7421B239412F90068C08D /* PlayerState.swift */,
 				5286A21E239797120028D898 /* PubSub */,
-				52A797292386A7340043EB99 /* Transition */,
+				52A797292386A7340043EB99 /* Animation */,
 				52F896A2238513AA00D87D9E /* Layer */,
 				52F896B423866B4400D87D9E /* Controls */,
 				52F896AE238626E900D87D9E /* Reachability */,
@@ -334,7 +328,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52A7972F2386AB9B0043EB99 /* Transition.swift in Sources */,
 				52D7421C239412F90068C08D /* PlayerState.swift in Sources */,
 				5292111A2388256800DF1101 /* VideoCell.swift in Sources */,
 				52A7973C238E15B90043EB99 /* IndicatorLoading.swift in Sources */,
@@ -353,7 +346,6 @@
 				520595822385938300BBEF77 /* IndicatorView.swift in Sources */,
 				52F896B623866B5A00D87D9E /* ControlsView.swift in Sources */,
 				52A797272386A4CB0043EB99 /* PlayerViewController.swift in Sources */,
-				52A7972B2386A75A0043EB99 /* TransitionContext.swift in Sources */,
 				52F896A52385151300D87D9E /* UIView + Constraints.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

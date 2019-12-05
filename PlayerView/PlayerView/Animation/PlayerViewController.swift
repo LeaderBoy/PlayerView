@@ -46,7 +46,7 @@ class PlayerViewController: UIViewController {
     }
         
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        return orientation
+        return .landscapeRight
     }
 
 }
@@ -59,58 +59,57 @@ extension PlayerViewController {
     }
     
     func dismissAnimationDidBegin(for animator: Animator, animating: (() -> Void)?, complete: @escaping () -> Void) {
-        let sourceFrame = animator.sourceFrame
-        let sourceView = animator.sourceView
-        let superView = animator.superView
-        
-        UIView.animate(withDuration: 0.5, delay: 0, options:.layoutSubviews, animations: {
-            sourceView.frame = CGRect(x: sourceFrame.origin.x, y: sourceFrame.origin.y, width: sourceFrame.height, height: sourceFrame.width)
-            sourceView.center = CGPoint(x: sourceFrame.midX, y: sourceFrame.midY)
-            sourceView.transform = .identity
-        }) { (_) in
-//            sourceView.removeFromSuperview()
-            superView.addSubview(sourceView)
-            sourceView.transform = .identity
-            sourceView.edges(to: superView)
-            superView.layoutIfNeeded()
-            complete()
-        }
+//        let sourceFrame = animator.sourceFrame
+//        let sourceView = animator.sourceView
+//        let superView = animator.superView
+//
+//        UIView.animate(withDuration: 0.5, delay: 0, options:.layoutSubviews, animations: {
+//            sourceView.frame = CGRect(x: sourceFrame.origin.x, y: sourceFrame.origin.y, width: sourceFrame.height, height: sourceFrame.width)
+//            sourceView.center = CGPoint(x: sourceFrame.midX, y: sourceFrame.midY)
+//            sourceView.transform = .identity
+//        }) { (_) in
+////            sourceView.removeFromSuperview()
+//            superView.addSubview(sourceView)
+//            sourceView.transform = .identity
+//            sourceView.edges(to: superView)
+//            superView.layoutIfNeeded()
+//            complete()
+//        }
     }
 }
 
 
 extension PlayerViewController {
     func presentAnimationWillBegin(for animator: Animator) {
-        // insert playerView
-        let sourceView = animator.sourceView
-        let sourceFrame = animator.sourceFrame
-        sourceView.removeFromSuperview()
-        sourceView.removeConstraints()
-
-        sourceView.frame = CGRect(x: sourceFrame.origin.y, y: sourceFrame.origin.x, width: sourceFrame.width, height: sourceFrame.height)
-        sourceView.center = CGPoint(x: sourceFrame.midY, y: sourceFrame.midX)
-        sourceView.transform = .init(rotationAngle: .pi / -2)
-
-        self.view.addSubview(sourceView)
+//        // insert playerView
+//        let sourceView = animator.sourceView
+//        let sourceFrame = animator.sourceFrame
+//        sourceView.removeFromSuperview()
+//        sourceView.removeConstraints()
+//
+//        sourceView.frame = CGRect(x: sourceFrame.origin.y, y: sourceFrame.origin.x, width: sourceFrame.width, height: sourceFrame.height)
+//        sourceView.center = CGPoint(x: sourceFrame.midY, y: sourceFrame.midX)
+//        sourceView.transform = .init(rotationAngle: .pi / -2)
+//        self.view.addSubview(sourceView)
 
     }
     
     func presentAnimationDidBegin(for animator : Animator,complete:@escaping ()->Void) {
                 
-        let sourceView = animator.sourceView
-        let sourceFrame = animator.sourceFrame
-        
-        let width = UIScreen.main.bounds.width
-        let height = UIScreen.main.bounds.height
-        
-        UIView.animate(withDuration: 0.5, delay: 0, options: .layoutSubviews, animations: {
-            let newFrame = CGRect(x: 0, y: 0, width: width, height: height)
-            sourceView.frame = newFrame
-            sourceView.center = CGPoint(x: height / 2.0, y: width / 2.0)
-            sourceView.transform = .identity
-        }) { (_) in
-            complete()
-        }
+//        let sourceView = animator.sourceView
+//        let sourceFrame = animator.sourceFrame
+//        
+//        let width = UIScreen.main.bounds.width
+//        let height = UIScreen.main.bounds.height
+//        
+//        UIView.animate(withDuration: 0.5, delay: 0, options: .layoutSubviews, animations: {
+//            let newFrame = CGRect(x: 0, y: 0, width: width, height: height)
+//            sourceView.frame = newFrame
+//            sourceView.center = CGPoint(x: height / 2.0, y: width / 2.0)
+//            sourceView.transform = .identity
+//        }) { (_) in
+//            complete()
+//        }
     }
     
 }

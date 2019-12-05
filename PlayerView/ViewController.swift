@@ -20,9 +20,7 @@ class ViewController: UIViewController {
     
     var willEnterFullScreen = false
     var shouldStatusBarHidden = false
-    
-    var delegate : Transition!
-    
+        
     @IBOutlet weak var tableView: UITableView!
     let playerVC = PlayerViewController()
     lazy var playerView = PlayerView()
