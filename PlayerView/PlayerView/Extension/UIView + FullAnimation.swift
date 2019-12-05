@@ -30,6 +30,7 @@ import UIKit
 
 
 extension UIView {
+    /// iOS13 will add more layer animation to playerview ,so remove them
     func removeLayerAnimation() {
         layer.removeAllAnimations()
         subviews.forEach{

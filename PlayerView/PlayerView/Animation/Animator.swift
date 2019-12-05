@@ -39,6 +39,9 @@ class Animator : NSObject {
     weak var sourceView : UIView?
     var sourceFrame : CGRect
     var superView : UIView
+    var keyView : UIView
+    
+    var flashTime : TimeInterval = 0.016
     
     private let lanVC = PlayerViewController()
     
@@ -63,8 +66,11 @@ class Animator : NSObject {
         self.sourceFrame = sourceView.convert(sourceView.bounds, to: nil)
         self.superView = sourceView.superview!
         if let rootView = UIApplication.shared.keyWindow?.rootViewController?.view {
+            keyView = rootView
             let view = rootView.snapshotView(afterScreenUpdates: false)
             self.sourceShotView = view
+        }else {
+            fatalError("keyWindow not exist")
         }
         lanWindow.rootViewController = lanVC
         super.init()
@@ -82,17 +88,29 @@ class Animator : NSObject {
     
     func present() {
         presentWillBegin()
-        presentAnimating()
-        lanWindow.makeKeyAndVisible()
     }
     
     func presentWillBegin() {
         guard let sourceView = self.sourceView else { return }
+        /// insert snapshotview as background
+        keyView.addSubview(sourceShotView)
+            
         sourceView.removeConstraints()
         sourceView.frame = CGRect(x: sourceFrame.origin.y, y: sourceFrame.origin.x, width: sourceFrame.width, height: sourceFrame.height)
         sourceView.center = CGPoint(x: sourceFrame.midY, y: sourceFrame.midX)
         sourceView.transform = .init(rotationAngle: .pi / -2)
         destinationView.addSubview(sourceView)
+        
+        lanWindow.alpha = 0
+        lanWindow.makeKeyAndVisible()
+        /// When sourceView removeFromSuperView and add to keyView,view will flash
+        /// so I add an fade animation to prevent the flash
+        UIView.animate(withDuration: flashTime, animations: {
+            self.lanWindow.alpha = 1
+        }) { (_) in
+            self.sourceShotView.removeFromSuperview()
+            self.presentAnimating()
+        }
     }
     
     func presentAnimating() {
@@ -111,25 +129,33 @@ class Animator : NSObject {
     
     func dismiss() {
         dismissWillBegin()
-        dismissAnimating()
+//        dismissAnimating()
     }
     
     func dismissWillBegin() {
+        /// insert snapshotview as background
+        let snap = destinationView.snapshotView(afterScreenUpdates: false)!
+        destinationView.insertSubview(snap, at: 0)
+        
         guard let sourceView = self.sourceView else { return }
+        
         let width = UIScreen.main.bounds.width
         let height = UIScreen.main.bounds.height
-
         sourceView.transform = .init(rotationAngle: .pi / 2)
         sourceView.center = CGPoint(x: height / 2.0, y: width / 2.0)
         sourceView.removeLayerAnimation()
-
-        lanWindow.isHidden = true
-        
-        guard let keyView = UIApplication.shared.keyWindow?.rootViewController?.view else {
-            fatalError("keyWindow not exist")
-        }
-
         keyView.addSubview(sourceView)
+
+        /// When sourceView removeFromSuperView and add to keyView,view will flash
+        /// so I add an fade animation to prevent the flash
+        UIView.animate(withDuration: flashTime, animations: {
+            self.lanWindow.alpha = 0
+        }) { (_) in
+            self.lanWindow.isHidden = true
+            self.lanWindow.alpha = 1.0
+            snap.removeFromSuperview()
+            self.dismissAnimating()
+        }
     }
     
     func dismissAnimating() {
