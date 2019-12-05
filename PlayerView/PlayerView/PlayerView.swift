@@ -103,7 +103,16 @@ public class PlayerView: UIView {
         addGestures()
         reachabilityCallBack()
         observerCallBack()
+        setupCategory()
         becomeSubscriber()
+    }
+    
+    func setupCategory() {
+        do {
+            try         AVAudioSession.sharedInstance().setCategory(.playback)
+        }catch {
+            
+        }
     }
     
     public func prepare(url : URL) {

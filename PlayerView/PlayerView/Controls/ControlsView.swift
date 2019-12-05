@@ -278,6 +278,9 @@ class ControlsView : UIView {
             playButton(hide: false)
         case .bufferFull(_),.error(_),.mode(_),.network(_),.unknown:
             break
+        case .underlying(let item):
+            // MARK: - ToDo
+            break
         }
     }
     

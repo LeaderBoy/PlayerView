@@ -29,6 +29,38 @@
 import Foundation
 import AVKit
 
+
+public enum PlayerItem {
+    case status(AVPlayer.Status)
+    case position(TimeInterval)
+    case duration(TimeInterval)
+    case loadedTime(TimeInterval)
+    case bufferEmpty(Bool)
+    case bufferFull(Bool)
+    case likelyKeepUp(Bool)
+    case error(Error)
+    case playDone(Bool)
+    case interrupted(AVAudioSession.InterruptionType)
+}
+
+extension PlayerItem : Equatable {
+    public static func == (lhs: PlayerItem, rhs: PlayerItem) -> Bool {
+        switch (lhs,rhs) {
+        case (.status(let l),.status(let r)) where l == r : return true
+        case (.position(let l),.position(let r))where l == r : return true
+        case (.duration(let l),.duration(let r)) where l == r : return true
+        case (.loadedTime(let l),.loadedTime(let r)) where l == r : return true
+        case (.bufferEmpty(let l),.bufferEmpty(let r)) where l == r : return true
+        case (.bufferFull(let l),.bufferFull(let r))where l == r : return true
+        case (.likelyKeepUp(let l),.likelyKeepUp(let r))where l == r : return true
+        case (.error(let l as NSError),.error(let r as NSError)) where l.code == r.code : return true
+        case (.playDone(let l),.playDone(let r))where l == r : return true
+        case (.interrupted(let l),.interrupted(let r))where l == r : return true
+        case (_):return false
+        }
+    }
+}
+
 public class ItemObserver: NSObject {
     public typealias ItemError         = (Swift.Error) -> Void
     public typealias ItemStatus        = (AVPlayer.Status) -> Void
@@ -94,6 +126,8 @@ public class ItemObserver: NSObject {
         removeObserverItemLoadedTimeRanges(item)
         removeObserverItemPlaybackBufferFull(item)
         removeObserverItemPlaybackLikelyToKeepUp(item)
+        removeObserverItemPlaybackBufferEmpty(item)
+        removeObserveInterrupted(item: item)
     }
 
 
@@ -106,6 +140,7 @@ public class ItemObserver: NSObject {
         observerItemPlaybackLikelyToKeepUp(item)
         observerItemPlaybackBufferFull(item)
         observerItemPlayToEndTime(item)
+        observerItemInterrupted()
     }
     
     override public func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
@@ -210,6 +245,15 @@ public class ItemObserver: NSObject {
         observedPlayDone?()
     }
     
+    @objc func observeInterrupted(note: Notification) {
+        guard let userInfo = note.userInfo else { return }
+        if let value = userInfo[AVAudioSessionInterruptionTypeKey] as? NSNumber,let type = AVAudioSession.InterruptionType(rawValue: value.uintValue) {
+            if let item = note.object as? AVPlayerItem,item == self.item {
+                
+            }
+        }
+    }
+    
     func observerItemError(_ item : AVPlayerItem) {
         item.addObserver(self, forKeyPath: itemErrorKeyPath, options: .new, context: &itemErrorContext)
     }
@@ -272,6 +316,14 @@ public class ItemObserver: NSObject {
     
     func removeObserverItemPlayToEndTime(_ item : AVPlayerItem) {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: item)
+    }
+    
+    func observerItemInterrupted() {
+        NotificationCenter.default.addObserver(self, selector: #selector(observeInterrupted(note:)), name: AVAudioSession.interruptionNotification, object: item)
+    }
+    
+    func removeObserveInterrupted(item: AVPlayerItem) {
+        NotificationCenter.default.removeObserver(self, name: AVAudioSession.interruptionNotification, object: item)
     }
     
     func observerRateForPlayer(_ player : AVPlayer) {

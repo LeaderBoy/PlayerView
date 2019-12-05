@@ -71,6 +71,10 @@ class IndicatorView: UIView {
                 case .timeout:
                     self = .timeout
                 }
+            case .underlying(_):
+                // MARK: - Todo
+                self = .ignore
+                break
             }
         }
     }
@@ -78,9 +82,7 @@ class IndicatorView: UIView {
     @IBOutlet weak var customView: UIView!
     @IBOutlet weak var indicatorView: UIView!
     @IBOutlet weak var indicatorStackView: UIStackView!
-    
     @IBOutlet weak var label: UILabel!
-    
     @IBOutlet weak var leftButton: UIButton!    
     @IBOutlet weak var rightButton: UIButton!
     

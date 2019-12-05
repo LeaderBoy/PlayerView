@@ -57,6 +57,7 @@ public enum PlayerState : Equatable {
     case mode(_ mode    : PlayerModeState)
     case network(_ net  : PlayerNetworkState)
     case unknown
+    case underlying(item : PlayerItem)
     
     public static func == (lhs : Self,rhs : Self) -> Bool {
         switch (lhs,rhs) {
@@ -73,6 +74,7 @@ public enum PlayerState : Equatable {
         case (.mode(let l),.mode(let r))where l == r : return true
         case (.network(let l),.network(let r))where l == r : return true
         case (.unknown,.unknown): return true
+        case (.underlying(let l),.underlying(let r))where l == r : return true
         case (_):return false
         }
     }
