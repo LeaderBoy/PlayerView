@@ -83,7 +83,7 @@ class IndicatorView: UIView {
     @IBOutlet weak var indicatorView: UIView!
     @IBOutlet weak var indicatorStackView: UIStackView!
     @IBOutlet weak var label: UILabel!
-    @IBOutlet weak var leftButton: UIButton!    
+    @IBOutlet weak var leftButton: UIButton!
     @IBOutlet weak var rightButton: UIButton!
     
     var state : PlayerState = .prepare {
@@ -251,6 +251,5 @@ class IndicatorView: UIView {
             return .clear
         }
     }
-    
-    
+
 }

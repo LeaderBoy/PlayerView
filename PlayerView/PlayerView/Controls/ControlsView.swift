@@ -334,6 +334,34 @@ class ControlsView : UIView {
             isBufferFull = false
             backButton.isHidden = true
             mode = .portrait
+        case .underlying(let item):
+            handle(item: item)
+        default:
+            break
+        }
+    }
+    
+    func handle(item : PlayerItem) {
+        switch item {
+        case .status(let s):
+            print("status : \(s)")
+            if s == .readyToPlay {
+                publish(.playing)
+            }
+        case .duration(let t):
+            duration = t
+        case .position(let t):
+            position = t
+        case .loadedTime(let t):
+            bufferTime = t
+        case .bufferFull(let f):
+            isBufferFull = f
+        case .interrupted(let t):
+            if t == .began {
+                publish(.paused)
+            }else if t == .ended {
+                publish(.playing)
+            }
         default:
             break
         }

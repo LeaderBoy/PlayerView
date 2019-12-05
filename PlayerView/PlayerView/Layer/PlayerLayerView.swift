@@ -142,6 +142,8 @@ class PlayerLayerView: UIView {
                 }
                 self.publish(.seekDone)
             }
+        case .underlying(let item) where item == .status(.readyToPlay):
+            isReadyToPlay = true
         default:
             break
         }
