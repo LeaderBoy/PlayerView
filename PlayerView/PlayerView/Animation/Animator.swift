@@ -37,8 +37,8 @@ class Animator : NSObject {
     }
     
     weak var sourceView : UIView?
-    let sourceFrame : CGRect
-    let superView : UIView
+    var sourceFrame : CGRect
+    var superView : UIView
     
     private let lanVC = PlayerViewController()
     
@@ -46,11 +46,10 @@ class Animator : NSObject {
         return lanVC.view
     }
     
-    private lazy var lanWindow : UIWindow = {
-        let window = UIWindow(frame: UIScreen.main.bounds)
+    private var lanWindow : UIWindow = {
+        let size = UIScreen.main.bounds.size
+        let window = UIWindow(frame: CGRect(origin: .zero, size: CGSize(width: size.height, height: size.width)))
         window.windowLevel = .alert
-        lanVC.orientation = .landscapeRight
-        window.rootViewController = lanVC
         window.backgroundColor = .clear
         return window
     }()
@@ -63,12 +62,22 @@ class Animator : NSObject {
         self.sourceView = sourceView
         self.sourceFrame = sourceView.convert(sourceView.bounds, to: nil)
         self.superView = sourceView.superview!
-        
         if let rootView = UIApplication.shared.keyWindow?.rootViewController?.view {
             let view = rootView.snapshotView(afterScreenUpdates: false)
             self.sourceShotView = view
         }
+        lanWindow.rootViewController = lanVC
         super.init()
+    }
+    
+    func update(sourceView : UIView) {
+        self.sourceView = sourceView
+        self.sourceFrame = sourceView.convert(sourceView.bounds, to: nil)
+        self.superView = sourceView.superview!
+        if let rootView = UIApplication.shared.keyWindow?.rootViewController?.view {
+            let view = rootView.snapshotView(afterScreenUpdates: false)
+            self.sourceShotView = view
+        }
     }
     
     func present() {
@@ -79,7 +88,6 @@ class Animator : NSObject {
     
     func presentWillBegin() {
         guard let sourceView = self.sourceView else { return }
-        sourceView.removeFromSuperview()
         sourceView.removeConstraints()
         sourceView.frame = CGRect(x: sourceFrame.origin.y, y: sourceFrame.origin.x, width: sourceFrame.width, height: sourceFrame.height)
         sourceView.center = CGPoint(x: sourceFrame.midY, y: sourceFrame.midX)
@@ -89,13 +97,13 @@ class Animator : NSObject {
     
     func presentAnimating() {
         guard let sourceView = self.sourceView else { return }
-        let width = UIScreen.main.bounds.width
-        let height = UIScreen.main.bounds.height
+        let width = lanWindow.bounds.size.width
+        let height = lanWindow.bounds.size.height
         UIView.animate(withDuration: 0.5, delay: 0, options: .layoutSubviews, animations: {
-            let newFrame = CGRect(x: 0, y: 0, width: width, height: height)
-            sourceView.frame = newFrame
             sourceView.center = CGPoint(x: height / 2.0, y: width / 2.0)
             sourceView.transform = .identity
+            let newFrame = CGRect(x: 0, y: 0, width: width, height: height)
+            sourceView.frame = newFrame
         }) { (_) in
 //            complete()
         }
@@ -116,7 +124,7 @@ class Animator : NSObject {
         sourceView.removeLayerAnimation()
 
         lanWindow.isHidden = true
-                    
+        
         guard let keyView = UIApplication.shared.keyWindow?.rootViewController?.view else {
             fatalError("keyWindow not exist")
         }

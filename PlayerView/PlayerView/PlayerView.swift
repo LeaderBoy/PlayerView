@@ -47,23 +47,6 @@ public class PlayerView: UIView {
     
     var animator : Animator?
 
-    private lazy var lanWindow : UIWindow = {
-        let window = UIWindow(frame: UIScreen.main.bounds)
-        window.windowLevel = .alert
-        lanVC.orientation = .landscapeRight
-        window.rootViewController = lanVC
-        window.backgroundColor = .clear
-        return window
-    }()
-        
-    private lazy var porWindow : UIWindow = {
-        let window = UIWindow(frame: UIScreen.main.bounds)
-        window.windowLevel = .alert
-        porVc.orientation = .portrait
-        window.rootViewController = porVc
-        window.backgroundColor = .clear
-        return window
-    }()
         
     weak public var dataSource : PlayerViewDataSource?
     weak public var delegate : PlayerViewDelegate?
@@ -248,9 +231,13 @@ public class PlayerView: UIView {
     
     func handle(state : PlayerState) {
         if state == .mode(.landscape) {
-            let animator = Animator(with: self)
-            animator.present()
-            self.animator = animator
+            if animator == nil {
+                let animator = Animator(with: self)
+                self.animator = animator
+            }else {
+                animator!.update(sourceView: self)
+            }
+            animator!.present()
         }else if state == .mode(.portrait) {
             animator!.dismiss()
         }
