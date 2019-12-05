@@ -42,16 +42,9 @@ public protocol PlayerViewDelegate : class {
 
 
 public class PlayerView: UIView {
-    private let lanVC = PlayerViewController()
-    private let porVc = PlayerViewController()
-    
-    var animator : Animator?
-
         
     weak public var dataSource : PlayerViewDataSource?
     weak public var delegate : PlayerViewDelegate?
-        
-    public lazy var itemObserver = ItemObserver()
     public var state : PlayerState = .unknown
     
     private var player : AVPlayer = {
@@ -72,10 +65,13 @@ public class PlayerView: UIView {
     lazy var indicatorView = IndicatorView()
     lazy var controlsView  = ControlsView()
     
-//    public var shouldStatusBarHidden = false
+    public var shouldStatusBarHidden = false
     
     public var item : AVPlayerItem?
         
+    lazy var itemObserver = ItemObserver()
+    var animator : Animator?
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
@@ -102,7 +98,6 @@ public class PlayerView: UIView {
         addSubViews()
         addGestures()
         reachabilityCallBack()
-        observerCallBack()
         setupCategory()
         becomeSubscriber()
     }
@@ -126,7 +121,6 @@ public class PlayerView: UIView {
         player.replaceCurrentItem(with: item)
         itemObserver.item = item
         itemObserver.player = player
-        layerView.play()
         // loading
         publish(.prepare)
     }
@@ -173,64 +167,6 @@ public class PlayerView: UIView {
         }
     }
     
-    func observerCallBack() {
-        itemObserver.observedStatus =  {[weak self] status in
-            guard let self = self else { return }
-            switch status {
-            case .readyToPlay:
-                self.layerView.isReadyToPlay = true
-                self.publish(.playing)
-            case .failed:
-               print("播放失败")
-            default:
-                break
-            }
-        }
-        
-        itemObserver.observedDuration =  {[weak self] duration in
-            guard let self = self else { return }
-            self.layerView.duration = duration
-            self.controlsView.duration = duration
-        }
-        
-        itemObserver.observedPosition =  {[weak self] position in
-            guard let self = self else { return }
-            self.controlsView.position = position
-        }
-                
-        itemObserver.observedLoadedTime =  {[weak self] time in
-            guard let self = self else { return }
-            self.controlsView.bufferTime = time
-        }
-        
-        itemObserver.observedPlayDone =  {[weak self] in
-            guard let self = self else { return }
-            self.publish(.finished)
-        }
-        
-        itemObserver.observedBufferEmpty =  {[weak self] isEmpty in
-            guard let self = self else { return }
-            self.publish(.loading)
-        }
-        
-        itemObserver.observedBufferFull =  {[weak self] isFull in
-            guard let self = self else { return }
-            self.publish(.bufferFull(isFull))
-        }
-        
-        itemObserver.observedKeepUp =  {[weak self] isLikely in
-            guard let self = self else { return }
-            if isLikely {
-//                self.state = .seekDone
-            }
-        }
-        
-        itemObserver.observedError =  {[weak self] error in
-            guard let self = self else { return }
-            self.publish(.error(error))
-        }
-    }
-    
     @objc func switchVideoGravity(gesture : UIGestureRecognizer) {
         if controlsView.ignore(gesture: gesture) {
             return
@@ -247,8 +183,10 @@ public class PlayerView: UIView {
                 animator!.update(sourceView: self)
             }
             animator!.present()
+            shouldStatusBarHidden = true
         }else if state == .mode(.portrait) {
             animator!.dismiss()
+            shouldStatusBarHidden = false
         }
     }
 }

@@ -48,8 +48,6 @@ class PlayerLayerView: UIView {
         return AVPlayerLayer.classForCoder()
     }
     
-    var duration : TimeInterval = 0
-
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
