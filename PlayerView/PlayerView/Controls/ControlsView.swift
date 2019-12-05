@@ -140,7 +140,6 @@ class ControlsView : UIView {
 
     func setup() {
         fromNib()
-        backgroundColor = .clear
         initialVariables()
         setupSlider()
         setupButtons()

@@ -30,34 +30,13 @@ import UIKit
 
 class PlayerViewController: UIViewController {
     
-    
-    
     var orientation : UIInterfaceOrientationMask = .landscapeRight
 
-    var containerView: UIView = {
-        let v = UIView()
-//        v.backgroundColor = .blue
-        return v
-    }()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .clear
-        // Do any additional setup after loading the view.
     }
 
-
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-    
     override var shouldAutorotate: Bool {
         return true
     }
@@ -72,7 +51,7 @@ class PlayerViewController: UIViewController {
 
 }
 
-extension PlayerViewController : DismissAnimation {
+extension PlayerViewController {
     
     
     func dismissAnimationWillBegin(for animator: Animator) {
@@ -84,7 +63,7 @@ extension PlayerViewController : DismissAnimation {
         let sourceView = animator.sourceView
         let superView = animator.superView
         
-        UIView.animate(withDuration: animator.transitionDuration(using: nil), delay: 0, options:.layoutSubviews, animations: {
+        UIView.animate(withDuration: 0.5, delay: 0, options:.layoutSubviews, animations: {
             sourceView.frame = CGRect(x: sourceFrame.origin.x, y: sourceFrame.origin.y, width: sourceFrame.height, height: sourceFrame.width)
             sourceView.center = CGPoint(x: sourceFrame.midX, y: sourceFrame.midY)
             sourceView.transform = .identity
@@ -97,15 +76,10 @@ extension PlayerViewController : DismissAnimation {
             complete()
         }
     }
-
-    
-    func dismissAnimationDidEnd(for animator: Animator) {
-        self.containerView.transform = .identity
-    }
 }
 
 
-extension PlayerViewController : PresentAnimation {
+extension PlayerViewController {
     func presentAnimationWillBegin(for animator: Animator) {
         // insert playerView
         let sourceView = animator.sourceView
@@ -113,7 +87,6 @@ extension PlayerViewController : PresentAnimation {
         sourceView.removeFromSuperview()
         sourceView.removeConstraints()
 
-        
         sourceView.frame = CGRect(x: sourceFrame.origin.y, y: sourceFrame.origin.x, width: sourceFrame.width, height: sourceFrame.height)
         sourceView.center = CGPoint(x: sourceFrame.midY, y: sourceFrame.midX)
         sourceView.transform = .init(rotationAngle: .pi / -2)
@@ -130,7 +103,7 @@ extension PlayerViewController : PresentAnimation {
         let width = UIScreen.main.bounds.width
         let height = UIScreen.main.bounds.height
         
-        UIView.animate(withDuration: animator.transitionDuration(using: nil), delay: 0, options: .layoutSubviews, animations: {
+        UIView.animate(withDuration: 0.5, delay: 0, options: .layoutSubviews, animations: {
             let newFrame = CGRect(x: 0, y: 0, width: width, height: height)
             sourceView.frame = newFrame
             sourceView.center = CGPoint(x: height / 2.0, y: width / 2.0)
