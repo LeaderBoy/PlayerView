@@ -90,13 +90,12 @@ class Animator : NSObject {
         }
     }
     
-    
-    /// present fullScreen view
+    /// Present fullScreen view
     func present() {
         presentWillBegin()
     }
     
-    // dismiss from fullScreen view
+    // Dismiss from fullScreen view
     func dismiss() {
         dismissWillBegin()
     }

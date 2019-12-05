@@ -39,7 +39,7 @@ public enum PlayerItem {
     case bufferFull(Bool)
     case likelyKeepUp(Bool)
     case error(Error)
-    case playDone(Bool)
+    case finished
     case interrupted(AVAudioSession.InterruptionType)
 }
 
@@ -54,30 +54,14 @@ extension PlayerItem : Equatable {
         case (.bufferFull(let l),.bufferFull(let r))where l == r : return true
         case (.likelyKeepUp(let l),.likelyKeepUp(let r))where l == r : return true
         case (.error(let l as NSError),.error(let r as NSError)) where l.code == r.code : return true
-        case (.playDone(let l),.playDone(let r))where l == r : return true
+        case (.finished,.finished): return true
         case (.interrupted(let l),.interrupted(let r))where l == r : return true
         case (_):return false
         }
     }
 }
 
-public class ItemObserver: NSObject {
-    public typealias ItemError         = (Swift.Error) -> Void
-    public typealias ItemStatus        = (AVPlayer.Status) -> Void
-    public typealias ItemTimeinterval  = (TimeInterval) -> Void
-    public typealias ItemPlayDone      = () -> Void
-    public typealias ItemBool          = (Bool) -> Void
-
-    public var observedPosition    : ItemTimeinterval?
-    public var observedLoadedTime  : ItemTimeinterval?
-    public var observedDuration    : ItemTimeinterval?
-    public var observedError       : ItemError?
-    public var observedStatus      : ItemStatus?
-    public var observedPlayDone    : ItemPlayDone?
-    public var observedBufferEmpty : ItemBool?
-    public var observedBufferFull  : ItemBool?
-    public var observedKeepUp      : ItemBool?
-    
+public class ItemObserver: NSObject {    
     private var itemErrorContext                    = 0
     private var itemDurationContext                 = 0
     private var itemStatusContext                   = 0
@@ -237,7 +221,7 @@ public class ItemObserver: NSObject {
         guard let item = note.object as? AVPlayerItem,player?.currentItem == item else{
             return
         }
-        publish(.underlying(item: .playDone(true)))
+        publish(.underlying(item: .finished))
     }
     
     @objc func observeInterrupted(note: Notification) {
