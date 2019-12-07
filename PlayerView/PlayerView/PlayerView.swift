@@ -99,7 +99,7 @@ public class PlayerView: UIView {
         addGestures()
         reachabilityCallBack()
         setupCategory()
-        becomeSubscriber()
+        becomeStateSubscriber()
     }
     
     func setupCategory() {
@@ -202,7 +202,7 @@ extension PlayerView : UIGestureRecognizerDelegate {
 }
 
 
-extension PlayerView : StateSubscriber {
+extension PlayerView : PLayerStateSubscriber {
     public func receive(_ value: PlayerState) {
         if state == value {
             return
@@ -211,4 +211,4 @@ extension PlayerView : StateSubscriber {
     }
 }
 
-extension PlayerView : StatePublisher {}
+extension PlayerView : PlayerStatePublisher {}

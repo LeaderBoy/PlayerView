@@ -30,27 +30,33 @@ import Foundation
 
 /// A publisher protocol about receive player's current state
 /// How to use:
-/// first  : Follow StateSubscriber protocol
-/// second : register as an observer by calling becomeSubscriber()
+/// first  : Follow PLayerStateSubscriber protocol
+/// second : register as an observer by calling becomeStateSubscriber()
 /// third  : handle the player's state yourself
-public protocol StateSubscriber {
+public protocol PLayerStateSubscriber {
     /// Receive various state
     /// - Parameter value: player current state
     func receive(_ value : PlayerState)
 }
 
-extension StateSubscriber {
-    /// Register as an observer,so you can receive state change
-    func becomeSubscriber() {
-        EventBus.shared.add(subscriber: self, for: StateSubscriber.self)
+extension PLayerStateSubscriber {
+    /// Register as an PlayerState observer,so you can receive state change
+    func becomeStateSubscriber() {
+        EventBus.shared.add(subscriber: self, for: PLayerStateSubscriber.self)
     }
 }
 
 
-public protocol ItemSubscriber {
+public protocol PlayerItemSubscriber {
     /// Receive various state
-    /// - Parameter value: player current state
-    func receive(_ itemState : PlayerState)
+    /// - Parameter value: player current item state
+    func receive(_ item : PlayerItem)
+}
+
+extension PlayerItemSubscriber {
+    func becomeItemSubscriber() {
+        EventBus.shared.add(subscriber: self, for: PlayerItemSubscriber.self)
+    }
 }
 
 

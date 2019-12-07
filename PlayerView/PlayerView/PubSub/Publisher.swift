@@ -30,23 +30,41 @@ import Foundation
 
 /// A publisher protocol about dispatch player's current state
 /// How to use:
-/// first : Follow StatePublisher protocol
+/// first : Follow PlayerStatePublisher protocol
 /// second : when you need to change player's state,just call publish(.yourstate)
-public protocol StatePublisher {
+public protocol PlayerStatePublisher {
     /// dispatch player's current state
     /// - Parameter value: player state
     func publish(_ value : PlayerState)
 }
 
-extension StatePublisher {
+extension PlayerStatePublisher {
     /// The default implementation,don't implement't it again
     /// - Parameter value: player current state
     public func publish(_ value: PlayerState) {
-        EventBus.shared.notify(event: StateSubscriber.self) { (subscriber) in
+        EventBus.shared.notify(event: PLayerStateSubscriber.self) { (subscriber) in
             subscriber.receive(value)
         }
     }
 }
+
+
+public protocol PlayerItemPublisher {
+    /// dispatch player's current state
+    /// - Parameter value: player state
+    func publish(_ item : PlayerItem)
+}
+
+extension PlayerItemPublisher {
+    /// The default implementation,don't implement't it again
+    /// - Parameter value: player current item state
+    public func publish(_ value: PlayerItem) {
+        EventBus.shared.notify(event: PlayerItemSubscriber.self) { (subscriber) in
+            subscriber.receive(value)
+        }
+    }
+}
+
 
 
 

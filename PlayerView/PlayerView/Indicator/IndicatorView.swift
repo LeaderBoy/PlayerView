@@ -46,7 +46,7 @@ class IndicatorView: UIView {
             switch state {
             case .loading,.prepare,.seeking(_),.unknown:
                 self = .loading
-            case .playing,.seekDone,.bufferFull(_):
+            case .play,.seekDone,.bufferFull(_):
                 self = .success
             case .stop,.finished:
                 self = .stop
@@ -71,9 +71,6 @@ class IndicatorView: UIView {
                 case .timeout:
                     self = .timeout
                 }
-            case .underlying(_):
-                // MARK: - Todo
-                self = .ignore
                 break
             }
         }

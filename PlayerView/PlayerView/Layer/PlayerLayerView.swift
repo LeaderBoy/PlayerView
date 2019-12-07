@@ -57,7 +57,7 @@ class PlayerLayerView: UIView {
         super.init(frame: .zero)
         playerLayer.player = player
         playerLayer.videoGravity = .resizeAspectFill
-        becomeSubscriber()
+        becomeStateSubscriber()
     }
     
     public func play() {
@@ -127,7 +127,8 @@ class PlayerLayerView: UIView {
         switch state {
         case .prepare:
             break
-        case .playing:
+        case .play:
+            isReadyToPlay = true
             play()
             isPausedByUser = false
         case .paused:
@@ -140,8 +141,6 @@ class PlayerLayerView: UIView {
                 }
                 self.publish(.seekDone)
             }
-        case .underlying(let item) where item == .status(.readyToPlay):
-            isReadyToPlay = true
         default:
             break
         }
@@ -157,7 +156,7 @@ class PlayerLayerView: UIView {
 }
 
 
-extension PlayerLayerView : StateSubscriber {
+extension PlayerLayerView : PLayerStateSubscriber {
     func receive(_ value: PlayerState) {
         if state == value {
             return
@@ -166,4 +165,4 @@ extension PlayerLayerView : StateSubscriber {
     }
 }
 
-extension PlayerLayerView : StatePublisher {}
+extension PlayerLayerView : PlayerStatePublisher {}

@@ -143,7 +143,8 @@ class ControlsView : UIView {
         initialVariables()
         setupSlider()
         setupButtons()
-        becomeSubscriber()
+        becomeStateSubscriber()
+        becomeItemSubscriber()
     }
     
     func initialVariables() {
@@ -178,7 +179,7 @@ class ControlsView : UIView {
         if sender.isSelected {
             publish(.paused)
         }else {
-            publish(.playing)
+            publish(.play)
         }
     }
     
@@ -261,7 +262,7 @@ class ControlsView : UIView {
         case .prepare:
             playButton(selected: true)
             playButton(hide: true)
-        case .playing:
+        case .play:
             playButton(selected: true)
             playButton(hide: false)
         case .paused:
@@ -277,9 +278,6 @@ class ControlsView : UIView {
             playButton(selected: true)
             playButton(hide: false)
         case .bufferFull(_),.error(_),.mode(_),.network(_),.unknown:
-            break
-        case .underlying(_):
-            // MARK: - ToDo
             break
         }
     }
@@ -334,8 +332,6 @@ class ControlsView : UIView {
             isBufferFull = false
             backButton.isHidden = true
             mode = .portrait
-        case .underlying(let item):
-            handle(item: item)
         default:
             break
         }
@@ -346,7 +342,7 @@ class ControlsView : UIView {
         case .status(let s):
             print("status : \(s)")
             if s == .readyToPlay {
-                publish(.playing)
+                publish(.play)
             }
         case .duration(let t):
             duration = t
@@ -360,7 +356,7 @@ class ControlsView : UIView {
             if t == .began {
                 publish(.paused)
             }else if t == .ended {
-                publish(.playing)
+                publish(.play)
             }
         default:
             break
@@ -375,7 +371,7 @@ class ControlsView : UIView {
     }
 }
 
-extension ControlsView : StateSubscriber {
+extension ControlsView : PLayerStateSubscriber {
     func receive(_ value: PlayerState) {
         if state == value {
             return
@@ -384,4 +380,11 @@ extension ControlsView : StateSubscriber {
     }
 }
 
-extension ControlsView : StatePublisher {}
+extension ControlsView : PlayerStatePublisher {}
+
+extension ControlsView : PlayerItemSubscriber {
+    func receive(_ item: PlayerItem) {
+        handle(item: item)
+    }
+}
+

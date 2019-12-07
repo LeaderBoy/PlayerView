@@ -45,7 +45,7 @@ public enum PlayerModeState {
 /// player state
 public enum PlayerState : Equatable {
     case prepare
-    case playing
+    case play
     case paused
     case seeking(_ time : TimeInterval)
     case seekDone
@@ -57,12 +57,12 @@ public enum PlayerState : Equatable {
     case mode(_ mode    : PlayerModeState)
     case network(_ net  : PlayerNetworkState)
     case unknown
-    case underlying(item : PlayerItem)
+//    case underlying(item : PlayerItem)
     
     public static func == (lhs : Self,rhs : Self) -> Bool {
         switch (lhs,rhs) {
         case (.prepare,.prepare): return true
-        case (.playing,.playing): return true
+        case (.play,.play): return true
         case (.paused,.paused): return true
         case (.seeking(let l),.seeking(let r)) where l == r : return true
         case (.seekDone,.seekDone): return true
@@ -74,7 +74,7 @@ public enum PlayerState : Equatable {
         case (.mode(let l),.mode(let r))where l == r : return true
         case (.network(let l),.network(let r))where l == r : return true
         case (.unknown,.unknown): return true
-        case (.underlying(let l),.underlying(let r))where l == r : return true
+//        case (.underlying(let l),.underlying(let r))where l == r : return true
         case (_):return false
         }
     }
