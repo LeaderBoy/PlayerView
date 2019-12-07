@@ -68,6 +68,14 @@ class ControlsView : UIView {
     var isBufferFull = false
     var isSeeking = false
     var hideTimeInterval = 5.0
+    var isReadyToPlay = false {
+        didSet {
+            if isReadyToPlay {
+                controlsStackView.isHidden = false
+            }
+        }
+    }
+    
     var oldPosition : TimeInterval = 0
     
     var mode : PlayerModeState = .portrait
@@ -140,16 +148,17 @@ class ControlsView : UIView {
 
     func setup() {
         fromNib()
-        initialVariables()
+        resetVariables()
         setupSlider()
         setupButtons()
         becomeStateSubscriber()
         becomeItemSubscriber()
     }
     
-    func initialVariables() {
+    func resetVariables() {
         isSliding = false
         isSeeking = false
+        isReadyToPlay = false
         isBufferFull = false
         duration = 0
         position = 0
@@ -160,6 +169,7 @@ class ControlsView : UIView {
         // UI
         backButton.isHidden = true
         playButton(hide: false)
+        controlsStackView.isHidden = true
     }
     
     func setupButtons() {
@@ -340,8 +350,8 @@ class ControlsView : UIView {
     func handle(item : PlayerItem) {
         switch item {
         case .status(let s):
-            print("status : \(s)")
             if s == .readyToPlay {
+                isReadyToPlay = true
                 publish(.play)
             }
         case .duration(let t):

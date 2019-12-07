@@ -45,7 +45,10 @@ public class PlayerView: UIView {
         
     weak public var dataSource : PlayerViewDataSource?
     weak public var delegate : PlayerViewDelegate?
+    
     public var state : PlayerState = .unknown
+    public var shouldStatusBarHidden = false
+    public var item : AVPlayerItem?
     
     private var player : AVPlayer = {
         let p = AVPlayer()
@@ -59,17 +62,13 @@ public class PlayerView: UIView {
         return p
     }()
     
-    public var reachability = Reachability.forInternetConnection()
+    private var reachability = Reachability.forInternetConnection()
     
-    lazy var layerView = PlayerLayerView(player: player)
-    lazy var indicatorView = IndicatorView()
-    lazy var controlsView  = ControlsView()
+    private lazy var layerView = PlayerLayerView(player: player)
+    private lazy var indicatorView = IndicatorView()
+    private lazy var controlsView  = ControlsView()
+    private lazy var itemObserver = ItemObserver()
     
-    public var shouldStatusBarHidden = false
-    
-    public var item : AVPlayerItem?
-        
-    lazy var itemObserver = ItemObserver()
     var animator : Animator?
 
     override init(frame: CGRect) {
@@ -79,13 +78,6 @@ public class PlayerView: UIView {
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
-        setup()
-    }
-    
-    init(dataSource : PlayerViewDataSource?,delegate : PlayerViewDelegate?) {
-        self.dataSource = dataSource
-        self.delegate = delegate
-        super.init(frame: .zero)
         setup()
     }
     
@@ -104,10 +96,14 @@ public class PlayerView: UIView {
     
     func setupCategory() {
         do {
-            try         AVAudioSession.sharedInstance().setCategory(.playback)
+            try AVAudioSession.sharedInstance().setCategory(.playback)
         }catch {
             
         }
+    }
+    
+    public func reload() {
+        
     }
     
     public func prepare(url : URL) {

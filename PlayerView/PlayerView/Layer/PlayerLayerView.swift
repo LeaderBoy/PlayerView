@@ -39,7 +39,14 @@ class PlayerLayerView: UIView {
     var isPausedByUser = false
     var isSeekingInProgress = false
     var chaseTime : CMTime = .zero
-    
+    var isReadyToDisplay = false {
+        didSet {
+            playerLayer.isHidden = !isReadyToDisplay
+        }
+    }
+    private let isReadyForDisplayKeyPath = #keyPath(AVPlayerLayer.isReadyForDisplay)
+    private var isReadyForDisplayContext = 0
+        
     var playerLayer : AVPlayerLayer {
         return self.layer as! AVPlayerLayer
     }
@@ -57,28 +64,43 @@ class PlayerLayerView: UIView {
         super.init(frame: .zero)
         playerLayer.player = player
         playerLayer.videoGravity = .resizeAspectFill
+        playerLayer.isHidden = true
+        observerFirstFrame()
         becomeStateSubscriber()
     }
     
-    public func play() {
+    deinit {
+        removeObserverFirstFrame()
+    }
+    
+    public func switchVideoGravity() {
+        if playerLayer.videoGravity == .resizeAspect {
+            playerLayer.videoGravity = .resizeAspectFill
+        }else {
+            playerLayer.videoGravity = .resizeAspect
+        }
+    }
+    
+    func play() {
         player.play()
     }
     
-    public func pause() {
+    func pause() {
         player.pause()
     }
     
-    public func replay(completionHandler: ((Bool) -> Void)? = nil) {
+    func replay(completionHandler: ((Bool) -> Void)? = nil) {
         seekToTime(0, completionHandler: completionHandler)
     }
     
-    public func stop() {
+    func stop() {
         pause()
+//        seekToTime(.zero)
         player.replaceCurrentItem(with: nil)
     }
     
     /// https://developer.apple.com/library/archive/qa/qa1820/_index.html
-    public func seekToTime(_ time:TimeInterval,completionHandler: ((Bool) -> Void)? = nil) {
+    func seekToTime(_ time:TimeInterval,completionHandler: ((Bool) -> Void)? = nil) {
         let timeScale = player.currentItem?.asset.duration.timescale ?? 600
         let newChaseTime = CMTimeMakeWithSeconds(time, preferredTimescale: timeScale)
         // when seek to zero,it always paued even called play,
@@ -123,7 +145,7 @@ class PlayerLayerView: UIView {
         })
     }
     
-    func handle(state : PlayerState) {
+    private func handle(state : PlayerState) {
         switch state {
         case .prepare:
             break
@@ -141,20 +163,45 @@ class PlayerLayerView: UIView {
                 }
                 self.publish(.seekDone)
             }
+        case .stop:
+            resetVariables()
+            stop()
         default:
             break
         }
     }
     
-    func switchVideoGravity() {
-        if playerLayer.videoGravity == .resizeAspect {
-            playerLayer.videoGravity = .resizeAspectFill
-        }else {
-            playerLayer.videoGravity = .resizeAspect
+    private func resetVariables() {
+        state = .unknown
+        isReadyToPlay = false
+        isReadyToDisplay = false
+        isPausedByUser = false
+        isSeekingInProgress = false
+        chaseTime = .zero
+    }
+    
+    func observerFirstFrame() {
+        playerLayer.addObserver(self, forKeyPath: isReadyForDisplayKeyPath, options: .new, context: &isReadyForDisplayContext)
+    }
+    
+    func removeObserverFirstFrame() {
+        playerLayer.removeObserver(self, forKeyPath: isReadyForDisplayKeyPath, context: &isReadyForDisplayContext)
+    }
+    
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        guard let itemContext = context,let itemKeyPath = keyPath,let newChange = change else {
+            super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
+            return
+        }
+        
+        if itemContext == &isReadyForDisplayContext && itemKeyPath == isReadyForDisplayKeyPath {
+            guard  let value = newChange[.newKey] as? NSNumber else{
+                return
+            }
+            isReadyToDisplay = value.boolValue
         }
     }
 }
-
 
 extension PlayerLayerView : PLayerStateSubscriber {
     func receive(_ value: PlayerState) {
