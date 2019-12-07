@@ -36,7 +36,6 @@ class PlayerLayerView: UIView {
     var player : AVPlayer
     
     var isReadyToPlay = false
-    var isPausedByUser = false
     var isSeekingInProgress = false
     var chaseTime : CMTime = .zero
     var isReadyToDisplay = false {
@@ -63,7 +62,7 @@ class PlayerLayerView: UIView {
         self.player = player
         super.init(frame: .zero)
         playerLayer.player = player
-        playerLayer.videoGravity = .resizeAspectFill
+        playerLayer.videoGravity = .resizeAspect
         playerLayer.isHidden = true
         observerFirstFrame()
         becomeStateSubscriber()
@@ -95,7 +94,6 @@ class PlayerLayerView: UIView {
     
     func stop() {
         pause()
-//        seekToTime(.zero)
         player.replaceCurrentItem(with: nil)
     }
     
@@ -104,14 +102,6 @@ class PlayerLayerView: UIView {
         let timeScale = player.currentItem?.asset.duration.timescale ?? 600
         let newChaseTime = CMTimeMakeWithSeconds(time, preferredTimescale: timeScale)
         // when seek to zero,it always paued even called play,
-        if newChaseTime == .zero {
-            if !self.isPausedByUser {
-                self.play()
-            }
-        }else {
-            pause()
-        }
-        
         if CMTimeCompare(newChaseTime, chaseTime) != 0 {
             chaseTime = newChaseTime;
             if !isSeekingInProgress {
@@ -133,10 +123,6 @@ class PlayerLayerView: UIView {
         let seekTimeInProgress = chaseTime
         player.seek(to: seekTimeInProgress, toleranceBefore: CMTime.zero,toleranceAfter: .zero, completionHandler:{ (isFinished:Bool) -> Void in
             if CMTimeCompare(seekTimeInProgress, self.chaseTime) == 0 {
-                if !self.isPausedByUser {
-                    // prevent paused by seek
-                    self.play()
-                }
                 self.isSeekingInProgress = false
                 completionHandler?(true)
             } else {
@@ -152,10 +138,8 @@ class PlayerLayerView: UIView {
         case .play:
             isReadyToPlay = true
             play()
-            isPausedByUser = false
         case .paused:
             pause()
-            isPausedByUser = true
         case .seeking(let time):
             seekToTime(time) { [weak self](done) in
                 guard let self = self else {
@@ -175,16 +159,15 @@ class PlayerLayerView: UIView {
         state = .unknown
         isReadyToPlay = false
         isReadyToDisplay = false
-        isPausedByUser = false
         isSeekingInProgress = false
         chaseTime = .zero
     }
     
-    func observerFirstFrame() {
+    private func observerFirstFrame() {
         playerLayer.addObserver(self, forKeyPath: isReadyForDisplayKeyPath, options: .new, context: &isReadyForDisplayContext)
     }
     
-    func removeObserverFirstFrame() {
+    private func removeObserverFirstFrame() {
         playerLayer.removeObserver(self, forKeyPath: isReadyForDisplayKeyPath, context: &isReadyForDisplayContext)
     }
     
