@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -30,7 +30,7 @@
                             </constraints>
                         </view>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6xf-ds-13k">
-                            <rect key="frame" x="16" y="34" width="31" height="30"/>
+                            <rect key="frame" x="16" y="54" width="31" height="30"/>
                             <state key="normal" image="ZYPlayer_controls_back_white"/>
                             <connections>
                                 <action selector="back:" destination="-1" eventType="touchUpInside" id="hNs-73-dyk"/>
@@ -50,7 +50,7 @@
             <constraints>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="top" secondItem="VnU-e5-gva" secondAttribute="top" id="HEu-dQ-Zqw"/>
                 <constraint firstItem="yNl-3V-srb" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="VWh-cK-rlZ"/>
-                <constraint firstItem="fnl-2z-Ty3" firstAttribute="top" secondItem="6xf-ds-13k" secondAttribute="top" constant="10" id="jwm-6W-Fqy"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="top" secondItem="6xf-ds-13k" secondAttribute="top" constant="-10" id="jwm-6W-Fqy"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="yNl-3V-srb" secondAttribute="trailing" id="mML-rE-Xc2"/>
                 <constraint firstItem="yNl-3V-srb" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="rYo-6d-PR5"/>
             </constraints>
