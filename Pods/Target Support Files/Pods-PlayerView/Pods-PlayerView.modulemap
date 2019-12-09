@@ -1,0 +1,6 @@
+module Pods_PlayerView {
+  umbrella header "Pods-PlayerView-umbrella.h"
+
+  export *
+  module * { export * }
+}

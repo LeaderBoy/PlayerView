@@ -1,0 +1,6 @@
+module Pods_PlayerViewUITests {
+  umbrella header "Pods-PlayerViewUITests-umbrella.h"
+
+  export *
+  module * { export * }
+}

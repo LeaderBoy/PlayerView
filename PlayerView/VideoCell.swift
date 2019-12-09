@@ -7,10 +7,10 @@
 //
 
 import UIKit
-
-protocol CellClick : class {
-    func click(at container: UIView)
-}
+//
+//protocol CellClick : class {
+//    func click(at container: UIView)
+//}
 
 class VideoCell: UITableViewCell {
     
@@ -35,7 +35,7 @@ class VideoCell: UITableViewCell {
     }
     
     @IBAction func click(_ sender: UIButton) {
-        delegate?.click(at: containerView)
+        delegate?.click(at: containerView, url: "")
     }
     
     
