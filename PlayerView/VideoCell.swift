@@ -35,7 +35,7 @@ class VideoCell: UITableViewCell {
     }
     
     @IBAction func click(_ sender: UIButton) {
-        delegate?.click(at: containerView, url: "")
+//        delegate?.click(at: containerView, url: "")
     }
     
     

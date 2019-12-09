@@ -11,7 +11,7 @@ import Kingfisher
 
 
 protocol CellClick : class {
-    func click(at container: UIView,url : String)
+    func click(at indexPath : IndexPath,container: UIView)
 }
 
 class HomeListCell: UITableViewCell {
@@ -22,6 +22,8 @@ class HomeListCell: UITableViewCell {
     @IBOutlet weak var playButton: UIButton!
     
     weak var delegate : CellClick?
+    
+    var indexPath : IndexPath!
 
     var model : MovieModel! {
         didSet {
@@ -44,6 +46,6 @@ class HomeListCell: UITableViewCell {
     
     
     @IBAction func play(_ sender: UIButton) {
-        delegate?.click(at: containerView,url: model.url)
+        delegate?.click(at: indexPath, container: containerView)
     }
 }

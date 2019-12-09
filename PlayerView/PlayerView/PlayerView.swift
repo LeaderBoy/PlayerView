@@ -46,6 +46,8 @@ public class PlayerView: UIView {
     weak public var dataSource : PlayerViewDataSource?
     weak public var delegate : PlayerViewDelegate?
     
+    public var indexPath : IndexPath?
+    
     public var state : PlayerState = .unknown
     public var shouldStatusBarHidden = false
     public var item : AVPlayerItem?
@@ -106,10 +108,12 @@ public class PlayerView: UIView {
         
     }
     
-    public func prepare(url : URL) {
+    public func prepare(url : URL,in container : UIView,at indexPath : IndexPath? = nil) {
         if item != nil {
             publish(.stop)
         }
+        
+        self.indexPath = indexPath
         
         let item = AVPlayerItem(url: url)
         item.preferredForwardBufferDuration = 10
@@ -119,6 +123,21 @@ public class PlayerView: UIView {
         itemObserver.player = player
         // loading
         publish(.prepare)
+        
+        container.addSubview(self)
+        translatesAutoresizingMaskIntoConstraints = false
+        edges(to: container)
+    }
+    
+    public func stop() {
+        publish(.stop)
+    }
+    
+    func resetVariables() {
+        indexPath = nil
+        item = nil
+        shouldStatusBarHidden = false
+        state = .unknown
     }
     
     func addSubViews() {
@@ -183,6 +202,9 @@ public class PlayerView: UIView {
         }else if state == .mode(.portrait) {
             animator!.dismiss()
             shouldStatusBarHidden = false
+        }else if state == .stop {
+            resetVariables()
+            removeFromSuperview()
         }
     }
 }

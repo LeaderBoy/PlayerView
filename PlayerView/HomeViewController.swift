@@ -64,6 +64,7 @@ extension HomeViewController : UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: HomeListCellID) as! HomeListCell
         cell.model = dataSource[indexPath.row]
+        cell.indexPath = indexPath
         cell.delegate = self
         return cell
     }
@@ -72,7 +73,15 @@ extension HomeViewController : UITableViewDataSource {
 extension HomeViewController : UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let detail = VideoDetailViewController(playerView: playerView)
+        var newPlayer : PlayerView?
+        if let player = playerView {
+            if let index = player.indexPath,indexPath == index {
+                newPlayer = player
+            }else {
+               player.stop()
+            }
+        }
+        let detail = VideoDetailViewController(playerView: newPlayer)
         detail.model = dataSource[indexPath.row]
         navigationController?.pushViewController(detail, animated: true)
     }
@@ -83,16 +92,14 @@ extension HomeViewController : UITableViewDelegate {
     
 }
 extension HomeViewController : CellClick {
-    func click(at container: UIView,url:String) {
-        
+    
+    func click(at indexPath: IndexPath, container: UIView) {
         if playerView == nil {
             playerView = PlayerView()
         }
         
-        container.addSubview(playerView!)
-        playerView!.edges(to: container)
-        if let url = URL(string: url) {
-            playerView!.prepare(url: url)
+        if let url = URL(string: dataSource[indexPath.row].url) {
+            playerView!.prepare(url: url, in: container, at: indexPath)
         }
     }
 }

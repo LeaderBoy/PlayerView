@@ -21,6 +21,10 @@ class VideoDetailViewController: UIViewController {
         self.playerView = playerView
     }
     
+    deinit {
+        print("deinit")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         addPlayerView()
@@ -34,20 +38,17 @@ class VideoDetailViewController: UIViewController {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         navigationController?.navigationBar.isHidden = false
-        publish(.stop)
+        playerView?.stop()
     }
  
     func addPlayerView() {
         if playerView == nil {
             playerView = PlayerView()
-            playerView!.translatesAutoresizingMaskIntoConstraints = false
-            if let url = URL(string: model.url) {
-                playerView!.prepare(url: url)
-            }
         }
         
-        videoContainerView.addSubview(playerView!)
-        playerView?.edges(to: videoContainerView)
+        if let url = URL(string: model.url) {
+            playerView!.prepare(url: url, in: videoContainerView)
+        }
     }
     
     @IBAction func back(_ sender: UIButton) {
@@ -57,5 +58,3 @@ class VideoDetailViewController: UIViewController {
     
 }
 
-extension VideoDetailViewController : PlayerStatePublisher {
-}

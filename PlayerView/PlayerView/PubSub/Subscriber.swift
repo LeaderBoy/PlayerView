@@ -44,6 +44,10 @@ extension PLayerStateSubscriber {
     func becomeStateSubscriber() {
         EventBus.shared.add(subscriber: self, for: PLayerStateSubscriber.self)
     }
+    /// Unregister PlayerState observer
+    func resignStateSubscriber() {
+        EventBus.shared.resign(subscriber: self, for: PLayerStateSubscriber.self)
+    }
 }
 
 

@@ -41,9 +41,19 @@ public class EventBus {
     /// - Parameter event: with the purpose of get unique identifier by ObjectIdentifier(x: Any.Type)
     public func add<T,E>(subscriber :T,for event : E.Type) {
         let identifier = ObjectIdentifier(event)
+        let weakSet = subscribed[identifier] ?? []
+        // update first to prevent insert same value
+        var newSet = update(set: weakSet) ?? []
+        let weakBox = WeakBox(subscriber as AnyObject)
+        newSet.insert(weakBox)
+        subscribed[identifier] = newSet
+    }
+    
+    public func resign<T,E>(subscriber :T,for event : E.Type) {
+        let identifier = ObjectIdentifier(event)
         var weakSet = subscribed[identifier] ?? []
         let weakBox = WeakBox(subscriber as AnyObject)
-        weakSet.insert(weakBox)
+        weakSet.remove(weakBox)
         subscribed[identifier] = update(set: weakSet)
     }
     

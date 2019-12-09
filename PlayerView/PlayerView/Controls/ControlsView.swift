@@ -71,6 +71,7 @@ class ControlsView : UIView {
     var isReadyToPlay = false {
         didSet {
             if isReadyToPlay {
+                hide()
                 controlsStackView.isHidden = false
             }
         }
@@ -314,6 +315,9 @@ class ControlsView : UIView {
     fileprivate func handleState(state : PlayerState) {
         playButton(state: state)
         switch state {
+        case .prepare:
+            controlsStackView.isHidden = true
+            show()
         case .seeking(_):
             isSeeking = true
         case .seekDone:
