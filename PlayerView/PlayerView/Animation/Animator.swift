@@ -107,7 +107,7 @@ class Animator : NSObject {
         }
         
         guard let sourceView = self.sourceView else { return }
-        
+                
         /// insert snapshotview as background
         keyView.addSubview(sourceShotView)
             
@@ -115,6 +115,8 @@ class Animator : NSObject {
         sourceView.frame = CGRect(x: sourceFrame.origin.y, y: sourceFrame.origin.x, width: sourceFrame.width, height: sourceFrame.height)
         sourceView.center = CGPoint(x: sourceFrame.midY, y: sourceFrame.midX)
         sourceView.transform = .init(rotationAngle: .pi / -2)
+        sourceView.layer.cornerRadius = superView.layer.cornerRadius
+        sourceView.layer.masksToBounds = true
         destinationView.addSubview(sourceView)
         
         lanWindow.alpha = 0
@@ -141,6 +143,7 @@ class Animator : NSObject {
             sourceView.transform = .identity
             let newFrame = CGRect(x: 0, y: 0, width: width, height: height)
             sourceView.frame = newFrame
+            sourceView.layer.cornerRadius = 0
         }) { (_) in
             self.state = .animated
         }
@@ -186,10 +189,13 @@ class Animator : NSObject {
             sourceView.frame = CGRect(x: sourceFrame.origin.x, y: sourceFrame.origin.y, width: sourceFrame.height, height: sourceFrame.width)
             sourceView.center = CGPoint(x: sourceFrame.midX, y: sourceFrame.midY)
             sourceView.transform = .identity
+            sourceView.layer.cornerRadius = superView.layer.cornerRadius
+            sourceView.layer.masksToBounds = false
         }) { (_) in
             superView.addSubview(sourceView)
             sourceView.transform = .identity
             sourceView.edges(to: superView)
+            sourceView.layer.cornerRadius = 0
             superView.layoutIfNeeded()
             self.state = .animated
         }

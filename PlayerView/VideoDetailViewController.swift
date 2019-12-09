@@ -57,5 +57,5 @@ class VideoDetailViewController: UIViewController {
     
 }
 
-extension VideoDetailViewController : StatePublisher {
+extension VideoDetailViewController : PlayerStatePublisher {
 }
