@@ -179,8 +179,9 @@ public class Reachability: NSObject {
     
     public func stopNotifier() {
         if let reachability = networkReachability, notifying == true {
-            SCNetworkReachabilityUnscheduleFromRunLoop(reachability, CFRunLoopGetCurrent(), CFRunLoopMode.defaultMode as! CFString)
             notifying = false
+            SCNetworkReachabilitySetCallback(reachability, nil, nil)
+            SCNetworkReachabilitySetDispatchQueue(reachability, nil)
         }
     }
     

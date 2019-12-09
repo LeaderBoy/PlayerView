@@ -105,6 +105,10 @@ extension ViewController : UITableViewDataSource {
 }
 
 extension ViewController : CellClick {
+    func click(at container: UIView, url: String) {
+        
+    }
+    
     func click(at container: UIView) {
         playerView.frame = CGRect(x: 0, y: 0, width: 100, height: 200)
         container.addSubview(playerView)
