@@ -44,11 +44,16 @@ class VideoDetailViewController: UIViewController {
     func addPlayerView() {
         if playerView == nil {
             playerView = PlayerView()
+            if let url = URL(string: model.url) {
+                playerView!.prepare(url: url, in: videoContainerView)
+            }
+        }else {
+            playerView!.translatesAutoresizingMaskIntoConstraints = false
+            videoContainerView.addSubview(playerView!)
+            playerView!.edges(to: videoContainerView)
         }
         
-        if let url = URL(string: model.url) {
-            playerView!.prepare(url: url, in: videoContainerView)
-        }
+        
     }
     
     @IBAction func back(_ sender: UIButton) {
