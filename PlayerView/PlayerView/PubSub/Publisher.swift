@@ -42,7 +42,7 @@ extension PlayerStatePublisher {
     /// The default implementation,don't implement't it again
     /// - Parameter value: player current state
     public func publish(_ value: PlayerState) {
-        EventBus.shared.notify(event: PLayerStateSubscriber.self) { (subscriber) in
+        EventBus.shared.notify(event: PlayerStateSubscriber.self) { (subscriber) in
             subscriber.receive(value)
         }
     }

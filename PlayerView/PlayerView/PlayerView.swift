@@ -220,7 +220,7 @@ extension PlayerView : UIGestureRecognizerDelegate {
 }
 
 
-extension PlayerView : PLayerStateSubscriber {
+extension PlayerView : PlayerStateSubscriber {
     public func receive(_ value: PlayerState) {
         if state == value {
             return

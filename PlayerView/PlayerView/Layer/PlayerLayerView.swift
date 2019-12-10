@@ -186,7 +186,7 @@ class PlayerLayerView: UIView {
     }
 }
 
-extension PlayerLayerView : PLayerStateSubscriber {
+extension PlayerLayerView : PlayerStateSubscriber {
     func receive(_ value: PlayerState) {
         if state == value {
             return

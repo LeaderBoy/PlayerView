@@ -385,7 +385,7 @@ class ControlsView : UIView {
     }
 }
 
-extension ControlsView : PLayerStateSubscriber {
+extension ControlsView : PlayerStateSubscriber {
     func receive(_ value: PlayerState) {
         if state == value {
             return
