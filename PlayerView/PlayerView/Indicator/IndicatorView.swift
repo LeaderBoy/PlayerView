@@ -46,21 +46,7 @@ class IndicatorView: UIView {
         }
     }
     
-    var state : PlayerState = .unknown {
-        didSet {
-            if oldValue == state {
-                return
-            }
-            
-            switch state {
-            case .bufferFull(let full):
-                isBufferFull = full
-            default:
-                break
-            }
-            handle(state: state)
-        }
-    }
+    var state : PlayerState = .unknown
     
     var networkState : PlayerNetworkState?
     
@@ -108,7 +94,6 @@ class IndicatorView: UIView {
     func reloadState(state : PlayerState) {
         
     }
-
 }
 
 extension IndicatorView : PlayerStateSubscriber {

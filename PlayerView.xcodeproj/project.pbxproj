@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		126CBD73F51CF94ECEC99DFC /* libPods-PlayerViewUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 61220C3861F3F171D6432313 /* libPods-PlayerViewUITests.a */; };
+		2FB2B5D1239FBDD90028E130 /* PlayerViewOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB2B5D0239FBDD90028E130 /* PlayerViewOptions.swift */; };
 		2FCEBEA0239E216B000FEDB6 /* movie.json in Resources */ = {isa = PBXBuildFile; fileRef = 2FCEBE9F239E216B000FEDB6 /* movie.json */; };
 		2FCEBEA3239E21F5000FEDB6 /* RootTabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FCEBEA1239E21F5000FEDB6 /* RootTabBarViewController.swift */; };
 		2FCEBEA4239E21F5000FEDB6 /* RootViewControllerInitial.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FCEBEA2239E21F5000FEDB6 /* RootViewControllerInitial.swift */; };
@@ -58,6 +59,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2FB2B5D0239FBDD90028E130 /* PlayerViewOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewOptions.swift; sourceTree = "<group>"; };
 		2FCEBE9F239E216B000FEDB6 /* movie.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = movie.json; sourceTree = "<group>"; };
 		2FCEBEA1239E21F5000FEDB6 /* RootTabBarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootTabBarViewController.swift; sourceTree = "<group>"; };
 		2FCEBEA2239E21F5000FEDB6 /* RootViewControllerInitial.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootViewControllerInitial.swift; sourceTree = "<group>"; };
@@ -140,7 +142,6 @@
 			children = (
 				520595812385938300BBEF77 /* IndicatorView.swift */,
 				520595832385939500BBEF77 /* IndicatorView.xib */,
-				52A7973B238E15B90043EB99 /* IndicatorLoading.swift */,
 			);
 			path = Indicator;
 			sourceTree = "<group>";
@@ -223,6 +224,7 @@
 			isa = PBXGroup;
 			children = (
 				52F8969E2385136D00D87D9E /* PlayerView.swift */,
+				2FB2B5D0239FBDD90028E130 /* PlayerViewOptions.swift */,
 				52D7421B239412F90068C08D /* PlayerState.swift */,
 				5286A21E239797120028D898 /* PubSub */,
 				52A797292386A7340043EB99 /* Animation */,
@@ -265,6 +267,7 @@
 		52F896B423866B4400D87D9E /* Controls */ = {
 			isa = PBXGroup;
 			children = (
+				52A7973B238E15B90043EB99 /* IndicatorLoading.swift */,
 				52F896B523866B5A00D87D9E /* ControlsView.swift */,
 				52F896B723866B8100D87D9E /* ControlsView.xib */,
 			);
@@ -461,6 +464,7 @@
 				52A7972D2386A7BA0043EB99 /* Animator.swift in Sources */,
 				2FE975A0239E61E800DF782D /* VideoDetailViewController.swift in Sources */,
 				520595822385938300BBEF77 /* IndicatorView.swift in Sources */,
+				2FB2B5D1239FBDD90028E130 /* PlayerViewOptions.swift in Sources */,
 				52F896B623866B5A00D87D9E /* ControlsView.swift in Sources */,
 				52A797272386A4CB0043EB99 /* PlayerViewController.swift in Sources */,
 				52F896A52385151300D87D9E /* UIView + Constraints.swift in Sources */,

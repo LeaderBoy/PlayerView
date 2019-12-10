@@ -159,6 +159,25 @@ class ControlsView : UIView {
         resetVariables()
         setupSlider()
         setupButtons()
+        configUI()
+    }
+    
+    func configUI() {
+        slider.minimumTrackTintColor = ControlsViewOptions.sliderMinTrackColor
+        slider.maximumTrackTintColor = ControlsViewOptions.sliderMaxTrackColor
+        slider.thumbImage = ControlsViewOptions.sliderImage
+        
+        playButton.setImage(ControlsViewOptions.playButtonImage, for: .normal)
+        playButton.setImage(ControlsViewOptions.playButtonSelectedImage, for: .selected)
+        playButton.setImage(ControlsViewOptions.playButtonSelectedImage, for: UIControl.State.init(arrayLiteral: .selected,.highlighted))
+        
+        backButton.setImage(ControlsViewOptions.backButtonImage, for: .normal)
+        
+        startLabel.textColor = ControlsViewOptions.timeLabelColor
+        endLabel.textColor = ControlsViewOptions.timeLabelColor
+        
+        progressView.trackTintColor = ControlsViewOptions.progressTrackTintColor
+        progressView.tintColor = ControlsViewOptions.progressTintColor
     }
     
     func resetVariables() {
