@@ -48,7 +48,7 @@ extension PlayerStateSubscriber {
     }
     /// Unregister PlayerState observer
     func unregisterStateSubscriber() {
-        eventBus.resign(subscriber: self, for: PlayerStateSubscriber.self)
+        eventBus.remove(subscriber: self, for: PlayerStateSubscriber.self)
     }
 }
 
@@ -66,7 +66,7 @@ extension PlayerItemSubscriber {
     
     /// Unregister item observer
     func unregisterStateSubscriber() {
-        eventBus.resign(subscriber: self, for: PlayerItemSubscriber.self)
+        eventBus.remove(subscriber: self, for: PlayerItemSubscriber.self)
     }
 }
 

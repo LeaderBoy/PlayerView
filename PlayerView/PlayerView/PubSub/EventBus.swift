@@ -52,7 +52,7 @@ public class EventBus {
         subscribed[identifier] = newSet
     }
     
-    public func resign<T,E>(subscriber :T,for event : E.Type) {
+    public func remove<T,E>(subscriber :T,for event : E.Type) {
         let identifier = ObjectIdentifier(event)
         var weakSet = subscribed[identifier] ?? []
         let weakBox = WeakBox(subscriber as AnyObject)
