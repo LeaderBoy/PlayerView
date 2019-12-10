@@ -29,12 +29,20 @@
 import UIKit
 
 
+struct PlayerViewOptions {
+    public static var disableControlsView = false
+    public static var disableIndicatorView = true
+    public static var backgroundColor : UIColor = .black
+}
+
+
 struct ControlsViewOptions {
+    public static var disableSlideControls = false
     // UIButton
     public static var fullButtonImage : UIImage = #imageLiteral(resourceName: "full_screen")
     public static var fullButtonSelectedImage : UIImage = #imageLiteral(resourceName: "full_screen_selected")
-    public static var enableFullScreen = true
     
+    public static var disableFullScreen = false
     public static var backButtonImage : UIImage = #imageLiteral(resourceName: "ZYPlayer_controls_back_white")
     
     public static var playButtonImage : UIImage = #imageLiteral(resourceName: "controls_play")

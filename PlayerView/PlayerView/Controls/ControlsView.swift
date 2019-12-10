@@ -72,7 +72,7 @@ class ControlsView : UIView {
         didSet {
             if isReadyToPlay {
                 hide()
-                controlsStackView.isHidden = false
+                controlsStackView.isHidden = ControlsViewOptions.disableSlideControls
             }
         }
     }
@@ -178,6 +178,10 @@ class ControlsView : UIView {
         
         progressView.trackTintColor = ControlsViewOptions.progressTrackTintColor
         progressView.tintColor = ControlsViewOptions.progressTintColor
+        
+        fullButton.isHidden = ControlsViewOptions.disableFullScreen
+        
+        controlsStackView.isHidden = ControlsViewOptions.disableSlideControls
     }
     
     func resetVariables() {

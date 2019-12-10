@@ -90,12 +90,12 @@ public class PlayerView: UIView {
     }
     
     func setup() {
-        backgroundColor = .black
-        addSubViews()
+        backgroundColor = PlayerViewOptions.backgroundColor
+        
+        configUI()
         addGestures()
         reachabilityCallBack()
         setupCategory()
-        setupEventBus()
         registerAsStateSubscriber()
     }
     
@@ -113,7 +113,7 @@ public class PlayerView: UIView {
     
     public func prepare(url : URL,in container : UIView,at indexPath : IndexPath? = nil) {
         if item != nil {
-            publish(.stop)
+            publish(.stop(indexPath))
         }
         
         self.indexPath = indexPath
@@ -132,9 +132,11 @@ public class PlayerView: UIView {
         edges(to: container)
     }
     
-    public func stop() {
-        publish(.stop)
+    public func stop(at indexPath : IndexPath? = nil) {
+        publish(.stop(indexPath))
     }
+    
+    
     
     func resetVariables() {
         indexPath = nil
@@ -143,22 +145,27 @@ public class PlayerView: UIView {
         state = .unknown
     }
     
-    func addSubViews() {
-        addSubview(layerView)
-        addSubview(controlsView)
-        addSubview(indicatorView)
+    func configUI() {
         
-        controlsView.edges(to: self)
-        indicatorView.edges(to: self)
+        addSubview(layerView)
+        layerView.bus = eventBus
         layerView.edges(to: self)
+        
+        if !PlayerViewOptions.disableControlsView {
+            addSubview(controlsView)
+            controlsView.edges(to: self)
+            controlsView.bus = eventBus
+        }
+        
+        if !PlayerViewOptions.disableIndicatorView {
+            addSubview(indicatorView)
+            indicatorView.edges(to: self)
+            indicatorView.bus = eventBus
+        }
+        
+        itemObserver.bus = eventBus
     }
     
-    func setupEventBus() {
-        itemObserver.bus = eventBus
-        layerView.bus = eventBus
-        indicatorView.bus = eventBus
-        controlsView.bus = eventBus
-    }
     
     func addGestures() {
         let oneTap = UITapGestureRecognizer(target: controlsView, action: #selector(ControlsView.switchHiddenState(gesture:)))
@@ -200,7 +207,8 @@ public class PlayerView: UIView {
     }
     
     func handle(state : PlayerState) {
-        if state == .mode(.landscape) {
+        switch state {
+        case .mode(.landscape):
             if animator == nil {
                 let animator = Animator(with: self)
                 self.animator = animator
@@ -209,12 +217,14 @@ public class PlayerView: UIView {
             }
             animator!.present()
             shouldStatusBarHidden = true
-        }else if state == .mode(.portrait) {
+        case .mode(.portrait):
             animator!.dismiss()
             shouldStatusBarHidden = false
-        }else if state == .stop {
+        case .stop(_):
             resetVariables()
             removeFromSuperview()
+        default:
+            break
         }
     }
 }

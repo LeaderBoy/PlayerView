@@ -54,12 +54,16 @@ public enum PlayerState : Equatable {
     case finished
     case bufferFull(_ full : Bool)
     case bufferEmpty(_ empty : Bool)
-    case stop
+    case stop(_ indexPath : IndexPath?)
     case error(_ error  : Error)
     case mode(_ mode    : PlayerModeState)
     case network(_ net  : PlayerNetworkState)
     case unknown
 //    case underlying(item : PlayerItem)
+    
+    public static func stop(at indexPath : IndexPath) -> PlayerState {
+        return .stop(indexPath)
+    }
     
     public static func == (lhs : Self,rhs : Self) -> Bool {
         switch (lhs,rhs) {
@@ -71,7 +75,7 @@ public enum PlayerState : Equatable {
         case (.loading,.loading): return true
         case (.finished,.finished): return true
         case (.bufferFull(let l),.bufferFull(let r)) where l == r : return true
-        case (.stop,.stop): return true
+        case (.stop(let l),.stop(let r)) where l == r: return true
         case (.error(let l as NSError),.error(let r as NSError)) where l.code == r.code : return true
         case (.mode(let l),.mode(let r))where l == r : return true
         case (.network(let l),.network(let r))where l == r : return true

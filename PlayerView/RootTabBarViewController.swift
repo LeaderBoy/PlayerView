@@ -89,6 +89,10 @@ extension UITabBarController {
         return self.selectedViewController?.prefersStatusBarHidden ?? false
     }
     
+    open override var preferredStatusBarStyle: UIStatusBarStyle {
+        return self.selectedViewController?.preferredStatusBarStyle ?? .default
+    }
+    
     override open var shouldAutorotate: Bool {
         return self.selectedViewController?.shouldAutorotate ?? false
     }
@@ -106,6 +110,10 @@ extension UITabBarController {
 extension UINavigationController {
     override open var prefersStatusBarHidden: Bool {
         return self.topViewController?.prefersStatusBarHidden ?? false
+    }
+    
+    open override var preferredStatusBarStyle: UIStatusBarStyle {
+        return self.topViewController?.preferredStatusBarStyle ?? .default
     }
     
     override open var shouldAutorotate: Bool {

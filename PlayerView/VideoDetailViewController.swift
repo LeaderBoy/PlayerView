@@ -40,6 +40,10 @@ class VideoDetailViewController: UIViewController {
         navigationController?.navigationBar.isHidden = false
         playerView?.stop()
     }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
  
     func addPlayerView() {
         if playerView == nil {
