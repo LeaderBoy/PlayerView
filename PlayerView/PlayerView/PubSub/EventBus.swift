@@ -28,9 +28,12 @@
 
 import Foundation
 
+public protocol EventBusIdentifiable {
+    var eventBus : EventBus { get }
+}
+
+
 public class EventBus {
-    /// global obj
-    public static let shared = EventBus()
     /// weakBox's set
     typealias WeakSet = Set<WeakBox>
     /// a Dictionary for store weakSet

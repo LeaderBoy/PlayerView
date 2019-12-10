@@ -48,6 +48,8 @@ public class PlayerView: UIView {
     
     public var indexPath : IndexPath?
     
+    public var eventBus = EventBus()
+    
     public var state : PlayerState = .unknown
     public var shouldStatusBarHidden = false
     public var item : AVPlayerItem?
@@ -93,7 +95,8 @@ public class PlayerView: UIView {
         addGestures()
         reachabilityCallBack()
         setupCategory()
-        becomeStateSubscriber()
+        setupEventBus()
+        registerAsStateSubscriber()
     }
     
     func setupCategory() {
@@ -122,7 +125,7 @@ public class PlayerView: UIView {
         itemObserver.item = item
         itemObserver.player = player
         // loading
-        publish(.prepare)
+        publish(.prepare(item))
         
         container.addSubview(self)
         translatesAutoresizingMaskIntoConstraints = false
@@ -148,6 +151,13 @@ public class PlayerView: UIView {
         controlsView.edges(to: self)
         indicatorView.edges(to: self)
         layerView.edges(to: self)
+    }
+    
+    func setupEventBus() {
+        itemObserver.bus = eventBus
+        layerView.bus = eventBus
+        indicatorView.bus = eventBus
+        controlsView.bus = eventBus
     }
     
     func addGestures() {

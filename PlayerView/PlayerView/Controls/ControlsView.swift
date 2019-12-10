@@ -115,6 +115,13 @@ class ControlsView : UIView {
         }
     }
     
+    var bus : EventBus! {
+        didSet {
+            registerAsStateSubscriber()
+            registerAsItemSubscriber()
+        }
+    }
+    
     var state : PlayerState = .unknown
            
     override init(frame: CGRect) {
@@ -152,8 +159,6 @@ class ControlsView : UIView {
         resetVariables()
         setupSlider()
         setupButtons()
-        becomeStateSubscriber()
-        becomeItemSubscriber()
     }
     
     func resetVariables() {
@@ -288,7 +293,7 @@ class ControlsView : UIView {
         case .finished,.stop:
             playButton(selected: true)
             playButton(hide: false)
-        case .bufferFull(_),.error(_),.mode(_),.network(_),.unknown:
+        case .bufferFull(_),.bufferEmpty(_),.error(_),.mode(_),.network(_),.unknown:
             break
         }
     }
@@ -386,6 +391,10 @@ class ControlsView : UIView {
 }
 
 extension ControlsView : PlayerStateSubscriber {
+    var eventBus: EventBus {
+        return bus
+    }
+    
     func receive(_ value: PlayerState) {
         if state == value {
             return

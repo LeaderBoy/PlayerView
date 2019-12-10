@@ -27,39 +27,46 @@
 //
 
 import Foundation
+import AVKit
+
 
 /// A publisher protocol about receive player's current state
 /// How to use:
 /// first  : Follow PlayerStateSubscriber protocol
 /// second : register as an observer by calling becomeStateSubscriber()
 /// third  : handle the player's state yourself
-public protocol PlayerStateSubscriber {
+public protocol PlayerStateSubscriber : EventBusIdentifiable {
     /// Receive various state
-    /// - Parameter value: player current state
-    func receive(_ value : PlayerState)
+    /// - Parameter state: player current state
+    func receive(_ state : PlayerState)
 }
 
 extension PlayerStateSubscriber {
     /// Register as an PlayerState observer,so you can receive state change
-    func becomeStateSubscriber() {
-        EventBus.shared.add(subscriber: self, for: PlayerStateSubscriber.self)
+    func registerAsStateSubscriber() {
+        eventBus.add(subscriber: self, for: PlayerStateSubscriber.self)
     }
     /// Unregister PlayerState observer
-    func resignStateSubscriber() {
-        EventBus.shared.resign(subscriber: self, for: PlayerStateSubscriber.self)
+    func unregisterStateSubscriber() {
+        eventBus.resign(subscriber: self, for: PlayerStateSubscriber.self)
     }
 }
 
 
-public protocol PlayerItemSubscriber {
+public protocol PlayerItemSubscriber : EventBusIdentifiable {
     /// Receive various state
     /// - Parameter value: player current item state
     func receive(_ item : PlayerItem)
 }
 
 extension PlayerItemSubscriber {
-    func becomeItemSubscriber() {
-        EventBus.shared.add(subscriber: self, for: PlayerItemSubscriber.self)
+    func registerAsItemSubscriber() {
+        eventBus.add(subscriber: self, for: PlayerItemSubscriber.self)
+    }
+    
+    /// Unregister item observer
+    func unregisterStateSubscriber() {
+        eventBus.resign(subscriber: self, for: PlayerItemSubscriber.self)
     }
 }
 

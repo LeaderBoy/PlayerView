@@ -83,6 +83,8 @@ public class ItemObserver: NSObject {
     private var duration            : TimeInterval = 0
     private var timeObserver        : Any?
     
+    var bus : EventBus!
+    
     var player : AVPlayer? {
         didSet {
             if player != nil {
@@ -339,4 +341,8 @@ public class ItemObserver: NSObject {
         
 }
 
-extension ItemObserver : PlayerItemPublisher {}
+extension ItemObserver : PlayerItemPublisher {
+    public var eventBus: EventBus {
+        return bus
+    }
+}

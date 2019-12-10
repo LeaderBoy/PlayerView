@@ -71,7 +71,6 @@ extension HomeViewController : UITableViewDataSource {
 }
 
 extension HomeViewController : UITableViewDelegate {
-    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         var newPlayer : PlayerView?
         if let player = playerView {
@@ -94,7 +93,6 @@ extension HomeViewController : UITableViewDelegate {
     
 }
 extension HomeViewController : CellClick {
-    
     func click(at indexPath: IndexPath, container: UIView) {
         if playerView == nil {
             playerView = PlayerView()

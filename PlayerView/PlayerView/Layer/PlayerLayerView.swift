@@ -35,6 +35,12 @@ class PlayerLayerView: UIView {
     var state : PlayerState = .unknown
     var player : AVPlayer
     
+    var bus : EventBus! {
+        didSet {
+            registerAsStateSubscriber()
+        }
+    }
+    
     var isReadyToPlay = false
     var isSeekingInProgress = false
     var chaseTime : CMTime = .zero
@@ -65,7 +71,6 @@ class PlayerLayerView: UIView {
         playerLayer.videoGravity = .resizeAspect
         playerLayer.isHidden = true
         observerFirstFrame()
-        becomeStateSubscriber()
     }
     
     deinit {
@@ -187,6 +192,10 @@ class PlayerLayerView: UIView {
 }
 
 extension PlayerLayerView : PlayerStateSubscriber {
+    var eventBus: EventBus {
+        return bus
+    }
+    
     func receive(_ value: PlayerState) {
         if state == value {
             return

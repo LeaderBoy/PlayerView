@@ -29,52 +29,9 @@
 import UIKit
 
 class IndicatorView: UIView {
-    
-    var isBufferFull = false
-    
-    enum IndicatorState {
-        case loading
-        case networkUnReachable
-        case timeout
-        case wwan
-        case success
-        case error
-        case ignore
-        case stop
         
-        init(state : PlayerState) {
-            switch state {
-            case .loading,.prepare,.seeking(_),.unknown:
-                self = .loading
-            case .play,.seekDone,.bufferFull(_):
-                self = .success
-            case .stop,.finished:
-                self = .stop
-            case .paused,.mode(_):
-                self = .ignore
-            case .error(let e as NSError):
-                if e.isTimeout() {
-                    self = .timeout
-                }else if e.isInternetUnavailable() {
-                    self = .networkUnReachable
-                }else {
-                    self = .error
-                }
-            case .network(let e):
-                switch e {
-                case .networkUnReachable:
-                    self = .networkUnReachable
-                case .wwan:
-                    self = .wwan
-                case .wifi:
-                    self = .success
-                case .timeout:
-                    self = .timeout
-                }
-                break
-            }
-        }
-    }
+    var isBufferFull = false
+    var isBufferEmpty = false
     
     @IBOutlet weak var customView: UIView!
     @IBOutlet weak var indicatorView: UIView!
@@ -82,8 +39,14 @@ class IndicatorView: UIView {
     @IBOutlet weak var label: UILabel!
     @IBOutlet weak var leftButton: UIButton!
     @IBOutlet weak var rightButton: UIButton!
+        
+    var bus : EventBus! {
+        didSet {
+            registerAsStateSubscriber()
+        }
+    }
     
-    var state : PlayerState = .prepare {
+    var state : PlayerState = .unknown {
         didSet {
             if oldValue == state {
                 return
@@ -131,7 +94,6 @@ class IndicatorView: UIView {
     }
     
     func handle(state : PlayerState) {
-        let state = IndicatorState(state: state)
         reloadState(state: state)
     }
 
@@ -143,110 +105,19 @@ class IndicatorView: UIView {
         networkState = state
     }
     
-    func reloadState(state : IndicatorState) {
-        if state == .stop {
-            isBufferFull = false
-            hide()
-            return
-        }else if state == .success || isBufferFull {
-            hide()
-            return
-        }else if state == .ignore{
-            return
-        }else {
-            show()
-        }
+    func reloadState(state : PlayerState) {
         
-        if let color = indicatorBackgroundColor(state: state) {
-            backgroundColor = color
-        }
-        
-        isUserInteractionEnabled = true
-        
-        if let view = indicatorCustomView(state: state) {
-            indicatorStackView.isHidden = true
-            customView.isHidden = false
-            customView.subviews.forEach{$0.removeFromSuperview()}
-            customView.addSubview(view)
-            view.edges(to: customView)
-        }else if state == .loading {
-            isUserInteractionEnabled = false
-            indicatorStackView.isHidden = true
-            customView.isHidden = true
-        }else {
-            customView.isHidden = true
-            indicatorStackView.isHidden = false
-            
-            if let title = indicatorTitleFor(state: state) {
-                label.text = title
-                label.isHidden = false
-            }else {
-                label.isHidden = true
-            }
-            
-            if let title = indicatorLeftButtonFor(state: state) {
-                leftButton.setTitle(title, for: .normal)
-                leftButton.isHidden = false
-            }else {
-                leftButton.isHidden = true
-            }
-            
-            if let title = indicatorRightButtonFor(state: state) {
-                rightButton.setTitle(title, for: .normal)
-                rightButton.isHidden = false
-            }else {
-                rightButton.isHidden = true
-            }
-        }
-        
-    }
-    
-    func indicatorTitleFor(state : IndicatorState) -> String? {
-        switch state {
-        case .wwan:
-            return "当前为移动网络,是否继续播放"
-        case .networkUnReachable:
-            return "无网络连接"
-        case .timeout :
-            return "请求已超时,请重试"
-        case .error:
-            return "加载失败,请重试"
-        default:
-            return nil
-        }
-    }
-    
-    func indicatorLeftButtonFor(state : IndicatorState) -> String? {
-        switch state {
-        case .wwan:
-            return "继续播放"
-        case .error,.timeout,.networkUnReachable:
-            return "点击重试"
-        default:
-            return nil
-        }
-    }
-    
-    func indicatorRightButtonFor(state : IndicatorState) -> String? {
-        switch state {
-        case .wwan:
-            return "退出播放"
-        default:
-            return nil
-        }
-    }
-    
-    func indicatorCustomView(state : IndicatorState) -> UIView? {
-        return nil
-    }
-    
-    func indicatorBackgroundColor(state : IndicatorState) -> UIColor? {
-        switch state {
-        case .networkUnReachable,.error:
-            return UIColor(white: 0, alpha: 1)
-        default:
-            return .clear
-        }
     }
 
+}
+
+extension IndicatorView : PlayerStateSubscriber {
+    var eventBus: EventBus {
+        return bus
+    }
+    
+    func receive(_ value: PlayerState) {
+        handle(state: value)
+    }
+    
 }

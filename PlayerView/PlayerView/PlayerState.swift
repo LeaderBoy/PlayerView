@@ -27,6 +27,7 @@
 //
 
 import Foundation
+import AVKit
 
 public enum PlayerNetworkState {
     case wwan
@@ -44,7 +45,7 @@ public enum PlayerModeState {
 
 /// player state
 public enum PlayerState : Equatable {
-    case prepare
+    case prepare(_ item : AVPlayerItem)
     case play
     case paused
     case seeking(_ time : TimeInterval)
@@ -52,6 +53,7 @@ public enum PlayerState : Equatable {
     case loading
     case finished
     case bufferFull(_ full : Bool)
+    case bufferEmpty(_ empty : Bool)
     case stop
     case error(_ error  : Error)
     case mode(_ mode    : PlayerModeState)
@@ -61,7 +63,7 @@ public enum PlayerState : Equatable {
     
     public static func == (lhs : Self,rhs : Self) -> Bool {
         switch (lhs,rhs) {
-        case (.prepare,.prepare): return true
+        case (.prepare(let l),.prepare(let r)) where l == r: return true
         case (.play,.play): return true
         case (.paused,.paused): return true
         case (.seeking(let l),.seeking(let r)) where l == r : return true
@@ -73,6 +75,7 @@ public enum PlayerState : Equatable {
         case (.error(let l as NSError),.error(let r as NSError)) where l.code == r.code : return true
         case (.mode(let l),.mode(let r))where l == r : return true
         case (.network(let l),.network(let r))where l == r : return true
+        case (.bufferEmpty(let l),.bufferEmpty(let r))where l == r : return true
         case (.unknown,.unknown): return true
 //        case (.underlying(let l),.underlying(let r))where l == r : return true
         case (_):return false
