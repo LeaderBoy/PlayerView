@@ -173,6 +173,10 @@ class PlayerLayerView: UIView {
     }
     
     func cachePlayProgress() {
+        if PlayerViewOptions.disableCacheProgress {
+            return
+        }
+        
         if let key = getVideoUrl(from: player) {
             let seconds = CMTimeGetSeconds(player.currentTime())
             // for show original frame
@@ -184,6 +188,10 @@ class PlayerLayerView: UIView {
     }
     
     func seekToCachedProgress() {
+        if PlayerViewOptions.disableCacheProgress {
+            return
+        }
+        
         if let key = getVideoUrl(from: player) {
             if let time = cache.object(forKey: key),let item = player.currentItem {
                 let duration = CMTimeGetSeconds(item.duration)
