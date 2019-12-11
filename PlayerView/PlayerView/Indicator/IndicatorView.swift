@@ -87,13 +87,50 @@ class IndicatorView: UIView {
         
     }
     
-    func handleNetwork(state : PlayerNetworkState) {
-        networkState = state
+    func reloadState(state : PlayerState) {
+        switch state {
+        case .bufferFull(let isFull):
+            isBufferFull = isFull
+        case .bufferEmpty(let isEmpty):
+            isBufferEmpty = isEmpty
+        case .error(let e):
+            errorView(e)
+        case .network(let state):
+            handleNetworkState(state)
+        default:
+            break
+        }
     }
     
-    func reloadState(state : PlayerState) {
+    func errorView(_ error : Error) {
+        leftButton.isHidden = false
+        rightButton.isHidden = true
+        
         
     }
+    
+    func handleNetworkState(_ state : PlayerNetworkState) {
+        rightButton.isHidden = true
+        leftButton.isHidden = false
+        var message : String = ""
+        var title = ""
+        switch state {
+        case .networkUnReachable:
+            title = NSLocalizedString("a", comment: "retry again")
+            message = NSLocalizedString("player-networkUnreachable", comment: "Network connection has been lost")
+        default:
+            break
+//        case .timeout:
+//        case .wifi:
+//        case .wwan:
+//            rightButton.isHidden = false
+        }
+        
+        label.text = message
+        leftButton.setTitle(title, for: .normal)
+    }
+    
+    
 }
 
 extension IndicatorView : PlayerStateSubscriber {

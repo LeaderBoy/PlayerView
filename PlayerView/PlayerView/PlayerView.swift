@@ -97,6 +97,8 @@ public class PlayerView: UIView {
         reachabilityCallBack()
         setupCategory()
         registerAsStateSubscriber()
+        
+        indicatorView.show()
     }
     
     func setupCategory() {
@@ -135,9 +137,7 @@ public class PlayerView: UIView {
     public func stop(at indexPath : IndexPath? = nil) {
         publish(.stop(indexPath))
     }
-    
-    
-    
+        
     func resetVariables() {
         indexPath = nil
         item = nil
