@@ -42,7 +42,7 @@ class Animator : NSObject {
     var keyView : UIView
     var sourceShotView : UIView!
     
-    var flashTime : TimeInterval = 0.016
+    var flashTime : TimeInterval = 0.02
     
     private let lanVC = PlayerViewController()
     
