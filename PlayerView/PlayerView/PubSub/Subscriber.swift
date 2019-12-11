@@ -55,8 +55,8 @@ extension PlayerStateSubscriber {
 
 public protocol PlayerItemSubscriber : EventBusIdentifiable {
     /// Receive various state
-    /// - Parameter value: player current item state
-    func receive(_ item : PlayerItem)
+    /// - Parameter item: player current item state
+    func receive(item : PlayerItem)
 }
 
 extension PlayerItemSubscriber {

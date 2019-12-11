@@ -60,7 +60,7 @@ extension PlayerItemPublisher {
     /// - Parameter value: player current item state
     public func publish(item: PlayerItem) {
         eventBus.notify(event: PlayerItemSubscriber.self) { (subscriber) in
-            subscriber.receive(item)
+            subscriber.receive(item: item)
         }
     }
 }

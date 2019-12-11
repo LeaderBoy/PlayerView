@@ -358,15 +358,7 @@ class ControlsView : UIView {
         case .bufferFull(let isFull):
             isBufferFull = isFull
         case .stop:
-            duration = 0
-            position = 0
-            oldPosition = 0
-            bufferTime = 0
-            progressView.progress = 0.0
-            isSliding = false
-            isBufferFull = false
-            backButton.isHidden = true
-            mode = .portrait
+            resetVariables()
         default:
             break
         }
@@ -422,7 +414,7 @@ extension ControlsView : PlayerStateSubscriber {
 extension ControlsView : PlayerStatePublisher {}
 
 extension ControlsView : PlayerItemSubscriber {
-    func receive(_ item: PlayerItem) {
+    func receive(item: PlayerItem) {
         handle(item: item)
     }
 }
