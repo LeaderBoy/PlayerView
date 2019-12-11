@@ -63,6 +63,7 @@ class IndicatorView: UIView {
     
     func setup() {
         fromNib()
+        backgroundColor = UIColor(white: 0, alpha: 0.5)
         hide()
     }
  
@@ -83,6 +84,8 @@ class IndicatorView: UIView {
     func resetVariables() {
         isBufferEmpty = false
         isBufferFull = false
+        indexPath = nil
+        hide()
     }
     
     func handle(state : PlayerState) {
@@ -97,10 +100,8 @@ class IndicatorView: UIView {
             isBufferFull = isFull
         case .bufferEmpty(let isEmpty):
             isBufferEmpty = isEmpty
-        case .error(let e):
-            handleError(e)
-        case .network(let state):
-            handleNetworkState(state)
+        case .error(_),.network(_):
+            handleError(state : state)
         case .stop(_):
             resetVariables()
         default:
@@ -108,54 +109,23 @@ class IndicatorView: UIView {
         }
     }
     
-    func handleError(_ error : Error) {
+    func handleError(state : PlayerState) {
         if isBufferFull {
             return
         }
         
-        leftButton.isHidden = false
         rightButton.isHidden = true
+        leftButton.isHidden = false
         
-        if error.isTimeout() {
-            handleNetworkState(.timeout)
-        }else if error.isInternetUnavailable() {
-            handleNetworkState(.networkUnReachable)
+        if let info = message(for: state){
+            show()
+            label.text = info.0
+            leftButton.setTitle(info.1, for: .normal)
         }else {
-            let title = NSLocalizedString("player-indicator-left-button-retry", comment: "Retry again")
-            let message = NSLocalizedString("player-indicator-label-error", comment: "Load failed")
-            label.text = message
-            leftButton.setTitle(title, for: .normal)
-        }
-    }
-    
-    func handleNetworkState(_ state : PlayerNetworkState) {
-        
-        if isBufferFull {
-            return
-        }
-        
-        show()
-        rightButton.isHidden = true
-        leftButton.isHidden = false
-        var message : String = ""
-        var title = NSLocalizedString("player-indicator-left-button-retry", comment: "Retry again")
-        switch state {
-        case .networkUnReachable:
-            message = NSLocalizedString("player-indicator-label-network-unreachable", comment: "Network connection has been lost")
-        case .timeout:
-            message = NSLocalizedString("player-indicator-label-network-timeout", comment: "Time out")
-        case .wifi:
-            message = ""
             hide()
-        case .wwan:
-            title = NSLocalizedString("player-indicator-left-button", comment: "Continue play")
-            message = NSLocalizedString("player-indicator-label-network-wwan", comment: "wwan")
-            rightButton.isHidden = false
         }
-        
-        label.text = message
-        leftButton.setTitle(title, for: .normal)
     }
+
     
     @IBAction func leftButtonClicked(_ sender: UIButton) {
         hide()
@@ -167,7 +137,46 @@ class IndicatorView: UIView {
         publish(state: .stop(indexPath))
     }
     
+    func message(for state : PlayerState) -> (String,String)? {
+        switch state {
+        case .network(let s):
+            return message(networkState: s)
+        case .error(let e):
+            if let state = PlayerNetworkState(error: e) {
+                return message(networkState: state)
+            }else {
+                return messageError()
+            }
+        default:
+            return nil
+        }
+    }
     
+    func message(networkState : PlayerNetworkState) -> (String,String)? {
+        var button = NSLocalizedString("player-indicator-left-button-retry", comment: "Retry again")
+        var message = ""
+        switch networkState {
+        case .networkUnReachable:
+            message = NSLocalizedString("player-indicator-label-network-unreachable", comment: "Network connection has been lost")
+        case .wwan:
+            button = NSLocalizedString("player-indicator-left-button", comment: "Continue play")
+            message = NSLocalizedString("player-indicator-label-network-wwan", comment: "wwan")
+            rightButton.isHidden = false
+            
+            publish(state: .paused)
+        case .timeout:
+            message = NSLocalizedString("player-indicator-label-network-timeout", comment: "Time out")
+        default:
+            return nil
+        }
+        return (message,button)
+    }
+    
+    func messageError() -> (String,String) {
+        let button = NSLocalizedString("player-indicator-left-button-retry", comment: "Retry again")
+        let message = NSLocalizedString("player-indicator-label-error", comment: "Load failed")
+        return (message,button)
+    }
     
     
 }

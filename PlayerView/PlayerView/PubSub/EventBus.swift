@@ -28,6 +28,7 @@
 
 import Foundation
 
+/// one playerView provide only one EventBus
 public protocol EventBusIdentifiable {
     var eventBus : EventBus { get }
 }

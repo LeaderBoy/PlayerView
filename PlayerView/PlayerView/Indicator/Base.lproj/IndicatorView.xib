@@ -44,14 +44,18 @@
                                     <subviews>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2IB-gH-7Jb">
                                             <rect key="frame" x="0.0" y="0.0" width="62" height="30"/>
-                                            <state key="normal" title="继续播放"/>
+                                            <state key="normal" title="继续播放">
+                                                <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </state>
                                             <connections>
                                                 <action selector="leftButtonClicked:" destination="-1" eventType="touchUpInside" id="wCT-m5-daN"/>
                                             </connections>
                                         </button>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="m9C-kR-L33">
                                             <rect key="frame" x="92" y="0.0" width="62" height="30"/>
-                                            <state key="normal" title="退出播放"/>
+                                            <state key="normal" title="退出播放">
+                                                <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </state>
                                             <connections>
                                                 <action selector="rightButtonClicked:" destination="-1" eventType="touchUpInside" id="WeH-lW-gxp"/>
                                             </connections>

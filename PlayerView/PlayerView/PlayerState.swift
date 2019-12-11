@@ -34,6 +34,17 @@ public enum PlayerNetworkState {
     case wifi
     case networkUnReachable
     case timeout
+    
+    init?(error : Error) {
+        if error.isTimeout() {
+            self = .timeout
+        }else if error.isInternetUnavailable() {
+            self = .networkUnReachable
+        }else {
+            return nil
+        }
+    }
+    
 }
 
 /// full screen or not
