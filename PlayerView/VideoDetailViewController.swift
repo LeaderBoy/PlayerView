@@ -44,6 +44,7 @@ class VideoDetailViewController: UIViewController {
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
+
  
     func addPlayerView() {
         if playerView == nil {

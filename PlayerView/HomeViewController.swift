@@ -34,6 +34,10 @@ class HomeViewController: UIViewController {
         fetchMovieModel()
     }
     
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return .portrait
+    }
+    
     func setupTableView() {
         let nib = UINib(nibName: "HomeListCell", bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: HomeListCellID)

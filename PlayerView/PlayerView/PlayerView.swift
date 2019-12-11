@@ -41,6 +41,13 @@ public protocol PlayerViewDelegate : class {
 }
 
 
+
+public class PlayerUIInterfaceOrientation {
+    static let shared = PlayerUIInterfaceOrientation()
+    var current : UIInterfaceOrientationMask = .portrait
+}
+
+
 public class PlayerView: UIView {
         
     weak public var dataSource : PlayerViewDataSource?
@@ -213,6 +220,7 @@ public class PlayerView: UIView {
     func handle(state : PlayerState) {
         switch state {
         case .mode(.landscape):
+            PlayerUIInterfaceOrientation.shared.current = [.landscapeRight]
             if animator == nil {
                 let animator = Animator(with: self)
                 self.animator = animator
