@@ -68,14 +68,14 @@ class IndicatorView: UIView {
     }
  
     func show() {
-        if !self.isHidden {
+        if !isHidden {
             return
         }
         isHidden = false
     }
     
     func hide() {
-        if self.isHidden {
+        if isHidden {
             return
         }
         isHidden = true

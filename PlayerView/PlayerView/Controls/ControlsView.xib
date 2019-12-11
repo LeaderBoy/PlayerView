@@ -16,7 +16,6 @@
                 <outlet property="controlsStackView" destination="fZx-DJ-HsU" id="HVJ-jt-LYp"/>
                 <outlet property="endLabel" destination="sd8-U6-KeF" id="jAu-JL-x98"/>
                 <outlet property="fullButton" destination="koJ-LB-ffQ" id="Nxv-jn-ftg"/>
-                <outlet property="loadingView" destination="6v2-2F-NoC" id="QiB-vK-UNe"/>
                 <outlet property="playButton" destination="F8w-dK-18L" id="pzx-zS-rae"/>
                 <outlet property="progressView" destination="evR-8F-h4z" id="fIW-sC-3ZO"/>
                 <outlet property="slider" destination="VJk-Kx-ngF" id="Ycr-2s-HvO"/>
@@ -39,10 +38,6 @@
                                 <action selector="play:" destination="-1" eventType="touchUpInside" id="YER-3q-ndR"/>
                             </connections>
                         </button>
-                        <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6v2-2F-NoC" customClass="IndicatorLoading" customModule="PlayerView" customModuleProvider="target">
-                            <rect key="frame" x="0.0" y="0.0" width="484" height="335"/>
-                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        </view>
                         <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="fZx-DJ-HsU" userLabel="controls">
                             <rect key="frame" x="0.0" y="285" width="484" height="50"/>
                             <subviews>
@@ -112,12 +107,8 @@
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
-                        <constraint firstItem="6v2-2F-NoC" firstAttribute="height" secondItem="DTA-EH-Ca3" secondAttribute="height" id="0xx-gr-92v"/>
                         <constraint firstAttribute="bottom" secondItem="fZx-DJ-HsU" secondAttribute="bottom" id="7fa-3T-vxN"/>
-                        <constraint firstItem="6v2-2F-NoC" firstAttribute="width" secondItem="DTA-EH-Ca3" secondAttribute="width" id="HeX-ke-cAb"/>
                         <constraint firstItem="fsR-Gl-wYF" firstAttribute="top" secondItem="DTA-EH-Ca3" secondAttribute="top" id="LKc-sb-Uox"/>
-                        <constraint firstItem="6v2-2F-NoC" firstAttribute="centerY" secondItem="DTA-EH-Ca3" secondAttribute="centerY" id="N02-Za-XnG"/>
-                        <constraint firstItem="6v2-2F-NoC" firstAttribute="centerX" secondItem="DTA-EH-Ca3" secondAttribute="centerX" id="OC9-hn-Yn1"/>
                         <constraint firstItem="fZx-DJ-HsU" firstAttribute="leading" secondItem="DTA-EH-Ca3" secondAttribute="leading" id="P3d-SF-Vtf"/>
                         <constraint firstItem="F8w-dK-18L" firstAttribute="centerX" secondItem="DTA-EH-Ca3" secondAttribute="centerX" id="gxT-0F-Eza"/>
                         <constraint firstAttribute="trailing" secondItem="fZx-DJ-HsU" secondAttribute="trailing" id="h5c-Le-KuT"/>

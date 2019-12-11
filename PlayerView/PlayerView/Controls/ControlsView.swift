@@ -53,7 +53,6 @@ class ControlsView : UIView {
     @IBOutlet weak var controlsStackView: UIStackView!
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var containerLeftLayout: NSLayoutConstraint!
-    @IBOutlet weak var loadingView: IndicatorLoading!
     
     public var isSliding = false {
         didSet {
@@ -326,13 +325,11 @@ class ControlsView : UIView {
     fileprivate func playButton(hide : Bool) {
         if isBufferFull {
             playButton.isHidden = false
-            loadingView.isHidden = true
             return
         }
         
         if playButton.isHidden != hide {
             playButton.isHidden = hide
-            loadingView.isHidden = !hide
         }
     }
     

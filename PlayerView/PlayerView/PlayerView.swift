@@ -72,6 +72,7 @@ public class PlayerView: UIView {
     private lazy var indicatorView = IndicatorView()
     private lazy var controlsView  = ControlsView()
     private lazy var itemObserver = ItemObserver()
+    private lazy var loadingView = IndicatorLoading()
     
     var animator : Animator?
 
@@ -152,6 +153,12 @@ public class PlayerView: UIView {
             addSubview(controlsView)
             controlsView.edges(to: self)
             controlsView.bus = eventBus
+        }
+        
+        if !PlayerViewOptions.disableIndicatorLoading {
+            addSubview(loadingView)
+            loadingView.edges(to: self)
+            loadingView.bus = eventBus
         }
         
         if !PlayerViewOptions.disableIndicatorView {

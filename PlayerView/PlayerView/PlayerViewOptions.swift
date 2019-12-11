@@ -32,6 +32,7 @@ import UIKit
 struct PlayerViewOptions {
     public static var disableControlsView = false
     public static var disableIndicatorView = false
+    public static var disableIndicatorLoading = false
     public static var backgroundColor : UIColor = .black
     public static var disableCacheProgress = false
 }

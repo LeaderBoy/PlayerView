@@ -52,6 +52,15 @@ class IndicatorLoading: UIView {
         return CGRect(origin: .zero, size: CGSize(width: layerWidth, height: layerWidth))
     }
     
+    var bus : EventBus! {
+        didSet {
+            registerAsStateSubscriber()
+        }
+    }
+    
+    var isBufferFull = false
+    
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
@@ -74,6 +83,8 @@ class IndicatorLoading: UIView {
         setupShapLayer()
         setupSubLayer()
         setupLayerView()
+        
+        isUserInteractionEnabled = false
     }
     
     func setupTopLayer() {
@@ -109,6 +120,20 @@ class IndicatorLoading: UIView {
         shapLayer.path = circlePath.cgPath
         shapLayer.frame = layerFrame
         indefiniteLayer = shapLayer
+    }
+    
+    func show() {
+        if !isHidden {
+            return
+        }
+        isHidden = false
+    }
+    
+    func hide() {
+        if isHidden {
+            return
+        }
+        isHidden = true
     }
     
     func setupSubLayer() {
@@ -169,5 +194,41 @@ class IndicatorLoading: UIView {
         }
         animation()
     }
+    
+    func handle(state : PlayerState) {
+        
+        if isBufferFull {
+            hide()
+            return
+        }
+        
+        switch state {
+        case .bufferFull(let full):
+            isBufferFull = full
+        case .prepare(_),.seeking(_),.loading:
+            show()
+        case .play,.paused,.seekDone,.network(_):
+            hide()
+        case .stop(_),.finished,.error(_):
+            hide()
+            resetVariables()
+        default:
+            break
+        }
+    }
+    
+    func resetVariables() {
+        isBufferFull = false
+    }
 
+}
+
+extension IndicatorLoading : PlayerStateSubscriber {
+    var eventBus: EventBus {
+        return bus
+    }
+    
+    func receive(state: PlayerState) {
+        handle(state: state)
+    }
 }
