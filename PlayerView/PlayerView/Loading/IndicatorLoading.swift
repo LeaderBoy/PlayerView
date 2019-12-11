@@ -151,12 +151,12 @@ class IndicatorLoading: UIView {
         rotationAnimation.duration = 1.0
         rotationAnimation.fillMode = .forwards
         subLayer.add(rotationAnimation, forKey: key)
+        subLayer.position = CGPoint(x: centerX, y: centerX)
     }
     
     func setupLayerView() {
         let width = centerX * 2
         let layerView = UIView()
-        subLayer.position = CGPoint(x: centerX, y: centerX)
         layerView.layer.addSublayer(subLayer)
         layerView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(layerView)
