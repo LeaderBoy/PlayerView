@@ -61,7 +61,8 @@ extension PlayerItem : Equatable {
     }
 }
 
-public class ItemObserver: NSObject {    
+public class ItemObserver: NSObject {
+
     private var itemErrorContext                    = 0
     private var itemDurationContext                 = 0
     private var itemStatusContext                   = 0

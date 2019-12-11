@@ -209,7 +209,7 @@ public class PlayerView: UIView {
             if animator == nil {
                 let animator = Animator(with: self)
                 self.animator = animator
-            }else {
+            } else {
                 animator!.update(sourceView: self)
             }
             animator!.present()

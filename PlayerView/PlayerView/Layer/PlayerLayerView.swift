@@ -32,6 +32,8 @@ import AVKit
 
 class PlayerLayerView: UIView {
     
+    let cache = MemoryCache.shared
+    
     var state : PlayerState = .unknown
     var player : AVPlayer
     
@@ -143,6 +145,7 @@ class PlayerLayerView: UIView {
         case .play:
             isReadyToPlay = true
             play()
+            seekToCachedProgress()
         case .paused:
             pause()
         case .seeking(let time):
@@ -153,6 +156,7 @@ class PlayerLayerView: UIView {
                 self.publish(state: .seekDone)
             }
         case .stop:
+            cachePlayProgress()
             resetVariables()
             stop()
         default:
@@ -166,6 +170,26 @@ class PlayerLayerView: UIView {
         isReadyToDisplay = false
         isSeekingInProgress = false
         chaseTime = .zero
+    }
+    
+    func cachePlayProgress() {
+        if let key = getVideoUrl(from: player) {
+            let seconds = CMTimeGetSeconds(player.currentTime())
+            let number = NSNumber(floatLiteral: seconds)
+            cache.setObject(number, forKey: key)
+        }
+    }
+    
+    func seekToCachedProgress() {
+        if let key = getVideoUrl(from: player) {
+            if let time = cache.object(forKey: key),let item = player.currentItem {
+                let duration = CMTimeGetSeconds(item.duration)
+                let seekTime = time.doubleValue
+                if seekTime < duration {
+                    publish(state: .seeking(seekTime))
+                }
+            }
+        }
     }
     
     private func observerFirstFrame() {
@@ -188,6 +212,15 @@ class PlayerLayerView: UIView {
             }
             isReadyToDisplay = value.boolValue
         }
+    }
+    
+    func getVideoUrl(from player : AVPlayer) -> NSString? {
+        if let asset = player.currentItem?.asset {
+            if let urlAsset = asset as? AVURLAsset {
+                return urlAsset.url.absoluteString as NSString
+            }
+        }
+        return nil
     }
 }
 
