@@ -45,7 +45,7 @@ public enum PlayerModeState {
 
 /// player state
 public enum PlayerState : Equatable {
-    case prepare(_ item : AVPlayerItem)
+    case prepare(_ indexPath : IndexPath?)
     case play
     case paused
     case seeking(_ time : TimeInterval)
@@ -59,7 +59,10 @@ public enum PlayerState : Equatable {
     case mode(_ mode    : PlayerModeState)
     case network(_ net  : PlayerNetworkState)
     case unknown
-//    case underlying(item : PlayerItem)
+    
+    public static func prepare(at indexPath : IndexPath) -> PlayerState {
+        return .prepare(indexPath)
+    }
     
     public static func stop(at indexPath : IndexPath) -> PlayerState {
         return .stop(indexPath)

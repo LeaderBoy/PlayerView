@@ -38,18 +38,15 @@ public class EventBus {
     typealias WeakSet = Set<WeakBox>
     /// a Dictionary for store weakSet
     private var subscribed : [ObjectIdentifier:WeakSet] = [:]
-    
     /// Add subscriber and event type
     /// - Parameter subscriber: subscriber,subscriber must be AnyObject
     /// - Parameter event: with the purpose of get unique identifier by ObjectIdentifier(x: Any.Type)
     public func add<T,E>(subscriber :T,for event : E.Type) {
         let identifier = ObjectIdentifier(event)
-        let weakSet = subscribed[identifier] ?? []
-        // update first to prevent insert same value
-        var newSet = update(set: weakSet) ?? []
+        var weakSet = subscribed[identifier] ?? []
         let weakBox = WeakBox(subscriber as AnyObject)
-        newSet.insert(weakBox)
-        subscribed[identifier] = newSet
+        weakSet.insert(weakBox)
+        subscribed[identifier] = update(set: weakSet) ?? []
     }
     
     public func remove<T,E>(subscriber :T,for event : E.Type) {

@@ -38,7 +38,7 @@ import AVKit
 public protocol PlayerStateSubscriber : EventBusIdentifiable {
     /// Receive various state
     /// - Parameter state: player current state
-    func receive(_ state : PlayerState)
+    func receive(state : PlayerState)
 }
 
 extension PlayerStateSubscriber {

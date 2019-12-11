@@ -216,21 +216,21 @@ class ControlsView : UIView {
     // MARK: - Event
     @IBAction func play(_ sender: UIButton) {
         if sender.isSelected {
-            publish(.paused)
+            publish(state: .paused)
         }else {
-            publish(.play)
+            publish(state: .play)
         }
     }
     
     @IBAction func back(_ sender: UIButton) {
-        publish(.mode(.portrait))
+        publish(state: .mode(.portrait))
     }
     
     @IBAction func full(_ sender: UIButton) {
         if sender.isSelected {
-            publish(.mode(.portrait))
+            publish(state: .mode(.portrait))
         }else {
-            publish(.mode(.landscape))
+            publish(state: .mode(.landscape))
         }
     }
     
@@ -240,7 +240,7 @@ class ControlsView : UIView {
         oldPosition = time
         position = time
         updatePosition(time)
-        publish(.seeking(time))
+        publish(state: .seeking(time))
     }
     
     @objc func sliderTouchCancel(_ slider:UISlider) {
@@ -384,7 +384,7 @@ class ControlsView : UIView {
         case .status(let s):
             if s == .readyToPlay {
                 isReadyToPlay = true
-                publish(.play)
+                publish(state: .play)
             }
         case .duration(let t):
             duration = t
@@ -396,9 +396,9 @@ class ControlsView : UIView {
             isBufferFull = f
         case .interrupted(let t):
             if t == .began {
-                publish(.paused)
+                publish(state: .paused)
             }else if t == .ended {
-                publish(.play)
+                publish(state: .play)
             }
         default:
             break
@@ -418,11 +418,11 @@ extension ControlsView : PlayerStateSubscriber {
         return bus
     }
     
-    func receive(_ value: PlayerState) {
-        if state == value {
+    func receive(state: PlayerState) {
+        if self.state == state {
             return
         }
-        handleState(state: value)
+        handleState(state: state)
     }
 }
 

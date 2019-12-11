@@ -34,16 +34,16 @@ import Foundation
 /// second : when you need to change player's state,just call publish(.yourstate)
 public protocol PlayerStatePublisher : EventBusIdentifiable {
     /// dispatch player's current state
-    /// - Parameter value: player state
-    func publish(_ value : PlayerState)
+    /// - Parameter state: player state
+    func publish(state : PlayerState)
 }
 
 extension PlayerStatePublisher {
     /// The default implementation,don't implement't it again
     /// - Parameter value: player current state
-    public func publish(_ value: PlayerState) {
+    public func publish(state: PlayerState) {
         eventBus.notify(event: PlayerStateSubscriber.self) { (subscriber) in
-            subscriber.receive(value)
+            subscriber.receive(state:state)
         }
     }
 }
@@ -52,15 +52,15 @@ extension PlayerStatePublisher {
 public protocol PlayerItemPublisher : EventBusIdentifiable {
     /// dispatch player's current state
     /// - Parameter value: player state
-    func publish(_ item : PlayerItem)
+    func publish(item : PlayerItem)
 }
 
 extension PlayerItemPublisher {
     /// The default implementation,don't implement't it again
     /// - Parameter value: player current item state
-    public func publish(_ value: PlayerItem) {
+    public func publish(item: PlayerItem) {
         eventBus.notify(event: PlayerItemSubscriber.self) { (subscriber) in
-            subscriber.receive(value)
+            subscriber.receive(item)
         }
     }
 }

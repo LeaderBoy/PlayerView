@@ -90,15 +90,11 @@ public class PlayerView: UIView {
     }
     
     func setup() {
-        backgroundColor = PlayerViewOptions.backgroundColor
-        
         configUI()
         addGestures()
         reachabilityCallBack()
         setupCategory()
         registerAsStateSubscriber()
-        
-        indicatorView.show()
     }
     
     func setupCategory() {
@@ -115,7 +111,7 @@ public class PlayerView: UIView {
     
     public func prepare(url : URL,in container : UIView,at indexPath : IndexPath? = nil) {
         if item != nil {
-            publish(.stop(indexPath))
+            publish(state: .stop(indexPath))
         }
         
         self.indexPath = indexPath
@@ -127,7 +123,7 @@ public class PlayerView: UIView {
         itemObserver.item = item
         itemObserver.player = player
         // loading
-        publish(.prepare(item))
+        publish(state: .prepare(indexPath))
         
         container.addSubview(self)
         translatesAutoresizingMaskIntoConstraints = false
@@ -135,7 +131,7 @@ public class PlayerView: UIView {
     }
     
     public func stop(at indexPath : IndexPath? = nil) {
-        publish(.stop(indexPath))
+        publish(state: .stop(indexPath))
     }
         
     func resetVariables() {
@@ -146,7 +142,8 @@ public class PlayerView: UIView {
     }
     
     func configUI() {
-        
+        backgroundColor = PlayerViewOptions.backgroundColor
+
         addSubview(layerView)
         layerView.bus = eventBus
         layerView.edges(to: self)
@@ -191,11 +188,11 @@ public class PlayerView: UIView {
     func handleReachability(status : Reachability.Status) {
         switch status {
         case .unReachable:
-            publish(.network(.networkUnReachable))
+            publish(state: .network(.networkUnReachable))
         case .wifi:
-            publish(.network(.wifi))
+            publish(state: .network(.wifi))
         case .wwan:
-            publish(.network(.wwan))
+            publish(state: .network(.wwan))
         }
     }
     
@@ -241,11 +238,11 @@ extension PlayerView : UIGestureRecognizerDelegate {
 
 
 extension PlayerView : PlayerStateSubscriber {
-    public func receive(_ value: PlayerState) {
-        if state == value {
+    public func receive(state: PlayerState) {
+        if self.state == state {
             return
         }
-        handle(state: value)
+        handle(state: state)
     }
 }
 

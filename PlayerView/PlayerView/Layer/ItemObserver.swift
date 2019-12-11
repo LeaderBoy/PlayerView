@@ -160,7 +160,8 @@ public class ItemObserver: NSObject {
         guard let newChange = change, let newError = newChange[.newKey] as? Error else {
             return
         }
-        publish(.error(newError))
+        publish(state: .error(newError))
+        publish(item : .error(newError))
     }
     
     func observeDurationValue(change: [NSKeyValueChangeKey : Any]?) {
@@ -172,7 +173,7 @@ public class ItemObserver: NSObject {
         let seconds = CMTimeGetSeconds(time)
         if duration >= 0 {
             duration = seconds
-            publish(.duration(seconds))
+            publish(item: .duration(seconds))
         }
     }
     
@@ -180,7 +181,7 @@ public class ItemObserver: NSObject {
         guard let newChange = change, let value = newChange[.newKey] as? NSNumber,let status = AVPlayer.Status(rawValue: value.intValue) else{
             return
         }
-        publish(.status(status))
+        publish(item: .status(status))
     }
     
     func observeLoadedTimeRangesValue(change: [NSKeyValueChangeKey : Any]?) {
@@ -193,44 +194,47 @@ public class ItemObserver: NSObject {
         let bufferTime = startSeconds + durationSeconds
         
         if bufferTime >= duration {
-            publish(.bufferFull(true))
+            publish(state: .bufferFull(true))
+            publish(item :.bufferFull(true))
         }
-        publish(.loadedTime(bufferTime))
+        publish(item : .loadedTime(bufferTime))
     }
     
     func observePlaybackBufferEmptyValue(change: [NSKeyValueChangeKey : Any]?) {
         guard let newChange = change, let value = newChange[.newKey] as? NSNumber else{
             return
         }
-        publish(.bufferEmpty(value.boolValue))
+        publish(item : .bufferEmpty(value.boolValue))
     }
     
     func observePlaybackBufferFullValue(change: [NSKeyValueChangeKey : Any]?) {
         guard let newChange = change, let value = newChange[.newKey] as? NSNumber else{
             return
         }
-        publish(.bufferFull(value.boolValue))
+        publish(state : .bufferFull(value.boolValue))
+        publish(item : .bufferFull(value.boolValue))
     }
     
     func observePlaybackLikelyToKeepUpValue(change: [NSKeyValueChangeKey : Any]?) {
         guard let newChange = change, let value = newChange[.newKey] as? NSNumber else{
             return
         }
-        publish(.likelyKeepUp(value.boolValue))
+        publish(item : .likelyKeepUp(value.boolValue))
     }
     
     @objc func observePlayToEndTime(note: Notification) {
         guard let item = note.object as? AVPlayerItem,player?.currentItem == item else{
             return
         }
-        publish(.finished)
+        publish(state: .finished)
+        publish(item :.finished)
     }
     
     @objc func observeInterrupted(note: Notification) {
         guard let userInfo = note.userInfo else { return }
         if let value = userInfo[AVAudioSessionInterruptionTypeKey] as? NSNumber,let type = AVAudioSession.InterruptionType(rawValue: value.uintValue) {
             if let item = note.object as? AVPlayerItem,item == self.item {
-                publish(.interrupted(type))
+                publish(item :.interrupted(type))
             }
         }
     }
@@ -334,7 +338,7 @@ public class ItemObserver: NSObject {
             }
             
             if player.timeControlStatus == .playing {
-                self.publish(.position(current))
+                self.publish(item :.position(current))
             }
         }
     }
@@ -346,3 +350,5 @@ extension ItemObserver : PlayerItemPublisher {
         return bus
     }
 }
+
+extension ItemObserver : PlayerStatePublisher {}

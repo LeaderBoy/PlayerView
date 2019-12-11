@@ -32,6 +32,7 @@ class IndicatorView: UIView {
         
     var isBufferFull = false
     var isBufferEmpty = false
+    var indexPath : IndexPath?
     
     @IBOutlet weak var customView: UIView!
     @IBOutlet weak var indicatorView: UIView!
@@ -79,56 +80,94 @@ class IndicatorView: UIView {
         isHidden = true
     }
     
+    func resetVariables() {
+        isBufferEmpty = false
+        isBufferFull = false
+    }
+    
     func handle(state : PlayerState) {
         reloadState(state: state)
     }
 
-    func handleMode(state : PlayerModeState) {
-        
-    }
-    
     func reloadState(state : PlayerState) {
         switch state {
+        case .prepare(let indexPath):
+            self.indexPath = indexPath
         case .bufferFull(let isFull):
             isBufferFull = isFull
         case .bufferEmpty(let isEmpty):
             isBufferEmpty = isEmpty
         case .error(let e):
-            errorView(e)
+            handleError(e)
         case .network(let state):
             handleNetworkState(state)
+        case .stop(_):
+            resetVariables()
         default:
             break
         }
     }
     
-    func errorView(_ error : Error) {
+    func handleError(_ error : Error) {
+        if isBufferFull {
+            return
+        }
+        
         leftButton.isHidden = false
         rightButton.isHidden = true
         
-        
+        if error.isTimeout() {
+            handleNetworkState(.timeout)
+        }else if error.isInternetUnavailable() {
+            handleNetworkState(.networkUnReachable)
+        }else {
+            let title = NSLocalizedString("player-indicator-left-button-retry", comment: "Retry again")
+            let message = NSLocalizedString("player-indicator-label-error", comment: "Load failed")
+            label.text = message
+            leftButton.setTitle(title, for: .normal)
+        }
     }
     
     func handleNetworkState(_ state : PlayerNetworkState) {
+        
+        if isBufferFull {
+            return
+        }
+        
+        show()
         rightButton.isHidden = true
         leftButton.isHidden = false
         var message : String = ""
-        var title = ""
+        var title = NSLocalizedString("player-indicator-left-button-retry", comment: "Retry again")
         switch state {
         case .networkUnReachable:
-            title = NSLocalizedString("a", comment: "retry again")
-            message = NSLocalizedString("player-networkUnreachable", comment: "Network connection has been lost")
-        default:
-            break
-//        case .timeout:
-//        case .wifi:
-//        case .wwan:
-//            rightButton.isHidden = false
+            message = NSLocalizedString("player-indicator-label-network-unreachable", comment: "Network connection has been lost")
+        case .timeout:
+            message = NSLocalizedString("player-indicator-label-network-timeout", comment: "Time out")
+        case .wifi:
+            message = ""
+            hide()
+        case .wwan:
+            title = NSLocalizedString("player-indicator-left-button", comment: "Continue play")
+            message = NSLocalizedString("player-indicator-label-network-wwan", comment: "wwan")
+            rightButton.isHidden = false
         }
         
         label.text = message
         leftButton.setTitle(title, for: .normal)
     }
+    
+    @IBAction func leftButtonClicked(_ sender: UIButton) {
+        hide()
+        publish(state: .play)
+    }
+    
+    @IBAction func rightButtonClicked(_ sender: UIButton) {
+        hide()
+        publish(state: .stop(indexPath))
+    }
+    
+    
     
     
 }
@@ -138,8 +177,9 @@ extension IndicatorView : PlayerStateSubscriber {
         return bus
     }
     
-    func receive(_ value: PlayerState) {
-        handle(state: value)
+    func receive(state: PlayerState) {
+        handle(state: state)
     }
-    
 }
+
+extension IndicatorView : PlayerStatePublisher {}

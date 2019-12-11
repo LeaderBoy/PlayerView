@@ -18,8 +18,9 @@
 		2FCEBEAC239E2D72000FEDB6 /* HomeListCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2FCEBEAA239E2D72000FEDB6 /* HomeListCell.xib */; };
 		2FE975A0239E61E800DF782D /* VideoDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FE9759E239E61E800DF782D /* VideoDetailViewController.swift */; };
 		2FE975A1239E61E800DF782D /* VideoDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2FE9759F239E61E800DF782D /* VideoDetailViewController.xib */; };
+		52046AD923A0A023008B0B43 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 52046ADB23A0A023008B0B43 /* Localizable.strings */; };
+		52046ADD23A0B116008B0B43 /* IndicatorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52046ADF23A0B116008B0B43 /* IndicatorView.xib */; };
 		520595822385938300BBEF77 /* IndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 520595812385938300BBEF77 /* IndicatorView.swift */; };
-		520595842385939500BBEF77 /* IndicatorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520595832385939500BBEF77 /* IndicatorView.xib */; };
 		5292111A2388256800DF1101 /* VideoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 529211182388256800DF1101 /* VideoCell.swift */; };
 		5292111B2388256800DF1101 /* VideoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 529211192388256800DF1101 /* VideoCell.xib */; };
 		529E2D18239226BB0026055D /* Subscriber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 529E2D17239226BB0026055D /* Subscriber.swift */; };
@@ -71,8 +72,14 @@
 		2FE9759F239E61E800DF782D /* VideoDetailViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VideoDetailViewController.xib; sourceTree = "<group>"; };
 		3971F510E861A880C845727C /* Pods-PlayerView.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PlayerView.debug.xcconfig"; path = "Target Support Files/Pods-PlayerView/Pods-PlayerView.debug.xcconfig"; sourceTree = "<group>"; };
 		4587459A44D3AAD8D083C900 /* Pods-PlayerView.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PlayerView.release.xcconfig"; path = "Target Support Files/Pods-PlayerView/Pods-PlayerView.release.xcconfig"; sourceTree = "<group>"; };
+		52046AD523A09F6D008B0B43 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Main.strings"; sourceTree = "<group>"; };
+		52046AD623A09F6D008B0B43 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
+		52046ADA23A0A023008B0B43 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		52046ADC23A0A027008B0B43 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		52046ADE23A0B116008B0B43 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/IndicatorView.xib; sourceTree = "<group>"; };
+		52046AE023A0B11F008B0B43 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/IndicatorView.strings; sourceTree = "<group>"; };
+		52046AE123A0B121008B0B43 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/IndicatorView.strings"; sourceTree = "<group>"; };
 		520595812385938300BBEF77 /* IndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndicatorView.swift; sourceTree = "<group>"; };
-		520595832385939500BBEF77 /* IndicatorView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = IndicatorView.xib; sourceTree = "<group>"; };
 		529211182388256800DF1101 /* VideoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCell.swift; sourceTree = "<group>"; };
 		529211192388256800DF1101 /* VideoCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VideoCell.xib; sourceTree = "<group>"; };
 		529E2D17239226BB0026055D /* Subscriber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Subscriber.swift; sourceTree = "<group>"; };
@@ -141,7 +148,7 @@
 			isa = PBXGroup;
 			children = (
 				520595812385938300BBEF77 /* IndicatorView.swift */,
-				520595832385939500BBEF77 /* IndicatorView.xib */,
+				52046ADF23A0B116008B0B43 /* IndicatorView.xib */,
 			);
 			path = Indicator;
 			sourceTree = "<group>";
@@ -233,6 +240,7 @@
 				52F896AE238626E900D87D9E /* Reachability */,
 				520595802385937000BBEF77 /* Indicator */,
 				52F896A32385142300D87D9E /* Extension */,
+				52046ADB23A0A023008B0B43 /* Localizable.strings */,
 			);
 			path = PlayerView;
 			sourceTree = "<group>";
@@ -351,6 +359,7 @@
 			knownRegions = (
 				en,
 				Base,
+				"zh-Hans",
 			);
 			mainGroup = 52F8966F2385123D00D87D9E;
 			productRefGroup = 52F896792385123D00D87D9E /* Products */;
@@ -369,13 +378,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				52F896882385124000D87D9E /* LaunchScreen.storyboard in Resources */,
+				52046AD923A0A023008B0B43 /* Localizable.strings in Resources */,
 				52F896B823866B8100D87D9E /* ControlsView.xib in Resources */,
 				2FCEBEAC239E2D72000FEDB6 /* HomeListCell.xib in Resources */,
 				2FCEBEA0239E216B000FEDB6 /* movie.json in Resources */,
 				5292111B2388256800DF1101 /* VideoCell.xib in Resources */,
 				52F896852385124000D87D9E /* Assets.xcassets in Resources */,
 				2FE975A1239E61E800DF782D /* VideoDetailViewController.xib in Resources */,
-				520595842385939500BBEF77 /* IndicatorView.xib in Resources */,
+				52046ADD23A0B116008B0B43 /* IndicatorView.xib in Resources */,
 				52F896832385123D00D87D9E /* Main.storyboard in Resources */,
 				52A797282386A4CB0043EB99 /* PlayerViewController.xib in Resources */,
 				2FCEBEA8239E294A000FEDB6 /* HomeViewController.xib in Resources */,
@@ -490,10 +500,30 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		52046ADB23A0A023008B0B43 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				52046ADA23A0A023008B0B43 /* en */,
+				52046ADC23A0A027008B0B43 /* zh-Hans */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		52046ADF23A0B116008B0B43 /* IndicatorView.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				52046ADE23A0B116008B0B43 /* Base */,
+				52046AE023A0B11F008B0B43 /* en */,
+				52046AE123A0B121008B0B43 /* zh-Hans */,
+			);
+			name = IndicatorView.xib;
+			sourceTree = "<group>";
+		};
 		52F896812385123D00D87D9E /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
 				52F896822385123D00D87D9E /* Base */,
+				52046AD523A09F6D008B0B43 /* zh-Hans */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -502,6 +532,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				52F896872385124000D87D9E /* Base */,
+				52046AD623A09F6D008B0B43 /* zh-Hans */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -513,6 +544,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -573,6 +605,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";

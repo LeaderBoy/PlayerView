@@ -150,7 +150,7 @@ class PlayerLayerView: UIView {
                 guard let self = self else {
                     return
                 }
-                self.publish(.seekDone)
+                self.publish(state: .seekDone)
             }
         case .stop:
             resetVariables()
@@ -196,11 +196,11 @@ extension PlayerLayerView : PlayerStateSubscriber {
         return bus
     }
     
-    func receive(_ value: PlayerState) {
-        if state == value {
+    func receive(state: PlayerState) {
+        if self.state == state {
             return
         }
-        handle(state:value)
+        handle(state:state)
     }
 }
 
