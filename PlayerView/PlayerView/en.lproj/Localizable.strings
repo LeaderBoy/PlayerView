@@ -1,0 +1,10 @@
+/* 
+  Localizable.strings
+  PlayerView
+
+  Created by 杨志远 on 2019/12/11.
+  Copyright © 2019 BaQiWL. All rights reserved.
+*/
+
+"player-indicator-left-button" = "YES";
+"player-indicator-right-button" = "NO";

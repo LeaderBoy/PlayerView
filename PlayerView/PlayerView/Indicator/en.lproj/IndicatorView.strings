@@ -1,0 +1,10 @@
+/* Class = "UIButton"; normalTitle = "继续播放"; ObjectID = "2IB-gH-7Jb"; */
+"2IB-gH-7Jb.normalTitle" = "YES";
+
+/* Class = "UILabel"; text = "当前为移动网络,是否继续播放?"; ObjectID = "DZR-le-QH8"; */
+"DZR-le-QH8.text" = "Using mobile network, whether to continue playing";
+
+/* Class = "UIButton"; normalTitle = "退出播放"; ObjectID = "m9C-kR-L33"; */
+"m9C-kR-L33.normalTitle" = "NO";
+
+
