@@ -230,6 +230,7 @@ public class PlayerView: UIView {
             animator!.present()
             shouldStatusBarHidden = true
         case .mode(.portrait):
+            PlayerUIInterfaceOrientation.shared.current = [.portrait]
             animator!.dismiss()
             shouldStatusBarHidden = false
         case .stop(_):

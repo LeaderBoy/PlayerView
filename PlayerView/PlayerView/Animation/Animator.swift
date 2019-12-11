@@ -174,7 +174,6 @@ class Animator : NSObject {
             self.lanWindow.alpha = 0
             self.state = .animating
         }) { (_) in
-            PlayerUIInterfaceOrientation.shared.current = [.portrait]
             self.lanWindow.isHidden = true
             self.lanWindow.alpha = 1.0
             snap.removeFromSuperview()
