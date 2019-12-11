@@ -144,8 +144,8 @@ class PlayerLayerView: UIView {
             break
         case .play:
             isReadyToPlay = true
-            play()
             seekToCachedProgress()
+            play()
         case .paused:
             pause()
         case .seeking(let time):

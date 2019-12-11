@@ -34,6 +34,9 @@ public protocol EventBusIdentifiable {
 
 
 public class EventBus {
+    
+    let lock = NSRecursiveLock()
+    
     /// weakBox's set
     typealias WeakSet = Set<WeakBox>
     /// a Dictionary for store weakSet
@@ -61,12 +64,14 @@ public class EventBus {
     /// - Parameter event: event type
     /// - Parameter closure: a closure that the register should excute
     public func notify<T>(event:T.Type, closure: @escaping (T) -> ()) {
+        lock.lock()
         let identifier = ObjectIdentifier(event)
         if let subscribers = subscribed[identifier] {
             for subscriber in subscribers.lazy.compactMap({$0.object as? T}) {
                 closure(subscriber)
             }
         }
+        lock.unlock()
     }
     
     /// clean up nil object from subscribed

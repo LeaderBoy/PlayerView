@@ -146,6 +146,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		52046AE423A0E9C2008B0B43 /* Cache */ = {
+			isa = PBXGroup;
+			children = (
+				52046AE223A0DE63008B0B43 /* MemoryCache.swift */,
+			);
+			path = Cache;
+			sourceTree = "<group>";
+		};
 		520595802385937000BBEF77 /* Indicator */ = {
 			isa = PBXGroup;
 			children = (
@@ -235,7 +243,7 @@
 				52F8969E2385136D00D87D9E /* PlayerView.swift */,
 				2FB2B5D0239FBDD90028E130 /* PlayerViewOptions.swift */,
 				52D7421B239412F90068C08D /* PlayerState.swift */,
-				52046AE223A0DE63008B0B43 /* MemoryCache.swift */,
+				52046AE423A0E9C2008B0B43 /* Cache */,
 				5286A21E239797120028D898 /* PubSub */,
 				52A797292386A7340043EB99 /* Animation */,
 				52F896A2238513AA00D87D9E /* Layer */,
