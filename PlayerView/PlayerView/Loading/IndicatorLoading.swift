@@ -71,12 +71,6 @@ class IndicatorLoading: UIView {
         setup()
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        subLayer.anchorPoint = CGPoint(x: 0.5, y: 0.5)
-        subLayer.position = CGPoint(x: layerView.bounds.midX, y: layerView.bounds.midY)
-    }
-    
     func setup() {
         setupTopLayer()
         setupBottomLayer()
@@ -162,6 +156,7 @@ class IndicatorLoading: UIView {
     func setupLayerView() {
         let width = centerX * 2
         let layerView = UIView()
+        subLayer.position = CGPoint(x: centerX, y: centerX)
         layerView.layer.addSublayer(subLayer)
         layerView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(layerView)
@@ -205,7 +200,10 @@ class IndicatorLoading: UIView {
         switch state {
         case .bufferFull(let full):
             isBufferFull = full
-        case .prepare(_),.seeking(_),.loading:
+        case .prepare(_):
+            resetVariables()
+            show()
+        case .seeking(_),.loading:
             show()
         case .play,.paused,.seekDone,.network(_):
             hide()
