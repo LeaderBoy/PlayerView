@@ -175,8 +175,11 @@ class PlayerLayerView: UIView {
     func cachePlayProgress() {
         if let key = getVideoUrl(from: player) {
             let seconds = CMTimeGetSeconds(player.currentTime())
-            let number = NSNumber(floatLiteral: seconds)
-            cache.setObject(number, forKey: key)
+            // for show original frame
+            if seconds >= 5.0 {
+                let number = NSNumber(floatLiteral: seconds - 3)
+                cache.setObject(number, forKey: key)
+            }
         }
     }
     
