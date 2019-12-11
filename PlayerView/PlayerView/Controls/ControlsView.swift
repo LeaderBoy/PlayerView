@@ -53,10 +53,7 @@ class ControlsView : UIView {
     @IBOutlet weak var controlsStackView: UIStackView!
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var containerLeftLayout: NSLayoutConstraint!
-    
-    
     @IBOutlet weak var loadingView: IndicatorLoading!
-    @IBOutlet weak var sliderContainerView: UIView!
     
     public var isSliding = false {
         didSet {
@@ -163,24 +160,23 @@ class ControlsView : UIView {
     }
     
     func configUI() {
+        // Slider
         slider.minimumTrackTintColor = ControlsViewOptions.sliderMinTrackColor
         slider.maximumTrackTintColor = ControlsViewOptions.sliderMaxTrackColor
         slider.thumbImage = ControlsViewOptions.sliderImage
-        
+        // ProgressView
+        progressView.trackTintColor = ControlsViewOptions.progressTrackTintColor
+        progressView.tintColor = ControlsViewOptions.progressTintColor
+        // Button
         playButton.setImage(ControlsViewOptions.playButtonImage, for: .normal)
         playButton.setImage(ControlsViewOptions.playButtonSelectedImage, for: .selected)
         playButton.setImage(ControlsViewOptions.playButtonSelectedImage, for: UIControl.State.init(arrayLiteral: .selected,.highlighted))
-        
         backButton.setImage(ControlsViewOptions.backButtonImage, for: .normal)
-        
+        fullButton.isHidden = ControlsViewOptions.disableFullScreen
+        // Label
         startLabel.textColor = ControlsViewOptions.timeLabelColor
         endLabel.textColor = ControlsViewOptions.timeLabelColor
-        
-        progressView.trackTintColor = ControlsViewOptions.progressTrackTintColor
-        progressView.tintColor = ControlsViewOptions.progressTintColor
-        
-        fullButton.isHidden = ControlsViewOptions.disableFullScreen
-        
+        // StackView
         controlsStackView.isHidden = ControlsViewOptions.disableSlideControls
     }
     
