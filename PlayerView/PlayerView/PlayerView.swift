@@ -112,7 +112,7 @@ public class PlayerView: UIView {
     
     public func prepare(url : URL,in container : UIView,at indexPath : IndexPath? = nil) {
         if item != nil {
-            publish(state: .stop(indexPath))
+            publish(state: .stop(self.indexPath))
         }
         
         self.indexPath = indexPath
@@ -131,8 +131,8 @@ public class PlayerView: UIView {
         edges(to: container)
     }
     
-    public func stop(at indexPath : IndexPath? = nil) {
-        publish(state: .stop(indexPath))
+    public func stop() {
+        publish(state: .stop(self.indexPath))
     }
         
     func resetVariables() {

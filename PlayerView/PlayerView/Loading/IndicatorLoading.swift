@@ -59,6 +59,7 @@ class IndicatorLoading: UIView {
     }
     
     var isBufferFull = false
+    var indexPath : IndexPath?
     
     
     override init(frame: CGRect) {
@@ -191,6 +192,11 @@ class IndicatorLoading: UIView {
     }
     
     func handle(state : PlayerState) {
+        // fixed a bug about isBufferFull always true
+        let stop = PlayerState.stop(indexPath)
+        if case state = stop {
+            resetVariables()
+        }
         
         if isBufferFull {
             hide()
@@ -200,8 +206,8 @@ class IndicatorLoading: UIView {
         switch state {
         case .bufferFull(let full):
             isBufferFull = full
-        case .prepare(_):
-            resetVariables()
+        case .prepare(let i):
+            indexPath = i
             show()
         case .seeking(_),.loading:
             show()
@@ -217,6 +223,7 @@ class IndicatorLoading: UIView {
     
     func resetVariables() {
         isBufferFull = false
+        indexPath = nil
     }
 
 }
