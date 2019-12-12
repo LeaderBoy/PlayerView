@@ -35,6 +35,8 @@ struct PlayerViewOptions {
     public static var disableIndicatorLoading = false
     public static var backgroundColor : UIColor = .black
     public static var disableCacheProgress = false
+    public static var disableMotionMonitor = false
+
 }
 
 

@@ -80,6 +80,7 @@ public class PlayerView: UIView {
     private lazy var controlsView  = ControlsView()
     private lazy var itemObserver = ItemObserver()
     private lazy var loadingView = IndicatorLoading()
+    private lazy var motionManager = MotionManager()
     
     var animator : Animator?
 
@@ -174,6 +175,13 @@ public class PlayerView: UIView {
             indicatorView.bus = eventBus
         }
         
+        if !PlayerViewOptions.disableMotionMonitor {
+//            motionManager.bus = eventBus
+//            motionManager.updateOrientation = { ori in
+//                print(ori)
+//            }
+        }
+        
         itemObserver.bus = eventBus
     }
     
@@ -230,7 +238,7 @@ public class PlayerView: UIView {
             animator!.present()
             shouldStatusBarHidden = true
         case .mode(.portrait):
-            PlayerUIInterfaceOrientation.shared.current = [.portrait]
+            PlayerUIInterfaceOrientation.shared.current = [.portrait,.landscapeRight]
             animator!.dismiss()
             shouldStatusBarHidden = false
         case .stop(_):

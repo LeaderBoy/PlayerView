@@ -22,6 +22,7 @@
 		52046ADD23A0B116008B0B43 /* IndicatorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52046ADF23A0B116008B0B43 /* IndicatorView.xib */; };
 		52046AE323A0DE63008B0B43 /* MemoryCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52046AE223A0DE63008B0B43 /* MemoryCache.swift */; };
 		520595822385938300BBEF77 /* IndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 520595812385938300BBEF77 /* IndicatorView.swift */; };
+		526C9F0623A1CE4F007F10A3 /* MotionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 526C9F0523A1CE4F007F10A3 /* MotionManager.swift */; };
 		5292111A2388256800DF1101 /* VideoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 529211182388256800DF1101 /* VideoCell.swift */; };
 		5292111B2388256800DF1101 /* VideoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 529211192388256800DF1101 /* VideoCell.xib */; };
 		529E2D18239226BB0026055D /* Subscriber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 529E2D17239226BB0026055D /* Subscriber.swift */; };
@@ -82,6 +83,7 @@
 		52046AE123A0B121008B0B43 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/IndicatorView.strings"; sourceTree = "<group>"; };
 		52046AE223A0DE63008B0B43 /* MemoryCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryCache.swift; sourceTree = "<group>"; };
 		520595812385938300BBEF77 /* IndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndicatorView.swift; sourceTree = "<group>"; };
+		526C9F0523A1CE4F007F10A3 /* MotionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionManager.swift; sourceTree = "<group>"; };
 		529211182388256800DF1101 /* VideoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCell.swift; sourceTree = "<group>"; };
 		529211192388256800DF1101 /* VideoCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VideoCell.xib; sourceTree = "<group>"; };
 		529E2D17239226BB0026055D /* Subscriber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Subscriber.swift; sourceTree = "<group>"; };
@@ -161,6 +163,14 @@
 				52046ADF23A0B116008B0B43 /* IndicatorView.xib */,
 			);
 			path = Indicator;
+			sourceTree = "<group>";
+		};
+		526C9F0423A1CE2C007F10A3 /* Motion */ = {
+			isa = PBXGroup;
+			children = (
+				526C9F0523A1CE4F007F10A3 /* MotionManager.swift */,
+			);
+			path = Motion;
 			sourceTree = "<group>";
 		};
 		5286A21E239797120028D898 /* PubSub */ = {
@@ -259,6 +269,7 @@
 				52F8969E2385136D00D87D9E /* PlayerView.swift */,
 				2FB2B5D0239FBDD90028E130 /* PlayerViewOptions.swift */,
 				52D7421B239412F90068C08D /* PlayerState.swift */,
+				526C9F0423A1CE2C007F10A3 /* Motion */,
 				52B74E7323A100DE002CCAEE /* Controller */,
 				52B74E7223A10058002CCAEE /* Loading */,
 				52046AE423A0E9C2008B0B43 /* Cache */,
@@ -484,6 +495,7 @@
 				5292111A2388256800DF1101 /* VideoCell.swift in Sources */,
 				2FCEBEAB239E2D72000FEDB6 /* HomeListCell.swift in Sources */,
 				52046AE323A0DE63008B0B43 /* MemoryCache.swift in Sources */,
+				526C9F0623A1CE4F007F10A3 /* MotionManager.swift in Sources */,
 				52A7973C238E15B90043EB99 /* IndicatorLoading.swift in Sources */,
 				2FCEBEA4239E21F5000FEDB6 /* RootViewControllerInitial.swift in Sources */,
 				52F896AB23852B3A00D87D9E /* ItemObserver.swift in Sources */,
