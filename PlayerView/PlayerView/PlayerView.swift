@@ -54,7 +54,6 @@ public class PlayerView: UIView {
     weak public var delegate : PlayerViewDelegate?
     
     public var indexPath : IndexPath?
-    
     public var eventBus = EventBus()
     
     public var state : PlayerState = .unknown
@@ -83,6 +82,8 @@ public class PlayerView: UIView {
     private lazy var motionManager = MotionManager()
     
     var animator : Animator?
+    var animatable = true
+    var modeState : PlayerModeState = .portrait
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -101,9 +102,29 @@ public class PlayerView: UIView {
     func setup() {
         configUI()
         addGestures()
+        addObserver()
         reachabilityCallBack()
         setupCategory()
         registerAsStateSubscriber()
+    }
+    
+    func addObserver() {
+        NotificationCenter.default.addObserver(self, selector: #selector(fore), name: UIApplication.willEnterForegroundNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(back), name: UIApplication.didEnterBackgroundNotification, object: nil)
+    }
+    
+    @objc func fore() {
+        animatable = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            self.publish(state: .mode(.landscape))
+            self.animatable = true
+        }
+    }
+    
+    @objc func back() {
+        animatable = false
+        publish(state: .mode(.portrait))
+        animatable = true
     }
     
     func setupCategory() {
@@ -228,18 +249,20 @@ public class PlayerView: UIView {
     func handle(state : PlayerState) {
         switch state {
         case .mode(.landscape):
-            PlayerUIInterfaceOrientation.shared.current = [.landscapeRight]
+            PlayerUIInterfaceOrientation.shared.current = [.landscapeRight,.portrait]
             if animator == nil {
                 let animator = Animator(with: self)
                 self.animator = animator
             } else {
                 animator!.update(sourceView: self)
             }
-            animator!.present()
+            animator!.present(animated: animatable)
+            modeState = .landscape
             shouldStatusBarHidden = true
         case .mode(.portrait):
             PlayerUIInterfaceOrientation.shared.current = [.portrait,.landscapeRight]
-            animator!.dismiss()
+            animator!.dismiss(animated: animatable)
+            modeState = .portrait
             shouldStatusBarHidden = false
         case .stop(_):
             resetVariables()

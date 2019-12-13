@@ -41,6 +41,7 @@ class Animator : NSObject {
     var superView : UIView
     var keyView : UIView
     var sourceShotView : UIView!
+    var keyWindow : UIWindow!
     
     var flashTime : TimeInterval = 0.02
     
@@ -53,7 +54,7 @@ class Animator : NSObject {
     private var lanWindow : UIWindow = {
         let size = UIScreen.main.bounds.size
         let window = UIWindow(frame: CGRect(origin: .zero, size: CGSize(width: size.height, height: size.width)))
-        window.windowLevel = .alert
+        window.windowLevel = .statusBar
         window.backgroundColor = .clear
         return window
     }()
@@ -64,7 +65,8 @@ class Animator : NSObject {
         self.sourceView = sourceView
         self.sourceFrame = sourceView.convert(sourceView.bounds, to: nil)
         self.superView = sourceView.superview!
-        if let rootView = UIApplication.shared.keyWindow?.rootViewController?.view {
+        if let w = UIApplication.shared.keyWindow,let rootView = w.rootViewController?.view {
+            keyWindow = w
             keyView = rootView
             let view = rootView.snapshotView(afterScreenUpdates: false)
             self.sourceShotView = view
@@ -72,6 +74,7 @@ class Animator : NSObject {
             fatalError("keyWindow not exist")
         }
         lanWindow.rootViewController = lanVC
+                
         super.init()
     }
     
@@ -91,16 +94,16 @@ class Animator : NSObject {
     }
     
     /// Present fullScreen view
-    func present() {
-        presentWillBegin()
+    func present(animated : Bool = true) {
+        presentWillBegin(animated: animated)
     }
     
     // Dismiss from fullScreen view
-    func dismiss() {
-        dismissWillBegin()
+    func dismiss(animated : Bool = true) {
+        dismissWillBegin(animated: animated)
     }
     
-    func presentWillBegin() {
+    func presentWillBegin(animated : Bool) {
         /// To prevent multiple calls
         if state == .animating {
             return
@@ -121,36 +124,51 @@ class Animator : NSObject {
         
         lanWindow.alpha = 0
         lanWindow.makeKeyAndVisible()
-        
-        /// When sourceView removeFromSuperView and add to destinationView,view will flash
-        /// so I add an fade animation to prevent the flash
-        UIView.animate(withDuration: flashTime, animations: {
+                
+        if animated {
+            /// When sourceView removeFromSuperView and add to destinationView,view will flash
+            /// so I add an fade animation to prevent the flash
+            UIView.animate(withDuration: flashTime, animations: {
+                self.lanWindow.alpha = 1
+                self.state = .animating
+            }) { (_) in
+                self.sourceShotView.removeFromSuperview()
+                self.presentAnimating(animated: animated)
+            }
+        }else {
             self.lanWindow.alpha = 1
             self.state = .animating
-        }) { (_) in
-            
             self.sourceShotView.removeFromSuperview()
-            self.presentAnimating()
+            self.presentAnimating(animated: animated)
         }
     }
     
-    fileprivate func presentAnimating() {
+    fileprivate func presentAnimating(animated : Bool) {
         guard let sourceView = self.sourceView else { return }
         let width   = lanWindow.bounds.size.width
         let height  = lanWindow.bounds.size.height
-                
-        UIView.animate(withDuration: playerAnimationTime, delay: 0, options: .layoutSubviews, animations: {
+        
+        if animated {
+            UIView.animate(withDuration: playerAnimationTime, delay: 0, options: .layoutSubviews, animations: {
+                sourceView.center = CGPoint(x: height / 2.0, y: width / 2.0)
+                sourceView.transform = .identity
+                let newFrame = CGRect(x: 0, y: 0, width: width, height: height)
+                sourceView.frame = newFrame
+                sourceView.layer.cornerRadius = 0
+            }) { (_) in
+                self.state = .animated
+            }
+        } else {
             sourceView.center = CGPoint(x: height / 2.0, y: width / 2.0)
             sourceView.transform = .identity
             let newFrame = CGRect(x: 0, y: 0, width: width, height: height)
             sourceView.frame = newFrame
             sourceView.layer.cornerRadius = 0
-        }) { (_) in
             self.state = .animated
         }
     }
     
-    fileprivate func dismissWillBegin() {
+    fileprivate func dismissWillBegin(animated : Bool) {
         /// To prevent multiple calls
         if state == .animating {
             return
@@ -167,32 +185,68 @@ class Animator : NSObject {
         sourceView.center = CGPoint(x: height / 2.0, y: width / 2.0)
         sourceView.removeLayerAnimation()
         keyView.addSubview(sourceView)
+        
+        if animated {
+            /// when sourceView removeFromSuperView and add to keyView,view will flash
+            /// so I add an fade animation to prevent the flash
+            UIView.animate(withDuration: flashTime, animations: {
+                self.lanWindow.alpha = 0
+                self.state = .animating
+            }) { (_) in
+                /// 1. when in landscape
+                /// 2. exit the app
+                /// 3. and in
+                /// UITableView will be scaled
+                /// so use makeKeyAndVisible and layoutIfNeeded to fix that problem
+                self.keyWindow.makeKeyAndVisible()
+                self.keyView.layoutIfNeeded()
 
-        /// When sourceView removeFromSuperView and add to keyView,view will flash
-        /// so I add an fade animation to prevent the flash
-        UIView.animate(withDuration: flashTime, animations: {
+                self.lanWindow.isHidden = true
+                self.lanWindow.alpha = 1.0
+                snap.removeFromSuperview()
+                self.dismissAnimating(animated: animated)
+            }
+        } else {
             self.lanWindow.alpha = 0
             self.state = .animating
-        }) { (_) in
+            self.keyWindow.makeKeyAndVisible()
+            self.keyView.layoutIfNeeded()
+
             self.lanWindow.isHidden = true
             self.lanWindow.alpha = 1.0
             snap.removeFromSuperview()
-            self.dismissAnimating()
+            self.dismissAnimating(animated: animated)
         }
+        
     }
     
-    fileprivate func dismissAnimating() {
+    fileprivate func dismissAnimating(animated : Bool) {
         guard let sourceView = self.sourceView else { return }
         let sourceFrame = self.sourceFrame
         let superView = self.superView
         
-        UIView.animate(withDuration: playerAnimationTime, delay: 0, options:.layoutSubviews, animations: {
+        if animated {
+            UIView.animate(withDuration: playerAnimationTime, delay: 0, options:.layoutSubviews, animations: {
+                sourceView.frame = CGRect(x: sourceFrame.origin.x, y: sourceFrame.origin.y, width: sourceFrame.height, height: sourceFrame.width)
+                sourceView.center = CGPoint(x: sourceFrame.midX, y: sourceFrame.midY)
+                sourceView.transform = .identity
+                sourceView.layer.cornerRadius = superView.layer.cornerRadius
+                sourceView.layer.masksToBounds = false
+            }) { (_) in
+                superView.addSubview(sourceView)
+                sourceView.transform = .identity
+                sourceView.edges(to: superView)
+                sourceView.layer.cornerRadius = 0
+                superView.layoutIfNeeded()
+                self.state = .animated
+            }
+        } else {
             sourceView.frame = CGRect(x: sourceFrame.origin.x, y: sourceFrame.origin.y, width: sourceFrame.height, height: sourceFrame.width)
             sourceView.center = CGPoint(x: sourceFrame.midX, y: sourceFrame.midY)
             sourceView.transform = .identity
             sourceView.layer.cornerRadius = superView.layer.cornerRadius
             sourceView.layer.masksToBounds = false
-        }) { (_) in
+            
             superView.addSubview(sourceView)
             sourceView.transform = .identity
             sourceView.edges(to: superView)
@@ -200,5 +254,7 @@ class Animator : NSObject {
             superView.layoutIfNeeded()
             self.state = .animated
         }
+        
+        
     }
 }
