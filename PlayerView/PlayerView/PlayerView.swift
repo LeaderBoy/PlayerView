@@ -250,20 +250,18 @@ public class PlayerView: UIView {
         switch state {
         case .mode(.landscape):
             PlayerUIInterfaceOrientation.shared.current = [.landscapeRight,.portrait]
-            if animator == nil {
-                let animator = Animator(with: self)
-                self.animator = animator
-            } else {
-                animator!.update(sourceView: self)
-            }
-            animator!.present(animated: animatable)
+            let animator = Animator(with: self)
+            self.animator = animator
+            animator.present(animated: animatable)
             modeState = .landscape
             shouldStatusBarHidden = true
         case .mode(.portrait):
-            PlayerUIInterfaceOrientation.shared.current = [.portrait,.landscapeRight]
-            animator!.dismiss(animated: animatable)
-            modeState = .portrait
-            shouldStatusBarHidden = false
+            if animator != nil {
+                PlayerUIInterfaceOrientation.shared.current = [.portrait,.landscapeRight]
+                animator!.dismiss(animated: animatable)
+                modeState = .portrait
+                shouldStatusBarHidden = false
+            }
         case .stop(_):
             resetVariables()
             removeFromSuperview()
