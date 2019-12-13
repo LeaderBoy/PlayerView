@@ -109,11 +109,15 @@ public class PlayerView: UIView {
     }
     
     func addObserver() {
-        NotificationCenter.default.addObserver(self, selector: #selector(fore), name: UIApplication.willEnterForegroundNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(fore), name: UIApplication.didBecomeActiveNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(back), name: UIApplication.didEnterBackgroundNotification, object: nil)
     }
     
     @objc func fore() {
+        
+        if modeState == .landscape {
+            return
+        }
         animatable = true
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
             self.publish(state: .mode(.landscape))
@@ -122,6 +126,11 @@ public class PlayerView: UIView {
     }
     
     @objc func back() {
+        
+        if modeState == .portrait {
+            return
+        }
+        
         animatable = false
         publish(state: .mode(.portrait))
         animatable = true
