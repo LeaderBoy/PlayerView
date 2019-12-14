@@ -120,15 +120,25 @@ public class PlayerView: UIView {
     }
     
     @objc func didBecomeActiveNotification() {
+
         if modeState == .landscape {
             return
         }
         modeState = .landscape
-        animator?.lanWindow.makeKeyAndVisible()
+        animator?.lanWindow.alpha = 0
 
         // present playerView and remove snapshotView from superView
-        if let ator = animator {
-            ator.removeSnapshotView()
+        
+        
+        UIView.animate(withDuration: 0.1, animations: {
+            self.animator?.lanWindow.alpha = 1
+        }) { (_) in
+            if let ator = self.animator {
+                ator.removeSnapshotView()
+            }
+            self.animator?.lanWindow.makeKeyAndVisible()
+            self.publish(state: .play)
+
         }
                 
 //        if modeState == .landscape {
@@ -142,6 +152,9 @@ public class PlayerView: UIView {
     }
     
     @objc func willResignActiveNotification() {
+        
+        publish(state: .paused)
+        
         if modeState == .portrait {
             return
         }
