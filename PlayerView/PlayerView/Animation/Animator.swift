@@ -45,6 +45,10 @@ class Animator : NSObject {
     
     var flashTime : TimeInterval = 0.02
     
+    var canRemoveSnapshotView = false
+    
+    var tempSnapshotView : UIView?
+    
     private let lanVC = PlayerViewController()
     
     private var destinationView : UIView {
@@ -90,6 +94,31 @@ class Animator : NSObject {
             self.sourceShotView = view
         }else {
             fatalError("keyWindow not exist")
+        }
+    }
+    
+    private func captureSnapshotView() -> UIView? {
+        if let snapshotView = lanVC.view.snapshotView(afterScreenUpdates: false) {
+            return snapshotView
+        }
+        return nil
+    }
+    
+    func insertSnapshotView() {
+        if let snapshotView = captureSnapshotView() {
+            canRemoveSnapshotView = true
+            tempSnapshotView = snapshotView
+            tempSnapshotView!.frame = sourceView!.frame
+            tempSnapshotView!.center = keyWindow.center
+            tempSnapshotView!.transform = .init(rotationAngle: .pi / -2)
+            keyWindow.addSubview(tempSnapshotView!)
+            keyWindow.bringSubviewToFront(tempSnapshotView!)
+        }
+    }
+    
+    func removeSnapshotView() {
+        if canRemoveSnapshotView && tempSnapshotView != nil {
+            tempSnapshotView!.removeFromSuperview()
         }
     }
     
