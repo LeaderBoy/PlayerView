@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		126CBD73F51CF94ECEC99DFC /* libPods-PlayerViewUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 61220C3861F3F171D6432313 /* libPods-PlayerViewUITests.a */; };
 		2FB2B5D1239FBDD90028E130 /* PlayerViewOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB2B5D0239FBDD90028E130 /* PlayerViewOptions.swift */; };
-		2FB2B5D323A4D58A0028E130 /* NewTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB2B5D223A4D58A0028E130 /* NewTableView.swift */; };
 		2FCEBEA0239E216B000FEDB6 /* movie.json in Resources */ = {isa = PBXBuildFile; fileRef = 2FCEBE9F239E216B000FEDB6 /* movie.json */; };
 		2FCEBEA3239E21F5000FEDB6 /* RootTabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FCEBEA1239E21F5000FEDB6 /* RootTabBarViewController.swift */; };
 		2FCEBEA4239E21F5000FEDB6 /* RootViewControllerInitial.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FCEBEA2239E21F5000FEDB6 /* RootViewControllerInitial.swift */; };
@@ -64,7 +63,6 @@
 
 /* Begin PBXFileReference section */
 		2FB2B5D0239FBDD90028E130 /* PlayerViewOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewOptions.swift; sourceTree = "<group>"; };
-		2FB2B5D223A4D58A0028E130 /* NewTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTableView.swift; sourceTree = "<group>"; };
 		2FCEBE9F239E216B000FEDB6 /* movie.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = movie.json; sourceTree = "<group>"; };
 		2FCEBEA1239E21F5000FEDB6 /* RootTabBarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootTabBarViewController.swift; sourceTree = "<group>"; };
 		2FCEBEA2239E21F5000FEDB6 /* RootViewControllerInitial.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootViewControllerInitial.swift; sourceTree = "<group>"; };
@@ -238,7 +236,6 @@
 				2FCEBEA2239E21F5000FEDB6 /* RootViewControllerInitial.swift */,
 				2FCEBEA5239E294A000FEDB6 /* HomeViewController.swift */,
 				2FCEBEA6239E294A000FEDB6 /* HomeViewController.xib */,
-				2FB2B5D223A4D58A0028E130 /* NewTableView.swift */,
 				2FCEBEA9239E2D72000FEDB6 /* HomeListCell.swift */,
 				2FCEBEAA239E2D72000FEDB6 /* HomeListCell.xib */,
 				2FE9759E239E61E800DF782D /* VideoDetailViewController.swift */,
@@ -512,7 +509,6 @@
 				52F8967C2385123D00D87D9E /* AppDelegate.swift in Sources */,
 				52F8969F2385136D00D87D9E /* PlayerView.swift in Sources */,
 				2FCEBEA3239E21F5000FEDB6 /* RootTabBarViewController.swift in Sources */,
-				2FB2B5D323A4D58A0028E130 /* NewTableView.swift in Sources */,
 				52F896B22386273100D87D9E /* Reachability.swift in Sources */,
 				52F896AD2385403F00D87D9E /* PlayerLayerView.swift in Sources */,
 				52A7972D2386A7BA0043EB99 /* Animator.swift in Sources */,
