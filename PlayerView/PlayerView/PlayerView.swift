@@ -109,9 +109,15 @@ public class PlayerView: UIView {
     }
     
     func addObserver() {
+        NotificationCenter.default.addObserver(self, selector: #selector(willEnterForegroundNotification), name: UIApplication.willEnterForegroundNotification, object: nil)
+
         NotificationCenter.default.addObserver(self, selector: #selector(didBecomeActiveNotification), name: UIApplication.didBecomeActiveNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(willResignActiveNotification), name: UIApplication.willResignActiveNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didEnterBackgroundNotification), name: UIApplication.didEnterBackgroundNotification, object: nil)
+    }
+    
+    @objc func willEnterForegroundNotification() {
+        animator?.lanWindow.makeKeyAndVisible()
     }
     
     @objc func didBecomeActiveNotification() {
@@ -119,33 +125,39 @@ public class PlayerView: UIView {
 //        if let ator = animator {
 //            ator.removeSnapshotView()
 //        }
-        if modeState == .landscape {
-            return
-        }
-        animatable = true
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-            self.publish(state: .mode(.landscape))
-            self.animatable = true
-        }
+//        if modeState == .landscape {
+//            return
+//        }
+//        animatable = true
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+//            self.publish(state: .mode(.landscape))
+//            self.animatable = true
+//        }
     }
     
     @objc func willResignActiveNotification() {
-        // insert snapshotView and dismiss playerview
-//        if let ator = animator {
-//            ator.insertSnapshotView()
-//        }
-        
         if modeState == .portrait {
             return
         }
 
-        animatable = false
-        publish(state: .mode(.portrait))
-        animatable = true
+//        animatable = false
+//        publish(state: .mode(.portrait))
+//        animatable = true
+        animator?.lanWindow.isHidden = true
     }
     
     @objc func didEnterBackgroundNotification() {
+//        if let ator = animator {
+//            ator.insertSnapshotView()
+//        }
+        
+//        if modeState == .portrait {
+//            return
+//        }
 
+        animatable = false
+        publish(state: .mode(.portrait))
+        animatable = true
     }
     
     func setupCategory() {

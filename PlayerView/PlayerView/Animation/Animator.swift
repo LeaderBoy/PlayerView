@@ -55,7 +55,7 @@ class Animator : NSObject {
         return lanVC.view
     }
     
-    private var lanWindow : UIWindow = {
+    var lanWindow : UIWindow = {
         let size = UIScreen.main.bounds.size
         let window = UIWindow(frame: CGRect(origin: .zero, size: CGSize(width: size.height, height: size.width)))
         window.windowLevel = .statusBar
