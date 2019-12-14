@@ -110,7 +110,7 @@ class Animator : NSObject {
             tempSnapshotView = snapshotView
             tempSnapshotView!.frame = sourceView!.frame
             tempSnapshotView!.center = keyWindow.center
-            tempSnapshotView!.transform = .init(rotationAngle: .pi / -2)
+            tempSnapshotView!.transform = .init(rotationAngle: .pi / 2)
             keyWindow.addSubview(tempSnapshotView!)
             keyWindow.bringSubviewToFront(tempSnapshotView!)
         }

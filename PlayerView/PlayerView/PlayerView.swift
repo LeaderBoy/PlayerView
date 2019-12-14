@@ -127,9 +127,10 @@ public class PlayerView: UIView {
         animator?.lanWindow.makeKeyAndVisible()
 
         // present playerView and remove snapshotView from superView
-//        if let ator = animator {
-//            ator.removeSnapshotView()
-//        }
+        if let ator = animator {
+            ator.removeSnapshotView()
+        }
+                
 //        if modeState == .landscape {
 //            return
 //        }
@@ -147,10 +148,15 @@ public class PlayerView: UIView {
         
         modeState = .portrait
 
+        
 //        animatable = false
 //        publish(state: .mode(.portrait))
 //        animatable = true
         animator?.lanWindow.isHidden = true
+        
+        if let ator = animator {
+            ator.insertSnapshotView()
+        }
     }
     
     @objc func didEnterBackgroundNotification() {
