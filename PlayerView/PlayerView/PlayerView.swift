@@ -110,17 +110,22 @@ public class PlayerView: UIView {
     
     func addObserver() {
         NotificationCenter.default.addObserver(self, selector: #selector(willEnterForegroundNotification), name: UIApplication.willEnterForegroundNotification, object: nil)
-
         NotificationCenter.default.addObserver(self, selector: #selector(didBecomeActiveNotification), name: UIApplication.didBecomeActiveNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(willResignActiveNotification), name: UIApplication.willResignActiveNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didEnterBackgroundNotification), name: UIApplication.didEnterBackgroundNotification, object: nil)
     }
     
     @objc func willEnterForegroundNotification() {
-        animator?.lanWindow.makeKeyAndVisible()
+        
     }
     
     @objc func didBecomeActiveNotification() {
+        if modeState == .landscape {
+            return
+        }
+        modeState = .landscape
+        animator?.lanWindow.makeKeyAndVisible()
+
         // present playerView and remove snapshotView from superView
 //        if let ator = animator {
 //            ator.removeSnapshotView()
@@ -139,6 +144,8 @@ public class PlayerView: UIView {
         if modeState == .portrait {
             return
         }
+        
+        modeState = .portrait
 
 //        animatable = false
 //        publish(state: .mode(.portrait))
@@ -155,9 +162,9 @@ public class PlayerView: UIView {
 //            return
 //        }
 
-        animatable = false
-        publish(state: .mode(.portrait))
-        animatable = true
+//        animatable = false
+//        publish(state: .mode(.portrait))
+//        animatable = true
     }
     
     func setupCategory() {
