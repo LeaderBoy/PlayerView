@@ -25,8 +25,10 @@ class HomeViewController: UIViewController {
     fileprivate let HomeListCellID = "HomeListCell"
     
     var dataSource : [MovieModel] = []
-    
     var playerView : PlayerView?
+    
+    var orientation : UIInterfaceOrientationMask = .portrait
+    var shouldRotate = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,8 +36,13 @@ class HomeViewController: UIViewController {
         fetchMovieModel()
     }
     
+    
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return .portrait
+    }
+    
+    override var shouldAutorotate: Bool {
+        return true
     }
     
     func setupTableView() {
@@ -57,7 +64,7 @@ class HomeViewController: UIViewController {
         dataSource = models
         tableView.reloadData()
     }
-
+    
 }
 
 extension HomeViewController : UITableViewDataSource {

@@ -30,6 +30,7 @@ import UIKit
 
 public let playerAnimationTime : TimeInterval =   0.5
 
+
 class Animator : NSObject {
     enum State {
         case animating
@@ -44,12 +45,11 @@ class Animator : NSObject {
     var keyWindow : UIWindow!
     
     var flashTime : TimeInterval = 0.02
-    
-    var canRemoveSnapshotView = false
-    
-    var tempSnapshotView : UIView?
-    
+        
     private let lanVC = PlayerViewController()
+    
+    private var animatable = true
+
     
     private var destinationView : UIView {
         return lanVC.view
@@ -57,13 +57,17 @@ class Animator : NSObject {
     
     var lanWindow : UIWindow = {
         let size = UIScreen.main.bounds.size
-        let window = UIWindow(frame: CGRect(origin: .zero, size: CGSize(width: size.height, height: size.width)))
+        let width = min(size.width, size.height)
+        let height = max(size.width, size.height)
+        let window = UIWindow(frame: CGRect(origin: .zero, size: CGSize(width: width, height: height)))
         window.windowLevel = .statusBar
         window.backgroundColor = .clear
         return window
     }()
     
     var state : State = .animated
+    
+    var mode : PlayerModeState = .portrait
     
     init(with sourceView : UIView) {
         self.sourceView = sourceView
@@ -78,7 +82,7 @@ class Animator : NSObject {
             fatalError("keyWindow not exist")
         }
         lanWindow.rootViewController = lanVC
-                
+        
         super.init()
     }
     
@@ -97,8 +101,8 @@ class Animator : NSObject {
         }
     }
     
-    private func captureSnapshotView() -> UIView? {
-        if let snapshotView = lanVC.view.snapshotView(afterScreenUpdates: false) {
+    func captureSnapshotView() -> UIView? {
+        if let snapshotView = lanVC.view.snapshotView(afterScreenUpdates: true) {
             return snapshotView
         }
         return nil
@@ -106,20 +110,18 @@ class Animator : NSObject {
     
     func insertSnapshotView() {
         if let snapshotView = captureSnapshotView() {
-            canRemoveSnapshotView = true
-            tempSnapshotView = snapshotView
-            tempSnapshotView!.frame = sourceView!.frame
-            tempSnapshotView!.center = keyWindow.center
-            tempSnapshotView!.transform = .init(rotationAngle: .pi / 2)
-            keyWindow.addSubview(tempSnapshotView!)
-            keyWindow.bringSubviewToFront(tempSnapshotView!)
+            snapshotView.tag = 999
+            snapshotView.frame = sourceView!.frame
+            snapshotView.center = keyWindow.center
+            snapshotView.transform = .init(rotationAngle: .pi / 2)
+            keyWindow.addSubview(snapshotView)
+            keyWindow.bringSubviewToFront(snapshotView)
         }
     }
     
     func removeSnapshotView() {
-        if canRemoveSnapshotView && tempSnapshotView != nil {
-            tempSnapshotView!.removeFromSuperview()
-        }
+        let view = keyWindow.viewWithTag(999)
+        view?.removeFromSuperview()
     }
     
     /// Present fullScreen view
@@ -135,6 +137,10 @@ class Animator : NSObject {
     func presentWillBegin(animated : Bool) {
         /// To prevent multiple calls
         if state == .animating {
+            return
+        }
+        
+        if mode == .landscape {
             return
         }
         
@@ -185,6 +191,7 @@ class Animator : NSObject {
                 sourceView.frame = newFrame
                 sourceView.layer.cornerRadius = 0
             }) { (_) in
+                self.mode = .landscape
                 self.state = .animated
             }
         } else {
@@ -193,6 +200,7 @@ class Animator : NSObject {
             let newFrame = CGRect(x: 0, y: 0, width: width, height: height)
             sourceView.frame = newFrame
             sourceView.layer.cornerRadius = 0
+            self.mode = .landscape
             self.state = .animated
         }
     }
@@ -202,9 +210,18 @@ class Animator : NSObject {
         if state == .animating {
             return
         }
+        
+        if mode == .portrait {
+            return
+        }
+        
         /// insert snapshotview as background
-        let snap = destinationView.snapshotView(afterScreenUpdates: false)!
-        destinationView.insertSubview(snap, at: 0)
+        /// when exit app snapshotView will be nil
+        var snapshotView : UIView?
+        if let snap = destinationView.snapshotView(afterScreenUpdates: true) {
+            destinationView.insertSubview(snap, at: 0)
+            snapshotView = snap
+        }
         
         guard let sourceView = self.sourceView else { return }
         
@@ -232,7 +249,7 @@ class Animator : NSObject {
 
                 self.lanWindow.isHidden = true
                 self.lanWindow.alpha = 1.0
-                snap.removeFromSuperview()
+                snapshotView?.removeFromSuperview()
                 self.dismissAnimating(animated: animated)
             }
         } else {
@@ -243,7 +260,7 @@ class Animator : NSObject {
 
             self.lanWindow.isHidden = true
             self.lanWindow.alpha = 1.0
-            snap.removeFromSuperview()
+            snapshotView?.removeFromSuperview()
             self.dismissAnimating(animated: animated)
         }
         
@@ -268,6 +285,7 @@ class Animator : NSObject {
                 sourceView.layer.cornerRadius = 0
                 superView.layoutIfNeeded()
                 self.state = .animated
+                self.mode = .portrait
             }
         } else {
             sourceView.frame = CGRect(x: sourceFrame.origin.x, y: sourceFrame.origin.y, width: sourceFrame.height, height: sourceFrame.width)
@@ -282,8 +300,7 @@ class Animator : NSObject {
             sourceView.layer.cornerRadius = 0
             superView.layoutIfNeeded()
             self.state = .animated
+            self.mode = .portrait
         }
-        
-        
     }
 }
