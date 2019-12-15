@@ -97,9 +97,9 @@ extension HomeViewController : UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-//        if let player = playerView,let i = player.indexPath,i == indexPath {
-//            player.stop()
-//        }
+        if let player = playerView,let i = player.indexPath,i == indexPath {
+            player.stop()
+        }
     }
     
 }
