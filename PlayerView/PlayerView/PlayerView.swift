@@ -265,31 +265,29 @@ public class PlayerView: UIView {
     
     @objc func didBecomeActiveNotification() {
         if modeState == .portrait && recoverFromPortrait {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.02) {
                 self.recoverFromPortrait = false
-                self.animatable = true
+                self.animatable = false
                 self.publish(state: .mode(.landscape))
                 self.animatable = true
                 self.animator?.removeSnapshotView()
+                self.publish(state: .play)
             }
             
         }
-        self.publish(state: .play)
     }
     
     @objc func willResignActiveNotification() {
         controlsView.hide()
         publish(state: .paused)
         if modeState == .landscape {
-//            self.animator?.insertSnapshotView()
-//            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-//
-//            }
-            
-            self.animatable = false
-            self.publish(state: .mode(.portrait))
-            self.animatable = true
-            self.recoverFromPortrait = true
+            self.animator?.insertSnapshotView()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.02) {
+                self.animatable = false
+                self.publish(state: .mode(.portrait))
+                self.animatable = true
+                self.recoverFromPortrait = true
+            }
         }
         
     }

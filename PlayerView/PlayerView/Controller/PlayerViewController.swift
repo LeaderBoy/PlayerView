@@ -46,9 +46,9 @@ class PlayerViewController: UIViewController {
         return .landscapeRight
     }
     
-    override var preferredScreenEdgesDeferringSystemGestures: UIRectEdge {
-        return .bottom
-    }
+//    override var preferredScreenEdgesDeferringSystemGestures: UIRectEdge {
+//        return .bottom
+//    }
     
     
 }
