@@ -265,24 +265,25 @@ public class PlayerView: UIView {
     
     @objc func didBecomeActiveNotification() {
         if modeState == .portrait && recoverFromPortrait {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.02) {
+            /// iOS12
+            /// fullscreen will get wrong width and height in present animation if not use DispatchQueue.main
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 self.recoverFromPortrait = false
                 self.animatable = false
                 self.publish(state: .mode(.landscape))
                 self.animatable = true
                 self.animator?.removeSnapshotView()
-                self.publish(state: .play)
             }
-            
         }
+        self.publish(state: .play)
     }
     
     @objc func willResignActiveNotification() {
         controlsView.hide()
         publish(state: .paused)
         if modeState == .landscape {
-            self.animator?.insertSnapshotView()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.02) {
+            DispatchQueue.main.asyncAfter(deadline: .now()) {
+                self.animator?.insertSnapshotView()
                 self.animatable = false
                 self.publish(state: .mode(.portrait))
                 self.animatable = true
