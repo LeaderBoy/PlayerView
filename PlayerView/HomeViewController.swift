@@ -30,6 +30,8 @@ class HomeViewController: UIViewController {
     var orientation : UIInterfaceOrientationMask = .portrait
     var shouldRotate = true
     
+    var cellHeights : [String:NSNumber] = [:]
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTableView()
@@ -59,6 +61,7 @@ class HomeViewController: UIViewController {
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         if let pre = previousTraitCollection,pre.verticalSizeClass == .compact {
             playerView?.updateDidChangeTableView(tableView)
+            self.view.layoutIfNeeded()
         }
     }
     
@@ -68,7 +71,11 @@ class HomeViewController: UIViewController {
         tableView.backgroundColor = .groupTableViewBackground
         tableView.delaysContentTouches = false
         tableView.separatorStyle = .none
-        tableView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0)
+        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedSectionFooterHeight = 0
+        tableView.estimatedSectionHeaderHeight = 0
+        tableView.estimatedRowHeight = 200
     }
     
     /// fetch models from movie.json file
@@ -117,6 +124,23 @@ extension HomeViewController : UITableViewDelegate {
 //        if let player = playerView,let i = player.indexPath,i == indexPath {
 //            player.stop()
 //        }
+    }
+    
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        let key = "\(indexPath.row)"
+        if let number = cellHeights[key] {
+            return CGFloat(number.floatValue)
+        }else {
+            return UITableView.automaticDimension
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if cell.frame.size.width < cell.frame.size.height {
+            let h = Double(cell.frame.size.height)
+            let key = "\(indexPath.row)"
+            cellHeights[key] = NSNumber(value: h)
+        }
     }
     
 }

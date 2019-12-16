@@ -153,20 +153,28 @@ extension TransitionAnimator : UIViewControllerAnimatedTransitioning {
     
     func dismissAnimation(context : TransitionContext) {
         let containerView = context.containerView
-        let toView = context.toView
         let fromView = context.fromView
-        
-        sourceShotView.center = containerView.center
+        let toView = context.toView
+
+        sourceShotView.center = toView.center
         sourceShotView.transform = .identity
-    
-        let playerContainer = fromView.viewWithTag(9991)!
-        playerContainer.center = CGPoint(x: fromView.center.y, y: fromView.center.x)
+        sourceShotView.frame = containerView.bounds
         
+        toView.transform = .identity
+        toView.frame = containerView.bounds
+        
+        fromView.transform = .identity
+        fromView.frame = containerView.bounds
+//
+        let playerContainer = fromView.viewWithTag(9991)!
+        playerContainer.center = fromView.center
+        playerContainer.transform = .init(rotationAngle: .pi / 2)
         UIView.animate(withDuration: transitionDuration(using: context.transitionContext), delay: 0, options:.layoutSubviews, animations: {
+            playerContainer.center = CGPoint(x: self.sourceFrame.midX, y: self.sourceFrame.midY)
+            playerContainer.transform = .identity
             playerContainer.frame = self.sourceFrame
-            playerContainer.center = CGPoint(x: self.sourceFrame.midY, y: self.sourceFrame.midX)
-            playerContainer.transform = .init(rotationAngle: .pi / -2)
         }) { (_) in
+            fromView.transform = .init(rotationAngle: .pi / 2)
             self.sourceShotView.removeFromSuperview()
             let superView = self.superView
             self.sourceView.removeFromSuperview()
@@ -174,7 +182,8 @@ extension TransitionAnimator : UIViewControllerAnimatedTransitioning {
             superView.addSubview(self.sourceView)
             self.sourceView.edges(to: superView)
             superView.layoutIfNeeded()
-//            complete()
+            playerContainer.removeFromSuperview()
+            context.transitionContext.completeTransition(true)
         }
     }
         

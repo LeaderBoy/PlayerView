@@ -169,6 +169,7 @@ public class PlayerView: UIView {
     
     public func updateWillChangeTableView(_ tableView : UITableView) {
         offset = tableView.contentOffset
+        print(offset)
     }
     
     public func updateDidChangeTableView(_ tableView : UITableView) {
