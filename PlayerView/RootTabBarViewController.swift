@@ -135,7 +135,6 @@ extension UIViewController {
         }else if let nav = self as? UINavigationController,let top = nav.topViewController {
             return top.findTopViewController()
         }else {
-            print(self)
             return self
         }
     }

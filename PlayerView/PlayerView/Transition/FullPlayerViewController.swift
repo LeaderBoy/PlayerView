@@ -115,7 +115,6 @@ extension FullPlayerViewController : PresentAnimation {
         sourceView.removeConstraints()
         containerView.addSubview(sourceView)
         sourceView.edges(to: containerView)
-        
         sourceView.removeLayerAnimation()
 
         let newCenter   = CGPoint(x: sourceFrame.midY, y: sourceFrame.midX)

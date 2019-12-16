@@ -102,17 +102,20 @@ extension Animator : UIViewControllerAnimatedTransitioning {
         let containerView = context.containerView
         let toViewController = context.toViewController
         let toView = context.toView
-        
         let fromView = context.fromView
-        fromView.isHidden = true
-        fromView.frame = containerView.bounds
-        fromView.transform = .init(rotationAngle: .pi / -2)
-    
+
+        
         sourceShotView.center = fromView.center
         sourceShotView.transform = .init(rotationAngle: .pi / -2)
         sourceShotView.frame = containerView.bounds
         containerView.addSubview(sourceShotView)
         
+//        fromView.isHidden = true
+        fromView.frame = containerView.bounds
+        fromView.transform = .init(rotationAngle: .pi / -2)
+    
+        
+
 
         toView.frame = containerView.bounds
         containerView.addSubview(toView)
@@ -120,7 +123,6 @@ extension Animator : UIViewControllerAnimatedTransitioning {
         if let animation = toViewController as? PresentAnimation {
             animation.presentAnimationWillBegin(for: self)
             animation.presentAnimationDidBegin(for: self) {
-                fromView.isHidden = false
                 fromView.transform = .identity
                 context.transitionContext.completeTransition(true)
             }

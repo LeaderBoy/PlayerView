@@ -254,7 +254,7 @@ public class PlayerView: UIView {
             shouldStatusBarHidden = true
         case .mode(.portrait):
             supportOrientation = .portrait
-            shouldAutorotate = false
+            shouldAutorotate = true
             full.dismiss(animated: true, completion: nil)
             modeState = .portrait
             shouldStatusBarHidden = false

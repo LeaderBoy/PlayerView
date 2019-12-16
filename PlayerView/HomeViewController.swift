@@ -36,17 +36,19 @@ class HomeViewController: UIViewController {
     }
     
     override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
-        if newCollection.verticalSizeClass == .regular {
+        super.willTransition(to: newCollection, with: coordinator)
+        if newCollection.verticalSizeClass == .compact {
             offset = tableView.contentOffset
         }
-        super.willTransition(to: newCollection, with: coordinator)
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         if let pre = previousTraitCollection {
-            if pre.verticalSizeClass == .regular {
-                tableView.contentOffset = offset
+            if pre.verticalSizeClass == .compact {
+                DispatchQueue.main.async {
+                    self.tableView.contentOffset = self.offset
+                }
             }
         }
     }
@@ -113,9 +115,9 @@ extension HomeViewController : UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if let player = playerView,let i = player.indexPath,i == indexPath {
-            player.stop()
-        }
+//        if let player = playerView,let i = player.indexPath,i == indexPath {
+//            player.stop()
+//        }
     }
     
 }
