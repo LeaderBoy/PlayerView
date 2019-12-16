@@ -60,9 +60,16 @@ public class PlayerView: UIView {
     public var shouldStatusBarHidden = false
     public var item : AVPlayerItem?
     
+    private var keyWindow : UIWindow? = UIApplication.shared.keyWindow
+    
     private var player : AVPlayer = {
         let p = AVPlayer()
         p.automaticallyWaitsToMinimizeStalling = false
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.playback)
+        }catch (let r) {
+            print("AVAudioSession.sharedInstance().setCategory error:\(r)")
+        }
         // 预防息屏
         if #available(iOS 12.0, *) {
             p.preventsDisplaySleepDuringVideoPlayback = true
@@ -82,8 +89,9 @@ public class PlayerView: UIView {
     private lazy var motionManager = MotionManager()
     
     var animator : Animator?
-    var animatable = true
     var modeState : PlayerModeState = .portrait
+    var animatable = true
+    var recoverFromPortrait = false
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -96,6 +104,7 @@ public class PlayerView: UIView {
     }
     
     deinit {
+        removeAllObserver()
         reachability?.stopNotifier()
     }
     
@@ -104,35 +113,7 @@ public class PlayerView: UIView {
         addGestures()
         addObserver()
         reachabilityCallBack()
-        setupCategory()
         registerAsStateSubscriber()
-    }
-    
-    func addObserver() {
-        NotificationCenter.default.addObserver(self, selector: #selector(fore), name: UIApplication.willEnterForegroundNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(back), name: UIApplication.didEnterBackgroundNotification, object: nil)
-    }
-    
-    @objc func fore() {
-        animatable = true
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-            self.publish(state: .mode(.landscape))
-            self.animatable = true
-        }
-    }
-    
-    @objc func back() {
-        animatable = false
-        publish(state: .mode(.portrait))
-        animatable = true
-    }
-    
-    func setupCategory() {
-        do {
-            try AVAudioSession.sharedInstance().setCategory(.playback)
-        }catch {
-            
-        }
     }
     
     public func reload() {
@@ -250,26 +231,66 @@ public class PlayerView: UIView {
         switch state {
         case .mode(.landscape):
             PlayerUIInterfaceOrientation.shared.current = [.landscapeRight,.portrait]
-            if animator == nil {
-                let animator = Animator(with: self)
-                self.animator = animator
-            } else {
-                animator!.update(sourceView: self)
-            }
-            animator!.present(animated: animatable)
+            let animator = Animator(with: self)
+            self.animator = animator
+            animator.present(animated: animatable)
             modeState = .landscape
             shouldStatusBarHidden = true
         case .mode(.portrait):
-            PlayerUIInterfaceOrientation.shared.current = [.portrait,.landscapeRight]
-            animator!.dismiss(animated: animatable)
-            modeState = .portrait
-            shouldStatusBarHidden = false
+            if animator != nil {
+                PlayerUIInterfaceOrientation.shared.current = [.portrait,.landscapeRight]
+                animator!.dismiss(animated: animatable)
+                modeState = .portrait
+                shouldStatusBarHidden = false
+            }
         case .stop(_):
             resetVariables()
             removeFromSuperview()
         default:
             break
         }
+    }
+    
+    
+    private func addObserver() {
+        NotificationCenter.default.addObserver(self, selector: #selector(didBecomeActiveNotification), name: UIApplication.didBecomeActiveNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(willResignActiveNotification), name: UIApplication.willResignActiveNotification, object: nil)
+    }
+    
+    private func removeAllObserver() {
+        NotificationCenter.default.removeObserver(self, name: UIApplication.didBecomeActiveNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIApplication.willResignActiveNotification, object: nil)
+    }
+    
+    
+    @objc func didBecomeActiveNotification() {
+        if modeState == .portrait && recoverFromPortrait {
+            /// iOS12
+            /// fullscreen will get wrong width and height in present animation if not use DispatchQueue.main
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                self.recoverFromPortrait = false
+                self.animatable = false
+                self.publish(state: .mode(.landscape))
+                self.animatable = true
+                self.animator?.removeSnapshotView()
+            }
+        }
+        self.publish(state: .play)
+    }
+    
+    @objc func willResignActiveNotification() {
+        controlsView.hide()
+        publish(state: .paused)
+        if modeState == .landscape {
+            DispatchQueue.main.asyncAfter(deadline: .now()) {
+                self.animator?.insertSnapshotView()
+                self.animatable = false
+                self.publish(state: .mode(.portrait))
+                self.animatable = true
+                self.recoverFromPortrait = true
+            }
+        }
+        
     }
 }
 

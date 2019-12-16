@@ -22,5 +22,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return PlayerUIInterfaceOrientation.shared.current
     }
     
+    
 }
 

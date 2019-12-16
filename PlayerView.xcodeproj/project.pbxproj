@@ -32,6 +32,7 @@
 		52A7972D2386A7BA0043EB99 /* Animator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A7972C2386A7BA0043EB99 /* Animator.swift */; };
 		52A7973123878A640043EB99 /* UIView + FullAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A7973023878A640043EB99 /* UIView + FullAnimation.swift */; };
 		52A7973C238E15B90043EB99 /* IndicatorLoading.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A7973B238E15B90043EB99 /* IndicatorLoading.swift */; };
+		52CCE62B23A6530800DAAD1B /* Debouncer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52CCE62A23A6530800DAAD1B /* Debouncer.swift */; };
 		52D7421C239412F90068C08D /* PlayerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52D7421B239412F90068C08D /* PlayerState.swift */; };
 		52D7421E239550E70068C08D /* EventBus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52D7421D239550E70068C08D /* EventBus.swift */; };
 		52F8967C2385123D00D87D9E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52F8967B2385123D00D87D9E /* AppDelegate.swift */; };
@@ -93,6 +94,7 @@
 		52A7972C2386A7BA0043EB99 /* Animator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animator.swift; sourceTree = "<group>"; };
 		52A7973023878A640043EB99 /* UIView + FullAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView + FullAnimation.swift"; sourceTree = "<group>"; };
 		52A7973B238E15B90043EB99 /* IndicatorLoading.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndicatorLoading.swift; sourceTree = "<group>"; };
+		52CCE62A23A6530800DAAD1B /* Debouncer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Debouncer.swift; sourceTree = "<group>"; };
 		52D7421B239412F90068C08D /* PlayerState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerState.swift; sourceTree = "<group>"; };
 		52D7421D239550E70068C08D /* EventBus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventBus.swift; sourceTree = "<group>"; };
 		52F896782385123D00D87D9E /* PlayerView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PlayerView.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -296,6 +298,7 @@
 		52F896A32385142300D87D9E /* Extension */ = {
 			isa = PBXGroup;
 			children = (
+				52CCE62A23A6530800DAAD1B /* Debouncer.swift */,
 				52F896A42385151300D87D9E /* UIView + Constraints.swift */,
 				52F896A82385155200D87D9E /* UIView + XIB.swift */,
 				52A7973023878A640043EB99 /* UIView + FullAnimation.swift */,
@@ -500,6 +503,7 @@
 				2FCEBEA4239E21F5000FEDB6 /* RootViewControllerInitial.swift in Sources */,
 				52F896AB23852B3A00D87D9E /* ItemObserver.swift in Sources */,
 				529E2D1A239229E50026055D /* Publisher.swift in Sources */,
+				52CCE62B23A6530800DAAD1B /* Debouncer.swift in Sources */,
 				52F896A92385155200D87D9E /* UIView + XIB.swift in Sources */,
 				2FCEBEA7239E294A000FEDB6 /* HomeViewController.swift in Sources */,
 				52F896802385123D00D87D9E /* ViewController.swift in Sources */,
