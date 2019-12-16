@@ -22,6 +22,11 @@
 		52046ADD23A0B116008B0B43 /* IndicatorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52046ADF23A0B116008B0B43 /* IndicatorView.xib */; };
 		52046AE323A0DE63008B0B43 /* MemoryCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52046AE223A0DE63008B0B43 /* MemoryCache.swift */; };
 		520595822385938300BBEF77 /* IndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 520595812385938300BBEF77 /* IndicatorView.swift */; };
+		52138F4A23A792660064785D /* FullPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52138F4523A792660064785D /* FullPlayerViewController.swift */; };
+		52138F4B23A792660064785D /* TransitionContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52138F4623A792660064785D /* TransitionContext.swift */; };
+		52138F4D23A792660064785D /* Transition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52138F4823A792660064785D /* Transition.swift */; };
+		52138F4E23A792660064785D /* FullPlayerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52138F4923A792660064785D /* FullPlayerViewController.xib */; };
+		52138F5023A792950064785D /* TransitionAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52138F4F23A792950064785D /* TransitionAnimator.swift */; };
 		526C9F0623A1CE4F007F10A3 /* MotionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 526C9F0523A1CE4F007F10A3 /* MotionManager.swift */; };
 		5292111A2388256800DF1101 /* VideoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 529211182388256800DF1101 /* VideoCell.swift */; };
 		5292111B2388256800DF1101 /* VideoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 529211192388256800DF1101 /* VideoCell.xib */; };
@@ -84,6 +89,11 @@
 		52046AE123A0B121008B0B43 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/IndicatorView.strings"; sourceTree = "<group>"; };
 		52046AE223A0DE63008B0B43 /* MemoryCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryCache.swift; sourceTree = "<group>"; };
 		520595812385938300BBEF77 /* IndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndicatorView.swift; sourceTree = "<group>"; };
+		52138F4523A792660064785D /* FullPlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullPlayerViewController.swift; sourceTree = "<group>"; };
+		52138F4623A792660064785D /* TransitionContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransitionContext.swift; sourceTree = "<group>"; };
+		52138F4823A792660064785D /* Transition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Transition.swift; sourceTree = "<group>"; };
+		52138F4923A792660064785D /* FullPlayerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FullPlayerViewController.xib; sourceTree = "<group>"; };
+		52138F4F23A792950064785D /* TransitionAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransitionAnimator.swift; sourceTree = "<group>"; };
 		526C9F0523A1CE4F007F10A3 /* MotionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionManager.swift; sourceTree = "<group>"; };
 		529211182388256800DF1101 /* VideoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCell.swift; sourceTree = "<group>"; };
 		529211192388256800DF1101 /* VideoCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VideoCell.xib; sourceTree = "<group>"; };
@@ -165,6 +175,18 @@
 				52046ADF23A0B116008B0B43 /* IndicatorView.xib */,
 			);
 			path = Indicator;
+			sourceTree = "<group>";
+		};
+		52138F4423A792660064785D /* Transition */ = {
+			isa = PBXGroup;
+			children = (
+				52138F4523A792660064785D /* FullPlayerViewController.swift */,
+				52138F4923A792660064785D /* FullPlayerViewController.xib */,
+				52138F4623A792660064785D /* TransitionContext.swift */,
+				52138F4F23A792950064785D /* TransitionAnimator.swift */,
+				52138F4823A792660064785D /* Transition.swift */,
+			);
+			path = Transition;
 			sourceTree = "<group>";
 		};
 		526C9F0423A1CE2C007F10A3 /* Motion */ = {
@@ -271,6 +293,7 @@
 				52F8969E2385136D00D87D9E /* PlayerView.swift */,
 				2FB2B5D0239FBDD90028E130 /* PlayerViewOptions.swift */,
 				52D7421B239412F90068C08D /* PlayerState.swift */,
+				52138F4423A792660064785D /* Transition */,
 				526C9F0423A1CE2C007F10A3 /* Motion */,
 				52B74E7323A100DE002CCAEE /* Controller */,
 				52B74E7223A10058002CCAEE /* Loading */,
@@ -421,6 +444,7 @@
 				52F896882385124000D87D9E /* LaunchScreen.storyboard in Resources */,
 				52046AD923A0A023008B0B43 /* Localizable.strings in Resources */,
 				52F896B823866B8100D87D9E /* ControlsView.xib in Resources */,
+				52138F4E23A792660064785D /* FullPlayerViewController.xib in Resources */,
 				2FCEBEAC239E2D72000FEDB6 /* HomeListCell.xib in Resources */,
 				2FCEBEA0239E216B000FEDB6 /* movie.json in Resources */,
 				5292111B2388256800DF1101 /* VideoCell.xib in Resources */,
@@ -498,6 +522,7 @@
 				5292111A2388256800DF1101 /* VideoCell.swift in Sources */,
 				2FCEBEAB239E2D72000FEDB6 /* HomeListCell.swift in Sources */,
 				52046AE323A0DE63008B0B43 /* MemoryCache.swift in Sources */,
+				52138F4B23A792660064785D /* TransitionContext.swift in Sources */,
 				526C9F0623A1CE4F007F10A3 /* MotionManager.swift in Sources */,
 				52A7973C238E15B90043EB99 /* IndicatorLoading.swift in Sources */,
 				2FCEBEA4239E21F5000FEDB6 /* RootViewControllerInitial.swift in Sources */,
@@ -514,11 +539,14 @@
 				52F8969F2385136D00D87D9E /* PlayerView.swift in Sources */,
 				2FCEBEA3239E21F5000FEDB6 /* RootTabBarViewController.swift in Sources */,
 				52F896B22386273100D87D9E /* Reachability.swift in Sources */,
+				52138F4D23A792660064785D /* Transition.swift in Sources */,
+				52138F4A23A792660064785D /* FullPlayerViewController.swift in Sources */,
 				52F896AD2385403F00D87D9E /* PlayerLayerView.swift in Sources */,
 				52A7972D2386A7BA0043EB99 /* Animator.swift in Sources */,
 				2FE975A0239E61E800DF782D /* VideoDetailViewController.swift in Sources */,
 				520595822385938300BBEF77 /* IndicatorView.swift in Sources */,
 				2FB2B5D1239FBDD90028E130 /* PlayerViewOptions.swift in Sources */,
+				52138F5023A792950064785D /* TransitionAnimator.swift in Sources */,
 				52F896B623866B5A00D87D9E /* ControlsView.swift in Sources */,
 				52A797272386A4CB0043EB99 /* PlayerViewController.swift in Sources */,
 				52F896A52385151300D87D9E /* UIView + Constraints.swift in Sources */,

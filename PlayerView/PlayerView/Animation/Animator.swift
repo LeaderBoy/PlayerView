@@ -28,7 +28,7 @@
 
 import UIKit
 
-public let playerAnimationTime : TimeInterval =   0.5
+public let playerAnimationTime : TimeInterval =   5
 
 
 class Animator : NSObject {
@@ -43,7 +43,6 @@ class Animator : NSObject {
     var keyView : UIView
     var sourceShotView : UIView!
     var keyWindow : UIWindow!
-
     var flashTime : TimeInterval = 0.02
 
     private let lanVC = PlayerViewController()

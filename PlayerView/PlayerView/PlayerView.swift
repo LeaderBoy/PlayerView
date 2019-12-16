@@ -48,6 +48,15 @@ public class PlayerUIInterfaceOrientation {
 }
 
 
+/// two implement about player fullscreen
+/// window : present a landscaped UIWindow
+/// present : present a landscaped controller
+public enum Plan {
+    case window
+    case present
+}
+
+
 public class PlayerView: UIView {
         
     weak public var dataSource : PlayerViewDataSource?
@@ -59,6 +68,8 @@ public class PlayerView: UIView {
     public var state : PlayerState = .unknown
     public var shouldStatusBarHidden = false
     public var item : AVPlayerItem?
+    
+    public var plan : Plan = .window
     
     private var keyWindow : UIWindow? = UIApplication.shared.keyWindow
     
@@ -92,6 +103,17 @@ public class PlayerView: UIView {
     var modeState : PlayerModeState = .portrait
     var animatable = true
     var recoverFromPortrait = false
+    
+    var transitionAnimator : TransitionAnimator?
+    lazy var transition = Transition()
+    lazy var fullVC: FullPlayerViewController = {
+        let full = FullPlayerViewController()
+        full.transitioningDelegate = transition
+        full.modalPresentationStyle = .overFullScreen
+        return full
+    }()
+    
+    private var offset : CGPoint = .zero
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -143,6 +165,24 @@ public class PlayerView: UIView {
     
     public func stop() {
         publish(state: .stop(self.indexPath))
+    }
+    
+    public func updateWillChangeTableView(_ tableView : UITableView) {
+        offset = tableView.contentOffset
+    }
+    
+    public func updateDidChangeTableView(_ tableView : UITableView) {
+        if let i = indexPath {
+            DispatchQueue.main.async {
+                tableView.contentOffset = self.offset
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    if let cell = tableView.cellForRow(at: i) as? HomeListCell {
+                        let container = cell.containerView
+                        self.transitionAnimator?.superView = container!
+                    }
+                }
+            }
+        }
     }
         
     func resetVariables() {
@@ -230,24 +270,47 @@ public class PlayerView: UIView {
     func handle(state : PlayerState) {
         switch state {
         case .mode(.landscape):
+            handleLandscape()
+        case .mode(.portrait):
+            handlePortrait()
+        case .stop(_):
+            resetVariables()
+            removeFromSuperview()
+        default:
+            break
+        }
+    }
+    
+    func handleLandscape() {
+        if plan == .window {
             PlayerUIInterfaceOrientation.shared.current = [.landscapeRight,.portrait]
             let animator = Animator(with: self)
             self.animator = animator
             animator.present(animated: animatable)
-            modeState = .landscape
-            shouldStatusBarHidden = true
-        case .mode(.portrait):
+        } else {
+            if let top = UIApplication.shared.keyWindow?.rootViewController?.topLevelViewController() {
+                let animator = TransitionAnimator(with: self)
+                transition.animator = animator
+                self.transitionAnimator = animator
+                top.present(fullVC, animated: true, completion: nil)
+            } else {
+                fatalError("could not find rootViewController's topLevelViewController")
+            }
+        }
+        modeState = .landscape
+        shouldStatusBarHidden = true
+    }
+    
+    func handlePortrait() {
+        if plan == .window {
             if animator != nil {
                 PlayerUIInterfaceOrientation.shared.current = [.portrait,.landscapeRight]
                 animator!.dismiss(animated: animatable)
                 modeState = .portrait
                 shouldStatusBarHidden = false
             }
-        case .stop(_):
-            resetVariables()
-            removeFromSuperview()
-        default:
-            break
+        } else {
+            fullVC.dismiss(animated: true, completion: nil)
         }
     }
     
@@ -315,3 +378,17 @@ extension PlayerView : PlayerStateSubscriber {
 }
 
 extension PlayerView : PlayerStatePublisher {}
+
+
+extension UIViewController {
+    // find the most top viewController but presentedViewController
+    func topLevelViewController() -> UIViewController {
+        if let tab = self as? UITabBarController,let selected = tab.selectedViewController {
+            return selected.topLevelViewController()
+        } else if let nav = self as? UINavigationController,let top = nav.topViewController {
+            return top.topLevelViewController()
+        } else {
+            return self
+        }
+    }
+}

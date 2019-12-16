@@ -36,6 +36,11 @@ class HomeViewController: UIViewController {
         fetchMovieModel()
     }
     
+//    override func viewSafeAreaInsetsDidChange() {
+//        UIView.animate(withDuration: playerAnimationTime) {
+//            self.view.layoutIfNeeded()
+//        }
+//    }
     
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return .portrait
@@ -43,6 +48,18 @@ class HomeViewController: UIViewController {
     
     override var shouldAutorotate: Bool {
         return true
+    }
+    
+    override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
+        if newCollection.verticalSizeClass == .compact {
+            playerView?.updateWillChangeTableView(tableView)
+        }
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        if let pre = previousTraitCollection,pre.verticalSizeClass == .compact {
+            playerView?.updateDidChangeTableView(tableView)
+        }
     }
     
     func setupTableView() {
@@ -97,9 +114,9 @@ extension HomeViewController : UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if let player = playerView,let i = player.indexPath,i == indexPath {
-            player.stop()
-        }
+//        if let player = playerView,let i = player.indexPath,i == indexPath {
+//            player.stop()
+//        }
     }
     
 }
@@ -107,6 +124,7 @@ extension HomeViewController : CellClick {
     func click(at indexPath: IndexPath, container: UIView) {
         if playerView == nil {
             playerView = PlayerView()
+            playerView!.plan = .present
         }
         
         if let url = URL(string: dataSource[indexPath.row].url) {
