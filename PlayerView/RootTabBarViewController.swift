@@ -86,46 +86,59 @@ class RootTabBarViewController: UITabBarController {
 
 extension UITabBarController {
     override open var prefersStatusBarHidden: Bool {
-        return self.selectedViewController?.prefersStatusBarHidden ?? false
+        return findTopViewController().prefersStatusBarHidden
     }
     
     open override var preferredStatusBarStyle: UIStatusBarStyle {
-        return self.selectedViewController?.preferredStatusBarStyle ?? .default
+        return findTopViewController().preferredStatusBarStyle
     }
     
     override open var shouldAutorotate: Bool {
-        return self.selectedViewController?.shouldAutorotate ?? false
+        return findTopViewController().shouldAutorotate
     }
     
     override open var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        return self.selectedViewController?.supportedInterfaceOrientations ?? UIInterfaceOrientationMask.portrait
+        return findTopViewController().supportedInterfaceOrientations
     }
     
     override open var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
-        return self.selectedViewController?.preferredInterfaceOrientationForPresentation ?? UIInterfaceOrientation.portrait
+        return findTopViewController().preferredInterfaceOrientationForPresentation
     }
 }
-
 
 extension UINavigationController {
     override open var prefersStatusBarHidden: Bool {
-        return self.topViewController?.prefersStatusBarHidden ?? false
+        return findTopViewController().prefersStatusBarHidden
     }
     
     open override var preferredStatusBarStyle: UIStatusBarStyle {
-        return self.topViewController?.preferredStatusBarStyle ?? .default
+        return findTopViewController().preferredStatusBarStyle
     }
     
     override open var shouldAutorotate: Bool {
-        return self.topViewController?.shouldAutorotate ?? false
+        return findTopViewController().shouldAutorotate
     }
     
     override open var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        return self.topViewController?.supportedInterfaceOrientations ?? UIInterfaceOrientationMask.portrait
+        return findTopViewController().supportedInterfaceOrientations
     }
     
     override open var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
-        return self.topViewController?.preferredInterfaceOrientationForPresentation ?? UIInterfaceOrientation.portrait
+        return findTopViewController().preferredInterfaceOrientationForPresentation
     }
-    
 }
+
+extension UIViewController {
+    func findTopViewController() -> UIViewController {
+        if let tab = self as? UITabBarController,let selected = tab.selectedViewController {
+            return selected.findTopViewController()
+        }else if let nav = self as? UINavigationController,let top = nav.topViewController {
+            return top.findTopViewController()
+        }else if let presented = presentedViewController {
+            return presented.findTopViewController()
+        }else {
+            return self
+        }
+    }
+}
+
