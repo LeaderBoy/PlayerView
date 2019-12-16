@@ -72,10 +72,11 @@ class HomeViewController: UIViewController {
         tableView.delaysContentTouches = false
         tableView.separatorStyle = .none
         tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-        tableView.rowHeight = UITableView.automaticDimension
+//        tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedSectionFooterHeight = 0
         tableView.estimatedSectionHeaderHeight = 0
-        tableView.estimatedRowHeight = 200
+        tableView.estimatedRowHeight = 0
+        tableView.rowHeight = 229
     }
     
     /// fetch models from movie.json file
@@ -126,22 +127,22 @@ extension HomeViewController : UITableViewDelegate {
 //        }
     }
     
-    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        let key = "\(indexPath.row)"
-        if let number = cellHeights[key] {
-            return CGFloat(number.floatValue)
-        }else {
-            return UITableView.automaticDimension
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if cell.frame.size.width < cell.frame.size.height {
-            let h = Double(cell.frame.size.height)
-            let key = "\(indexPath.row)"
-            cellHeights[key] = NSNumber(value: h)
-        }
-    }
+//    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+//        let key = "\(indexPath.row)"
+//        if let number = cellHeights[key] {
+//            return CGFloat(number.floatValue)
+//        }else {
+//            return UITableView.automaticDimension
+//        }
+//    }
+//
+//    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+//        if cell.frame.size.width < cell.frame.size.height {
+//            let h = Double(cell.frame.size.height)
+//            let key = "\(indexPath.row)"
+//            cellHeights[key] = NSNumber(value: h)
+//        }
+//    }
     
 }
 extension HomeViewController : CellClick {
