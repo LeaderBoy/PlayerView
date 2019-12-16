@@ -27,8 +27,7 @@ class HomeViewController: UIViewController {
     var dataSource : [MovieModel] = []
     var playerView : PlayerView?
     
-    var orientation : UIInterfaceOrientationMask = .portrait
-    var shouldRotate = true
+    var offset : CGPoint = .zero
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,13 +35,28 @@ class HomeViewController: UIViewController {
         fetchMovieModel()
     }
     
+    override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
+        if newCollection.verticalSizeClass == .regular {
+            offset = tableView.contentOffset
+        }
+        super.willTransition(to: newCollection, with: coordinator)
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if let pre = previousTraitCollection {
+            if pre.verticalSizeClass == .regular {
+                tableView.contentOffset = offset
+            }
+        }
+    }
     
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        return .portrait
+        return playerView?.supportOrientation ?? .portrait
     }
     
     override var shouldAutorotate: Bool {
-        return true
+        return playerView?.shouldAutorotate ?? false
     }
     
     func setupTableView() {
@@ -52,6 +66,8 @@ class HomeViewController: UIViewController {
         tableView.delaysContentTouches = false
         tableView.separatorStyle = .none
         tableView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0)
+        tableView.estimatedRowHeight = 300
+        tableView.rowHeight = UITableView.automaticDimension
     }
     
     /// fetch models from movie.json file

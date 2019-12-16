@@ -92,7 +92,19 @@ public class PlayerView: UIView {
     var modeState : PlayerModeState = .portrait
     var animatable = true
     var recoverFromPortrait = false
-
+    
+    var supportOrientation : UIInterfaceOrientationMask = .portrait
+    var shouldAutorotate = true
+    
+    let transition = Transition()
+    
+    lazy var full: UIViewController = {
+        let full = FullPlayerViewController()
+        full.transitioningDelegate = transition
+        full.modalPresentationStyle = .overFullScreen
+        return full
+    }()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
@@ -230,19 +242,22 @@ public class PlayerView: UIView {
     func handle(state : PlayerState) {
         switch state {
         case .mode(.landscape):
-            PlayerUIInterfaceOrientation.shared.current = [.landscapeRight,.portrait]
-            let animator = Animator(with: self)
-            self.animator = animator
-            animator.present(animated: animatable)
+            supportOrientation = [.landscapeRight,.landscapeLeft]
+            shouldAutorotate = true
+            if let top = UIApplication.shared.keyWindow?.rootViewController?.findTopViewController() {
+                let animator = Animator(with: self)
+                transition.animator = animator
+                top.present(full, animated: true, completion: nil)
+                
+            }
             modeState = .landscape
             shouldStatusBarHidden = true
         case .mode(.portrait):
-            if animator != nil {
-                PlayerUIInterfaceOrientation.shared.current = [.portrait,.landscapeRight]
-                animator!.dismiss(animated: animatable)
-                modeState = .portrait
-                shouldStatusBarHidden = false
-            }
+            supportOrientation = .portrait
+            shouldAutorotate = false
+            full.dismiss(animated: true, completion: nil)
+            modeState = .portrait
+            shouldStatusBarHidden = false
         case .stop(_):
             resetVariables()
             removeFromSuperview()
@@ -253,44 +268,23 @@ public class PlayerView: UIView {
     
     
     private func addObserver() {
-        NotificationCenter.default.addObserver(self, selector: #selector(didBecomeActiveNotification), name: UIApplication.didBecomeActiveNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(willResignActiveNotification), name: UIApplication.willResignActiveNotification, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(didBecomeActiveNotification), name: UIApplication.didBecomeActiveNotification, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(willResignActiveNotification), name: UIApplication.willResignActiveNotification, object: nil)
     }
     
     private func removeAllObserver() {
-        NotificationCenter.default.removeObserver(self, name: UIApplication.didBecomeActiveNotification, object: nil)
-        NotificationCenter.default.removeObserver(self, name: UIApplication.willResignActiveNotification, object: nil)
+//        NotificationCenter.default.removeObserver(self, name: UIApplication.didBecomeActiveNotification, object: nil)
+//        NotificationCenter.default.removeObserver(self, name: UIApplication.willResignActiveNotification, object: nil)
     }
     
     
     @objc func didBecomeActiveNotification() {
-        if modeState == .portrait && recoverFromPortrait {
-            /// iOS12
-            /// fullscreen will get wrong width and height in present animation if not use DispatchQueue.main
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                self.recoverFromPortrait = false
-                self.animatable = false
-                self.publish(state: .mode(.landscape))
-                self.animatable = true
-                self.animator?.removeSnapshotView()
-            }
-        }
         self.publish(state: .play)
     }
     
     @objc func willResignActiveNotification() {
         controlsView.hide()
         publish(state: .paused)
-        if modeState == .landscape {
-            DispatchQueue.main.asyncAfter(deadline: .now()) {
-                self.animator?.insertSnapshotView()
-                self.animatable = false
-                self.publish(state: .mode(.portrait))
-                self.animatable = true
-                self.recoverFromPortrait = true
-            }
-        }
-        
     }
 }
 

@@ -20,7 +20,7 @@
 //  DEALINGS IN THE SOFTWARE.
 //
 //
-//  PlayerViewController.swift
+//  Transition.swift
 //  PlayerView
 //
 //  Created by 杨志远 on 2019/11/21.
@@ -28,27 +28,18 @@
 
 import UIKit
 
-class PlayerViewController: UIViewController {
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .clear
-    }
 
-    override var shouldAutorotate: Bool {
-        return true
+
+class Transition : NSObject {
+    var animator : UIViewControllerAnimatedTransitioning?
+}
+
+extension Transition : UIViewControllerTransitioningDelegate {
+    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return animator
     }
     
-    override var prefersStatusBarHidden: Bool {
-        return true
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return animator
     }
-        
-    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        return .landscapeRight
-    }
-    
-//    override var preferredScreenEdgesDeferringSystemGestures: UIRectEdge {
-//        return .bottom
-//    }
-    
-    
 }
