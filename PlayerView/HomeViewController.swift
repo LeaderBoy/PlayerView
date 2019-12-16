@@ -28,11 +28,18 @@ class HomeViewController: UIViewController {
     var playerView : PlayerView?
     
     var offset : CGPoint = .zero
+    var indexPath : IndexPath?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTableView()
         fetchMovieModel()
+    }
+    
+    override func viewSafeAreaInsetsDidChange() {
+        UIView.animate(withDuration: playerAnimationTime) {
+            self.view.layoutIfNeeded()
+        }
     }
     
     override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -48,6 +55,11 @@ class HomeViewController: UIViewController {
             if pre.verticalSizeClass == .compact {
                 DispatchQueue.main.async {
                     self.tableView.contentOffset = self.offset
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        if let i = self.indexPath, let cell = self.tableView.cellForRow(at: i) as? HomeListCell {
+                            self.playerView?.preparedSuperView = cell.containerView
+                        }
+                    }
                 }
             }
         }
@@ -67,8 +79,8 @@ class HomeViewController: UIViewController {
         tableView.backgroundColor = .groupTableViewBackground
         tableView.delaysContentTouches = false
         tableView.separatorStyle = .none
-        tableView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0)
-        tableView.estimatedRowHeight = 300
+        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        tableView.estimatedRowHeight = 229
         tableView.rowHeight = UITableView.automaticDimension
     }
     
@@ -129,6 +141,7 @@ extension HomeViewController : CellClick {
         
         if let url = URL(string: dataSource[indexPath.row].url) {
             playerView!.prepare(url: url, in: container, at: indexPath)
+            self.indexPath = indexPath
         }
     }
 }

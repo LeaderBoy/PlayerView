@@ -88,7 +88,7 @@ public class PlayerView: UIView {
     private lazy var loadingView = IndicatorLoading()
     private lazy var motionManager = MotionManager()
     
-    var animator : Animator?
+//    var animator : Animator?
     var modeState : PlayerModeState = .portrait
     var animatable = true
     var recoverFromPortrait = false
@@ -97,6 +97,12 @@ public class PlayerView: UIView {
     var shouldAutorotate = true
     
     let transition = Transition()
+    var animator : Animator?
+    var preparedSuperView : UIView? {
+        didSet {
+            animator?.superView = preparedSuperView!
+        }
+    }
     
     lazy var full: UIViewController = {
         let full = FullPlayerViewController()
@@ -246,6 +252,7 @@ public class PlayerView: UIView {
             shouldAutorotate = true
             if let top = UIApplication.shared.keyWindow?.rootViewController?.findTopViewController() {
                 let animator = Animator(with: self)
+                self.animator = animator
                 transition.animator = animator
                 top.present(full, animated: true, completion: nil)
                 

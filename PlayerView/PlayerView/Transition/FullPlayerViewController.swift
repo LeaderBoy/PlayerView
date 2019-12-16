@@ -84,13 +84,14 @@ extension FullPlayerViewController : DismissAnimation {
     func dismissAnimationDidBegin(for animator: Animator, complete: @escaping () -> Void) {
         let sourceFrame = animator.sourceFrame
         let sourceView = animator.sourceView
-        let superView = animator.superView
+        
         
         UIView.animate(withDuration: animator.transitionDuration(using: nil), delay: 0, options:.layoutSubviews, animations: {
             self.containerView.center = CGPoint(x: sourceFrame.midX, y: sourceFrame.midY)
             self.containerView.transform = .identity
             self.containerView.frame = sourceFrame
         }) { (_) in
+            let superView = animator.superView
             sourceView.removeFromSuperview()
             sourceView.removeConstraints()
             superView.addSubview(sourceView)
