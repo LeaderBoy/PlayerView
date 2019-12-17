@@ -120,7 +120,6 @@ extension TransitionAnimator : UIViewControllerAnimatedTransitioning {
         /// create a new view as playerView's container
         let playerContainer = UIView()
         playerContainer.tag = 9991
-        playerContainer.backgroundColor = .red
         toView.addSubview(playerContainer)
         let newCenter   = CGPoint(x: sourceFrame.midY, y: sourceFrame.midX)
         playerContainer.frame    = sourceFrame
@@ -146,7 +145,6 @@ extension TransitionAnimator : UIViewControllerAnimatedTransitioning {
             playerContainer.center = center
             playerContainer.transform = .identity
         }) { (_) in
-//            fromView.transform = .identity
             context.transitionContext.completeTransition(true)
         }
     }
@@ -156,19 +154,25 @@ extension TransitionAnimator : UIViewControllerAnimatedTransitioning {
         let fromView = context.fromView
         let toView = context.toView
 
+        /// 1.
+        /// snapshotView should transform identity
         sourceShotView.center = toView.center
         sourceShotView.transform = .identity
         sourceShotView.frame = containerView.bounds
-        
+        /// 2.
+        /// toView and fromView should rotate to satisfy safearea change immediately
+        /// this step is very important otherwise safearea will not work properly
         toView.transform = .identity
         toView.frame = containerView.bounds
-        
         fromView.transform = .identity
         fromView.frame = containerView.bounds
-//
+        /// 3.
+        /// player stay in current orientation should also rotate
         let playerContainer = fromView.viewWithTag(9991)!
         playerContainer.center = fromView.center
         playerContainer.transform = .init(rotationAngle: .pi / 2)
+        /// 4.
+        /// animating
         UIView.animate(withDuration: transitionDuration(using: context.transitionContext), delay: 0, options:.layoutSubviews, animations: {
             playerContainer.center = CGPoint(x: self.sourceFrame.midX, y: self.sourceFrame.midY)
             playerContainer.transform = .identity

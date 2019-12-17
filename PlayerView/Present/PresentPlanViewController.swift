@@ -27,6 +27,12 @@ class PresentPlanViewController: UIViewController {
         setupTableView()
     }
     
+    override func viewSafeAreaInsetsDidChange() {
+//        UIView.animate(withDuration: playerAnimationTime) {
+//            self.view.layoutIfNeeded()
+//        }
+    }
+    
     func setupTableView() {
         dataSource = MovieDataSource(with: self)
         
