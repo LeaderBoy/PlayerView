@@ -284,6 +284,15 @@ public class PlayerView: UIView {
     }
     
     func handleLandscape() {
+        
+        if modeState == .landscape {
+            print("Warn : current modeState is already landscape, do not landscape again")
+            return
+        }
+        
+        modeState = .landscape
+        shouldStatusBarHidden = true
+        
         if plan == .window {
             PlayerUIInterfaceOrientation.shared.current = [.landscapeRight,.portrait]
             let animator = Animator(with: self)
@@ -299,19 +308,24 @@ public class PlayerView: UIView {
                 fatalError("could not find rootViewController's topLevelViewController")
             }
         }
-        modeState = .landscape
-        shouldStatusBarHidden = true
     }
     
     func handlePortrait() {
+        if modeState == .portrait {
+            print("Warn : current modeState is already portrait, do not portrait again")
+            return
+        }
+        
         if plan == .window {
+            modeState = .portrait
+            shouldStatusBarHidden = false
             if animator != nil {
                 PlayerUIInterfaceOrientation.shared.current = [.portrait,.landscapeRight]
                 animator!.dismiss(animated: animatable)
-                modeState = .portrait
-                shouldStatusBarHidden = false
             }
         } else {
+            modeState = .portrait
+            shouldStatusBarHidden = false
             fullVC.dismiss(animated: true, completion: nil)
         }
     }

@@ -87,6 +87,9 @@ extension PresentPlanViewController : UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        /// when present excute
+        /// didEndDisplaying will be called because of tableView reloadData
+        /// to prevent landscaping player beening removed
         if player.modeState == .landscape {
             return
         }

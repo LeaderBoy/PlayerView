@@ -38,9 +38,7 @@ class HomeListCell: UITableViewCell {
         containerView.layer.masksToBounds = true
         containerView.layer.cornerRadius = 5
     }
-    
-    
-    
+        
     @IBAction func play(_ sender: UIButton) {
         delegate?.click(model: model, at: containerView)
     }
