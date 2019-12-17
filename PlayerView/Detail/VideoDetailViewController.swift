@@ -15,6 +15,7 @@ class VideoDetailViewController: UIViewController {
     var model : MovieModel!
     
     var playerView : PlayerView?
+    
    
     convenience init(playerView : PlayerView?) {
         self.init(nibName:nil, bundle:nil)
@@ -28,23 +29,21 @@ class VideoDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         addPlayerView()
+        navgationConfig()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationController?.navigationBar.isHidden = true
+    func navgationConfig() {
+        navigationController?.delegate = self
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        navigationController?.navigationBar.isHidden = false
         playerView?.stop()
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
-
  
     func addPlayerView() {
         if playerView == nil {
@@ -57,14 +56,21 @@ class VideoDetailViewController: UIViewController {
             videoContainerView.addSubview(playerView!)
             playerView!.edges(to: videoContainerView)
         }
-        
-        
     }
     
     @IBAction func back(_ sender: UIButton) {
         navigationController?.popViewController(animated: true)
+    }    
+}
+
+/// MARK: UINavigationControllerDelegate
+extension VideoDetailViewController : UINavigationControllerDelegate {
+    func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
+        if viewController.isKind(of: self.classForCoder) {
+            navigationController.setNavigationBarHidden(true, animated: true)
+        }else {
+            navigationController.setNavigationBarHidden(false, animated: true)
+        }
     }
-    
-    
 }
 

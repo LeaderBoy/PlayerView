@@ -60,8 +60,8 @@ class RootTabBarViewController: UITabBarController {
     private func createViewControllerSource() -> [UIViewController]{
         let vcs =
             [
-                HomeViewController(),
-                UIViewController(),
+                WindowPlanViewController(),
+                PresentPlanViewController(),
                 UIViewController()
         ]
         return vcs

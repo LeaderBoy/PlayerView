@@ -11,7 +11,7 @@ import Kingfisher
 
 
 protocol CellClick : class {
-    func click(at indexPath : IndexPath,container: UIView)
+    func click(model : MovieModel,at container: UIView)
 }
 
 class HomeListCell: UITableViewCell {
@@ -23,8 +23,6 @@ class HomeListCell: UITableViewCell {
     
     weak var delegate : CellClick?
     
-    var indexPath : IndexPath!
-
     var model : MovieModel! {
         didSet {
             if let url = URL(string: model.coverImg) {
@@ -36,8 +34,6 @@ class HomeListCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        
-        contentView.backgroundColor = .clear
         selectionStyle = .none
         containerView.layer.masksToBounds = true
         containerView.layer.cornerRadius = 5
@@ -46,6 +42,6 @@ class HomeListCell: UITableViewCell {
     
     
     @IBAction func play(_ sender: UIButton) {
-        delegate?.click(at: indexPath, container: containerView)
+        delegate?.click(model: model, at: containerView)
     }
 }

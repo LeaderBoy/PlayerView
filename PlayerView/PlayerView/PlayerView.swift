@@ -143,21 +143,22 @@ public class PlayerView: UIView {
     }
     
     public func prepare(url : URL,in container : UIView,at indexPath : IndexPath? = nil) {
+        /// stop observer for oldItem
         if item != nil {
             publish(state: .stop(self.indexPath))
         }
-        
+        /// record indexPath
         self.indexPath = indexPath
-        
+        /// prepare new item
         let item = AVPlayerItem(url: url)
         item.preferredForwardBufferDuration = 10
         self.item = item
         player.replaceCurrentItem(with: item)
         itemObserver.item = item
         itemObserver.player = player
-        // loading
+        /// loading
         publish(state: .prepare(indexPath))
-        
+        /// add player
         container.addSubview(self)
         translatesAutoresizingMaskIntoConstraints = false
         edges(to: container)
