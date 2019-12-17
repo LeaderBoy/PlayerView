@@ -36,13 +36,12 @@ struct PlayerViewOptions {
     public static var backgroundColor : UIColor = .black
     public static var disableCacheProgress = false
     public static var disableMotionMonitor = false
-
 }
 
 
 struct ControlsViewOptions {
     public static var disableSlideControls = false
-    // UIButton
+    /// UIButton
     public static var fullButtonImage : UIImage = #imageLiteral(resourceName: "full_screen")
     public static var fullButtonSelectedImage : UIImage = #imageLiteral(resourceName: "full_screen_selected")
     
@@ -51,14 +50,16 @@ struct ControlsViewOptions {
     
     public static var playButtonImage : UIImage = #imageLiteral(resourceName: "controls_play")
     public static var playButtonSelectedImage : UIImage = #imageLiteral(resourceName: "controls_pause")
-    // UISlider
+    /// UISlider
     public static var sliderMinTrackColor : UIColor = #colorLiteral(red: 1, green: 0.1490196078, blue: 0, alpha: 1)
     public static var sliderMaxTrackColor : UIColor = .clear
     public static var sliderImage : UIImage = #imageLiteral(resourceName: "ZYPlayer_controls_thumb")
-    // UIProgressView
+    /// UIProgressView
     public static var progressTintColor : UIColor = .white
     public static var progressTrackTintColor : UIColor = .lightGray
-    // UILabel
+    /// UILabel
     public static var timeLabelColor : UIColor = .white
+    /// Cache
+    public static var disableCache = false
     
 }
