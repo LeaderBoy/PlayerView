@@ -15,6 +15,17 @@ class PresentPlanViewController: UIViewController {
     var dataSource : MovieDataSource!
     
     var cellHeights : [String:NSNumber] = [:]
+    
+    typealias ShouldRecord = (CGFloat) -> Bool
+    
+    let verticalWidth = UIScreen.main.bounds.width
+    
+    lazy var shouldRecord : ShouldRecord = { number in
+        if number == self.verticalWidth {
+            return true
+        }
+        return false
+    }
 
     lazy var player : PlayerView = {
         let player = PlayerView()
@@ -73,20 +84,25 @@ extension PresentPlanViewController : UITableViewDelegate {
             return CGFloat(number.floatValue)
         }else {
             if #available(iOS 11.0, *) {
+                return UITableView.automaticDimension
+            } else {
                 /// prefered max cell height
                 return 250
-            } else {
-                return UITableView.automaticDimension
             }
         }
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if self.traitCollection.verticalSizeClass == .regular {
-            let h = Double(cell.frame.size.height)
+        let width = cell.frame.width
+        let height = cell.frame.height
+        print("index :\(indexPath.row) 宽度\(width) 高度\(height)" )
+        if shouldRecord(width) {
+            let h = Double(height)
             let key = "\(indexPath.row)"
             cellHeights[key] = NSNumber(value: h)
         }
+        
+        print(cellHeights)
     }
     
     func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {

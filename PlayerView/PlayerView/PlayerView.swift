@@ -184,7 +184,7 @@ public class PlayerView: UIView {
             DispatchQueue.main.async {
                 tableView.contentOffset = self.offset
                 /// deadline should less than playerAnimationTime
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.016) {
                     if let cell = tableView.cellForRow(at: i) as? PlayerContainerable {
                         let container = cell.playerContainer
                         self.transitionAnimator?.superView = container
@@ -308,11 +308,11 @@ public class PlayerView: UIView {
             self.animator = animator
             animator.present(animated: animatable)
         } else {
-            if let rootView = UIApplication.shared.keyWindow?.rootViewController?.view, let top = UIApplication.shared.keyWindow?.rootViewController?.topLevelViewController() {
+            if let top = UIApplication.shared.keyWindow?.rootViewController?.topLevelViewController() {
                 let animator = TransitionAnimator(with: self)
                 animator.presentWillBegin()
                 transition.animator = animator
-                self.transitionAnimator = animator
+                transitionAnimator = animator
                 isAnimating = true
                 
                 top.present(fullVC, animated: true, completion: ({
