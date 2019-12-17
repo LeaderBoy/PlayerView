@@ -35,7 +35,6 @@ class PresentPlanViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Present"
         setupTableView()
     }
   

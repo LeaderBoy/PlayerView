@@ -9,6 +9,7 @@
 import UIKit
 
 fileprivate struct TabbarItem {
+    var title           : String
     var image           : UIImage
     var selectedImage   : UIImage
 }
@@ -47,9 +48,9 @@ class RootTabBarViewController: UITabBarController {
     
     fileprivate var items : [TabbarItem] =
         [
-            TabbarItem(image: #imageLiteral(resourceName: "tab_play_back"), selectedImage: #imageLiteral(resourceName: "tab_play_back_selected")),
-            TabbarItem(image: #imageLiteral(resourceName: "tab_play"), selectedImage: #imageLiteral(resourceName: "tab_play_selected")),
-            TabbarItem(image: #imageLiteral(resourceName: "tab_play_forward"), selectedImage: #imageLiteral(resourceName: "tab_play_forward_selected")),
+            TabbarItem(title: "Window", image: #imageLiteral(resourceName: "tab_play_back"), selectedImage: #imageLiteral(resourceName: "tab_play_back_selected")),
+            TabbarItem(title: "Present",image: #imageLiteral(resourceName: "tab_play"), selectedImage: #imageLiteral(resourceName: "tab_play_selected")),
+            TabbarItem(title: "Custom",image: #imageLiteral(resourceName: "tab_play_forward"), selectedImage: #imageLiteral(resourceName: "tab_play_forward_selected")),
     ]
     
     override public func viewDidLoad() {
@@ -68,13 +69,15 @@ class RootTabBarViewController: UITabBarController {
     }
     
     private func setUp() {
-        let vc = createViewControllerSource()
+        let vcs = createViewControllerSource()
         var viewControllersArray = [UINavigationController]()
         
-        for i in 0 ..< vc.count {
-            let nav = RootNavigationController(rootViewController: vc[i])
-            nav.tabBarItem.image = items[i].image.withRenderingMode(.alwaysOriginal)
-            nav.tabBarItem.selectedImage = items[i].selectedImage.withRenderingMode(.alwaysOriginal)
+        for (index,value) in vcs.enumerated() {
+            let nav = RootNavigationController(rootViewController: value)
+            value.navigationItem.title = items[index].title
+            nav.tabBarItem.title = items[index].title
+            nav.tabBarItem.image = items[index].image.withRenderingMode(.alwaysOriginal)
+            nav.tabBarItem.selectedImage = items[index].selectedImage.withRenderingMode(.alwaysOriginal)
             viewControllersArray.append(nav)
         }
         viewControllers = viewControllersArray
