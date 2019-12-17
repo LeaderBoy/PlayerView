@@ -65,7 +65,7 @@
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
-                <outlet property="containerView" destination="1ei-6Z-1Mf" id="pzn-bq-L8q"/>
+                <outlet property="container" destination="1ei-6Z-1Mf" id="9Zj-Yc-YYo"/>
                 <outlet property="coverImageView" destination="1cU-e5-09U" id="daa-jk-zy2"/>
                 <outlet property="desLabel" destination="gcF-2P-rHF" id="GLZ-Pd-Uc8"/>
                 <outlet property="playButton" destination="YqV-vE-sjf" id="vE3-io-xMl"/>

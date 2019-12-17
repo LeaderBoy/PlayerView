@@ -56,6 +56,9 @@ public enum Plan {
     case present
 }
 
+public protocol PlayerContainerable {
+    var playerContainer : UIView { get }
+}
 
 public class PlayerView: UIView {
         
@@ -170,17 +173,19 @@ public class PlayerView: UIView {
     
     public func updateWillChangeTableView(_ tableView : UITableView) {
         offset = tableView.contentOffset
-        print(offset)
     }
     
     public func updateDidChangeTableView(_ tableView : UITableView) {
         if let i = indexPath {
             DispatchQueue.main.async {
                 tableView.contentOffset = self.offset
+                /// deadline should less than playerAnimationTime
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    if let cell = tableView.cellForRow(at: i) as? HomeListCell {
-                        let container = cell.containerView
-                        self.transitionAnimator?.superView = container!
+                    if let cell = tableView.cellForRow(at: i) as? PlayerContainerable {
+                        let container = cell.playerContainer
+                        self.transitionAnimator?.superView = container
+                    }else {
+                        fatalError("your cell must confirm to protocol PlayerContainerable")
                     }
                 }
             }

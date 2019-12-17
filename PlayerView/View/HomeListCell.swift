@@ -16,7 +16,7 @@ protocol CellClick : class {
 
 class HomeListCell: UITableViewCell {
     
-    @IBOutlet weak var containerView: UIView!
+    @IBOutlet weak var container : UIView!
     @IBOutlet weak var coverImageView: UIImageView!
     @IBOutlet weak var desLabel: UILabel!
     @IBOutlet weak var playButton: UIButton!
@@ -35,11 +35,19 @@ class HomeListCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         selectionStyle = .none
-        containerView.layer.masksToBounds = true
-        containerView.layer.cornerRadius = 5
+        container.layer.masksToBounds = true
+        container.layer.cornerRadius = 5
     }
         
     @IBAction func play(_ sender: UIButton) {
-        delegate?.click(model: model, at: containerView)
+        delegate?.click(model: model, at: container)
+    }
+}
+
+extension HomeListCell : PlayerContainerable {
+    var playerContainer: UIView {
+        get {
+            return container
+        }
     }
 }

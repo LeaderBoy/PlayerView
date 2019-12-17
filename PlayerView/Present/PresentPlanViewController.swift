@@ -71,7 +71,8 @@ extension PresentPlanViewController : UITableViewDelegate {
             return CGFloat(number.floatValue)
         }else {
             if #available(iOS 11.0, *) {
-                return 200
+                /// prefered max cell height
+                return 250
             } else {
                 return UITableView.automaticDimension
             }
