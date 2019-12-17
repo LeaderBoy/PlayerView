@@ -30,7 +30,6 @@ import UIKit
 
 public let playerAnimationTime : TimeInterval =   0.5
 
-
 class Animator : NSObject {
     enum State {
         case animating

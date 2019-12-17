@@ -24,14 +24,10 @@ class PresentPlanViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = "Present"
         setupTableView()
     }
-    
-    override func viewSafeAreaInsetsDidChange() {
-//        UIView.animate(withDuration: playerAnimationTime) {
-//            self.view.layoutIfNeeded()
-//        }
-    }
+  
     
     func setupTableView() {
         dataSource = MovieDataSource(with: self)
@@ -94,12 +90,6 @@ extension PresentPlanViewController : UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        /// when present excute
-        /// didEndDisplaying will be called because of tableView reloadData
-        /// to prevent landscaping player beening removed
-        if player.modeState == .landscape {
-            return
-        }
         if player.indexPath == indexPath {
             player.stop()
         }

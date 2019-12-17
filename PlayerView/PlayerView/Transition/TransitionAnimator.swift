@@ -34,22 +34,29 @@ class TransitionAnimator : NSObject {
         case animated
     }
     
-    var sourceView : UIView
+    weak var sourceView : UIView?
     let sourceFrame : CGRect
     var superView : UIView
     
     var isPortrait = true
     var state : State = .animated
     var sourceShotView : UIView!
+
+    var keyView : UIView
+    var keyWindow : UIWindow!
     
     init(with sourceView : UIView) {
         self.sourceView = sourceView
         self.sourceFrame = sourceView.convert(sourceView.bounds, to: nil)
         self.superView = sourceView.superview!
         
-        if let rootView = UIApplication.shared.keyWindow?.rootViewController?.view {
+        if let window = UIApplication.shared.keyWindow,let rootView = window.rootViewController?.view {
             let view = rootView.snapshotView(afterScreenUpdates: false)
             self.sourceShotView = view
+            self.keyWindow = window
+            self.keyView = rootView
+        } else {
+            fatalError("key window not found")
         }
         super.init()
     }
@@ -96,69 +103,73 @@ extension TransitionAnimator : UIViewControllerAnimatedTransitioning {
         }
     }
     
+    func presentWillBegin() {
+        /// 1.
+        /// insert snapshotView as background
+        sourceShotView.frame = keyView.bounds
+        keyView.addSubview(sourceShotView)
+    }
+    
     func presentAnimation(context : TransitionContext) {
+        guard let sourceView = self.sourceView else {
+            fatalError("playerView is nil")
+        }
+        
         let containerView = context.containerView
         let toView = context.toView
         let fromView = context.fromView
-        
+        /// 2.
+        /// setup fromView's transform
+        /// thought system already setup this
+        fromView.frame = containerView.bounds
+        fromView.transform = .init(rotationAngle: .pi / -2)
+        /// 3.
+        /// add toView
+        toView.frame = containerView.bounds
+        containerView.addSubview(toView)
+        /// 4.
+        /// create a new view as playerView's container
+        let playerContainer = UIView()
+        playerContainer.tag = 9991
+        playerContainer.backgroundColor = .red
+        toView.addSubview(playerContainer)
+        let newCenter   = CGPoint(x: self.sourceFrame.midY, y: self.sourceFrame.midX)
+        playerContainer.frame    = self.sourceFrame
+        playerContainer.center   = newCenter
+        playerContainer.transform = .init(rotationAngle: .pi / -2)
+        /// 5.
+        /// remove all playerView's contraints
+        sourceView.removeFromSuperview()
+        sourceView.removeConstraints()
+        playerContainer.addSubview(sourceView)
+        sourceView.edges(to: playerContainer)
+        sourceView.removeLayerAnimation()
+        playerContainer.layoutIfNeeded()
+        /// 6.
+        /// animating
+        let w = toView.bounds.width
+        let h = toView.bounds.height
+        let center = toView.center
 
-        /// 1.
-        /// insert snapshotView as background
-        sourceShotView.center = fromView.center
-        sourceShotView.transform = .init(rotationAngle: .pi / -2)
-        sourceShotView.frame = containerView.bounds
-        containerView.addSubview(sourceShotView)
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.016) {
-            /// 2.
-            /// setup fromView's transform
-            /// thought system already setup this
-            fromView.frame = containerView.bounds
-            fromView.transform = .init(rotationAngle: .pi / -2)
-            /// 3.
-            /// add toView
-            toView.frame = containerView.bounds
-            containerView.addSubview(toView)
-            /// 4.
-            /// create a new view as playerView's container
-            let playerContainer = UIView()
-            playerContainer.tag = 9991
-            toView.addSubview(playerContainer)
-            let newCenter   = CGPoint(x: self.sourceFrame.midY, y: self.sourceFrame.midX)
-            playerContainer.frame    = self.sourceFrame
-            playerContainer.center   = newCenter
-            playerContainer.transform = .init(rotationAngle: .pi / -2)
-            /// 5.
-            /// remove all playerView's contraints
-            self.sourceView.removeFromSuperview()
-            self.sourceView.removeConstraints()
-            playerContainer.addSubview(self.sourceView)
-            self.sourceView.edges(to: playerContainer)
-            self.sourceView.removeLayerAnimation()
-            playerContainer.layoutIfNeeded()
-            /// 6.
-            /// animating
-            let w = toView.bounds.width
-            let h = toView.bounds.height
-            let center = toView.center
-
-            UIView.animate(withDuration: self.transitionDuration(using: context.transitionContext), delay: 0, options: .layoutSubviews, animations: {
-                let newFrame = CGRect(x: 0, y: 0, width: h, height: w)
-                playerContainer.frame = newFrame
-                playerContainer.center = center
-                playerContainer.transform = .identity
-                fromView.layoutIfNeeded()
-            }) { (_) in
-                context.transitionContext.completeTransition(true)
-            }
+        UIView.animate(withDuration: self.transitionDuration(using: context.transitionContext), delay: 0, options: .layoutSubviews, animations: {
+            let newFrame = CGRect(x: 0, y: 0, width: h, height: w)
+            playerContainer.frame = newFrame
+            playerContainer.center = center
+            playerContainer.transform = .identity
+        }) { (_) in
+            context.transitionContext.completeTransition(true)
         }
     }
     
     func dismissAnimation(context : TransitionContext) {
+        guard let sourceView = self.sourceView else {
+            fatalError("playerView is nil")
+        }
+        
         let containerView = context.containerView
         let fromView = context.fromView
         let toView = context.toView
-
+        
         /// 1.
         /// snapshotView should transform identity
         sourceShotView.center = toView.center
@@ -186,10 +197,10 @@ extension TransitionAnimator : UIViewControllerAnimatedTransitioning {
             fromView.transform = .init(rotationAngle: .pi / 2)
             self.sourceShotView.removeFromSuperview()
             let superView = self.superView
-            self.sourceView.removeFromSuperview()
-            self.sourceView.removeConstraints()
-            superView.addSubview(self.sourceView)
-            self.sourceView.edges(to: superView)
+            sourceView.removeFromSuperview()
+            sourceView.removeConstraints()
+            superView.addSubview(sourceView)
+            sourceView.edges(to: superView)
             superView.layoutIfNeeded()
             playerContainer.removeFromSuperview()
             context.transitionContext.completeTransition(true)

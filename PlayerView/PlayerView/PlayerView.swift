@@ -73,6 +73,7 @@ public class PlayerView: UIView {
     public var item : AVPlayerItem?
     
     public var plan : Plan = .window
+    public var isAnimating = false
     
     private var keyWindow : UIWindow? = UIApplication.shared.keyWindow
     
@@ -168,6 +169,9 @@ public class PlayerView: UIView {
     }
     
     public func stop() {
+        if modeState == .landscape || isAnimating {
+            return
+        }
         publish(state: .stop(self.indexPath))
     }
     
@@ -180,7 +184,7 @@ public class PlayerView: UIView {
             DispatchQueue.main.async {
                 tableView.contentOffset = self.offset
                 /// deadline should less than playerAnimationTime
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                     if let cell = tableView.cellForRow(at: i) as? PlayerContainerable {
                         let container = cell.playerContainer
                         self.transitionAnimator?.superView = container
@@ -304,11 +308,16 @@ public class PlayerView: UIView {
             self.animator = animator
             animator.present(animated: animatable)
         } else {
-            if let top = UIApplication.shared.keyWindow?.rootViewController?.topLevelViewController() {
+            if let rootView = UIApplication.shared.keyWindow?.rootViewController?.view, let top = UIApplication.shared.keyWindow?.rootViewController?.topLevelViewController() {
                 let animator = TransitionAnimator(with: self)
+                animator.presentWillBegin()
                 transition.animator = animator
                 self.transitionAnimator = animator
-                top.present(fullVC, animated: true, completion: nil)
+                isAnimating = true
+                
+                top.present(fullVC, animated: true, completion: ({
+                    self.isAnimating = false
+                }))
             } else {
                 fatalError("could not find rootViewController's topLevelViewController")
             }
@@ -331,7 +340,10 @@ public class PlayerView: UIView {
         } else {
             modeState = .portrait
             shouldStatusBarHidden = false
-            fullVC.dismiss(animated: true, completion: nil)
+            isAnimating = true
+            fullVC.dismiss(animated: true, completion: ({
+                self.isAnimating = false
+            }))
         }
     }
     
