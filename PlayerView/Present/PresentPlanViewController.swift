@@ -95,14 +95,11 @@ extension PresentPlanViewController : UITableViewDelegate {
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         let width = cell.frame.width
         let height = cell.frame.height
-        print("index :\(indexPath.row) 宽度\(width) 高度\(height)" )
         if shouldRecord(width) {
             let h = Double(height)
             let key = "\(indexPath.row)"
             cellHeights[key] = NSNumber(value: h)
         }
-        
-        print(cellHeights)
     }
     
     func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
