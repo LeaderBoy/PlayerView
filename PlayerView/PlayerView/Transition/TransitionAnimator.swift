@@ -101,51 +101,56 @@ extension TransitionAnimator : UIViewControllerAnimatedTransitioning {
         let toView = context.toView
         let fromView = context.fromView
         
+
         /// 1.
         /// insert snapshotView as background
         sourceShotView.center = fromView.center
         sourceShotView.transform = .init(rotationAngle: .pi / -2)
         sourceShotView.frame = containerView.bounds
         containerView.addSubview(sourceShotView)
-        /// 2.
-        /// setup fromView's transform
-        /// thought system already setup this
-        fromView.frame = containerView.bounds
-        fromView.transform = .init(rotationAngle: .pi / -2)
-        /// 3.
-        /// add toView
-        toView.frame = containerView.bounds
-        containerView.addSubview(toView)
-        /// 4.
-        /// create a new view as playerView's container
-        let playerContainer = UIView()
-        playerContainer.tag = 9991
-        toView.addSubview(playerContainer)
-        let newCenter   = CGPoint(x: sourceFrame.midY, y: sourceFrame.midX)
-        playerContainer.frame    = sourceFrame
-        playerContainer.center   = newCenter
-        playerContainer.transform = .init(rotationAngle: .pi / -2)
-        /// 5.
-        /// remove all playerView's contraints
-        sourceView.removeFromSuperview()
-        sourceView.removeConstraints()
-        playerContainer.addSubview(sourceView)
-        sourceView.edges(to: playerContainer)
-        sourceView.removeLayerAnimation()
-        playerContainer.layoutIfNeeded()
-        /// 6.
-        /// animating
-        let w = toView.bounds.width
-        let h = toView.bounds.height
-        let center = toView.center
         
-        UIView.animate(withDuration: transitionDuration(using: context.transitionContext), delay: 0, options: .layoutSubviews, animations: {
-            let newFrame = CGRect(x: 0, y: 0, width: h, height: w)
-            playerContainer.frame = newFrame
-            playerContainer.center = center
-            playerContainer.transform = .identity
-        }) { (_) in
-            context.transitionContext.completeTransition(true)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.016) {
+            /// 2.
+            /// setup fromView's transform
+            /// thought system already setup this
+            fromView.frame = containerView.bounds
+            fromView.transform = .init(rotationAngle: .pi / -2)
+            /// 3.
+            /// add toView
+            toView.frame = containerView.bounds
+            containerView.addSubview(toView)
+            /// 4.
+            /// create a new view as playerView's container
+            let playerContainer = UIView()
+            playerContainer.tag = 9991
+            toView.addSubview(playerContainer)
+            let newCenter   = CGPoint(x: self.sourceFrame.midY, y: self.sourceFrame.midX)
+            playerContainer.frame    = self.sourceFrame
+            playerContainer.center   = newCenter
+            playerContainer.transform = .init(rotationAngle: .pi / -2)
+            /// 5.
+            /// remove all playerView's contraints
+            self.sourceView.removeFromSuperview()
+            self.sourceView.removeConstraints()
+            playerContainer.addSubview(self.sourceView)
+            self.sourceView.edges(to: playerContainer)
+            self.sourceView.removeLayerAnimation()
+            playerContainer.layoutIfNeeded()
+            /// 6.
+            /// animating
+            let w = toView.bounds.width
+            let h = toView.bounds.height
+            let center = toView.center
+
+            UIView.animate(withDuration: self.transitionDuration(using: context.transitionContext), delay: 0, options: .layoutSubviews, animations: {
+                let newFrame = CGRect(x: 0, y: 0, width: h, height: w)
+                playerContainer.frame = newFrame
+                playerContainer.center = center
+                playerContainer.transform = .identity
+                fromView.layoutIfNeeded()
+            }) { (_) in
+                context.transitionContext.completeTransition(true)
+            }
         }
     }
     
