@@ -138,7 +138,7 @@ class ControlsView : UIView {
     override func safeAreaInsetsDidChange() {
         let delay = 0.0
         let animation = {
-            UIView.animate(withDuration: playerAnimationTime, delay: delay, options: [], animations: {
+            UIView.animate(withDuration: playerAnimationTime, delay: delay, options: [.beginFromCurrentState], animations: {
                 self.layoutIfNeeded()
             }, completion: nil)
         }
