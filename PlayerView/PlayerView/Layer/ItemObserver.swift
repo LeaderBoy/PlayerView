@@ -62,7 +62,11 @@ extension PlayerItem : Equatable {
 }
 
 public class ItemObserver: NSObject {
-
+    private var currentPosition     : TimeInterval = 0
+    private var previousPosition    : TimeInterval = 0
+    private var duration            : TimeInterval = 0
+    private var timeObserver        : Any?
+    
     private var itemErrorContext                    = 0
     private var itemDurationContext                 = 0
     private var itemStatusContext                   = 0
@@ -78,11 +82,6 @@ public class ItemObserver: NSObject {
     private let itemPlaybackBufferEmptyKeyPath      = #keyPath(AVPlayerItem.isPlaybackBufferEmpty)
     private let itemPlaybackBufferFullKeyPath       = #keyPath(AVPlayerItem.isPlaybackBufferFull)
     private let itemPlaybackLikelyToKeepUpKeyPath   = #keyPath(AVPlayerItem.isPlaybackLikelyToKeepUp)
-    
-    private var currentPosition     : TimeInterval = 0
-    private var previousPosition    : TimeInterval = 0
-    private var duration            : TimeInterval = 0
-    private var timeObserver        : Any?
     
     var bus : EventBus!
     
@@ -116,7 +115,6 @@ public class ItemObserver: NSObject {
         removeObserverItemPlaybackBufferEmpty(item)
         removeObserveInterrupted(item: item)
     }
-
 
     func observerItem(_ item : AVPlayerItem) {
         observerItemError(item)
@@ -156,7 +154,6 @@ public class ItemObserver: NSObject {
         }
     }
     
-    
     func observeErrorValue(change: [NSKeyValueChangeKey : Any]?) {
         guard let newChange = change, let newError = newChange[.newKey] as? Error else {
             return
@@ -189,11 +186,9 @@ public class ItemObserver: NSObject {
         guard let newChange = change, let value = newChange[.newKey] as? [NSValue],let timeRange = value.first?.timeRangeValue else {
             return
         }
-        
         let startSeconds = CMTimeGetSeconds(timeRange.start)
         let durationSeconds = CMTimeGetSeconds(timeRange.duration)
         let bufferTime = startSeconds + durationSeconds
-        
         if bufferTime >= duration {
             publish(state: .bufferFull(true))
             publish(item :.bufferFull(true))
@@ -235,6 +230,7 @@ public class ItemObserver: NSObject {
         guard let userInfo = note.userInfo else { return }
         if let value = userInfo[AVAudioSessionInterruptionTypeKey] as? NSNumber,let type = AVAudioSession.InterruptionType(rawValue: value.uintValue) {
             if let item = note.object as? AVPlayerItem,item == self.item {
+                publish(state: .interrupted(type))
                 publish(item :.interrupted(type))
             }
         }

@@ -59,7 +59,5 @@ struct ControlsViewOptions {
     public static var progressTrackTintColor : UIColor = .lightGray
     /// UILabel
     public static var timeLabelColor : UIColor = .white
-    /// Cache
-    public static var disableCache = false
     
 }

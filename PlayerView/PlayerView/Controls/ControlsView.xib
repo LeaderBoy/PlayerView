@@ -11,8 +11,6 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ControlsView" customModule="PlayerView" customModuleProvider="target">
             <connections>
                 <outlet property="backButton" destination="fsR-Gl-wYF" id="gvr-Mg-nhd"/>
-                <outlet property="containerLeftLayout" destination="KV9-gd-iFr" id="tMj-n8-Bh2"/>
-                <outlet property="containerView" destination="DTA-EH-Ca3" id="LuQ-MB-Zke"/>
                 <outlet property="controlsStackView" destination="fZx-DJ-HsU" id="HVJ-jt-LYp"/>
                 <outlet property="endLabel" destination="sd8-U6-KeF" id="jAu-JL-x98"/>
                 <outlet property="fullButton" destination="koJ-LB-ffQ" id="Nxv-jn-ftg"/>

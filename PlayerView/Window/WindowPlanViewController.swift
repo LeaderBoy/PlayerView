@@ -24,6 +24,13 @@ class WindowPlanViewController: UIViewController {
         super.viewDidLoad()
         setupTableView()
     }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if player.indexPath != nil {
+            player.paused()
+        }
+    }
 
     func setupTableView() {
         dataSource = MovieDataSource(with: self)

@@ -29,10 +29,10 @@
 import Foundation
 
 /// one playerView provide only one EventBus
+/// to prevent A playerView notifying B playerView
 public protocol EventBusIdentifiable {
     var eventBus : EventBus { get }
 }
-
 
 public class EventBus {
     
@@ -53,14 +53,6 @@ public class EventBus {
         subscribed[identifier] = update(set: weakSet) ?? []
     }
     
-    public func remove<T,E>(subscriber :T,for event : E.Type) {
-        let identifier = ObjectIdentifier(event)
-        var weakSet = subscribed[identifier] ?? []
-        let weakBox = WeakBox(subscriber as AnyObject)
-        weakSet.remove(weakBox)
-        subscribed[identifier] = update(set: weakSet)
-    }
-    
     /// notify event register to excute closure
     /// - Parameter event: event type
     /// - Parameter closure: a closure that the register should excute
@@ -73,6 +65,20 @@ public class EventBus {
             }
         }
         lock.unlock()
+    }
+    
+    /// Remove unsed subscriber
+    /// - Parameter subscriber: subscriber
+    /// - Parameter event: event
+    public func remove<T,E>(subscriber :T,for event : E.Type) {
+        let identifier = ObjectIdentifier(event)
+        var weakSet = subscribed[identifier] ?? []
+        let weakBox = WeakBox(subscriber as AnyObject)
+        
+        if weakSet.contains(weakBox) {
+            weakSet.remove(weakBox)
+            subscribed[identifier] = update(set: weakSet)
+        }
     }
     
     /// clean up nil object from subscribed

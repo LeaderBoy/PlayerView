@@ -296,6 +296,12 @@ public class PlayerView: UIView {
         case .stop(_):
             resetVariables()
             removeFromSuperview()
+        case .interrupted(let t):
+            if t == .began {
+                publish(state: .paused)
+            }else if t == .ended {
+                publish(state: .play)
+            }
         default:
             break
         }

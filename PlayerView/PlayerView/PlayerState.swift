@@ -69,6 +69,7 @@ public enum PlayerState : Equatable {
     case error(_ error  : Error)
     case mode(_ mode    : PlayerModeState)
     case network(_ net  : PlayerNetworkState)
+    case interrupted(AVAudioSession.InterruptionType)
     case unknown
     
     public static func prepare(at indexPath : IndexPath) -> PlayerState {
@@ -95,49 +96,8 @@ public enum PlayerState : Equatable {
         case (.network(let l),.network(let r))where l == r : return true
         case (.bufferEmpty(let l),.bufferEmpty(let r))where l == r : return true
         case (.unknown,.unknown): return true
-//        case (.underlying(let l),.underlying(let r))where l == r : return true
+        case (.interrupted(let l),.interrupted(let r))where l == r : return true
         case (_):return false
         }
     }
 }
-
-
-extension Error {
-    func isTimeout() -> Bool {
-        let nsError = self as NSError
-        return nsError.isTimeout()
-    }
-    
-    func isInternetUnavailable() -> Bool {
-        let nsError = self as NSError
-        return nsError.isInternetUnavailable()
-    }
-    
-    func isResourceUnavailable() -> Bool {
-        let nsError = self as NSError
-        return nsError.isResourceUnavailable()
-    }
-}
-
-extension NSError {
-    func isURLErrorDomain() -> Bool {
-        return self.domain == NSURLErrorDomain
-    }
-    
-    func isTimeout() -> Bool {
-        return self.code == NSURLErrorTimedOut
-    }
-    
-    func isInternetUnavailable() -> Bool {
-        return self.code == NSURLErrorNotConnectedToInternet
-    }
-    
-    func isUnsupportedURL() -> Bool {
-        return self.code == NSURLErrorUnsupportedURL
-    }
-    
-    func isResourceUnavailable() -> Bool {
-        self.code == NSURLErrorResourceUnavailable
-    }
-}
-

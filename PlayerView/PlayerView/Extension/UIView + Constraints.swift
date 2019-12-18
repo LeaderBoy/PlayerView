@@ -79,8 +79,8 @@ extension UIView {
     @discardableResult
     func center(to view: UIView) -> [NSLayoutConstraint] {
         translatesAutoresizingMaskIntoConstraints = false
-        let x = self.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-        let y = self.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        let x = centerXAnchor.constraint(equalTo: view.centerXAnchor)
+        let y = centerYAnchor.constraint(equalTo: view.centerYAnchor)
         
         NSLayoutConstraint.activate([
             x,y
@@ -88,7 +88,7 @@ extension UIView {
         return [x,y]
     }
     
-    
+    /// remove constraints inclued width and height
     func removeConstraints() {
         if let superView = self.superview {
             for constraint in superView.constraints {
@@ -106,6 +106,7 @@ extension UIView {
         translatesAutoresizingMaskIntoConstraints = true
     }
     
+    /// only remove width constraint
     func removeWidthConstraints() {
         for constraint in constraints {
             if #available(iOS 10.0, *) {
@@ -120,6 +121,7 @@ extension UIView {
         }
     }
     
+    /// only remove height constraint
     func removeHeightConstraints() {
         for constraint in constraints {
             if #available(iOS 10.0, *) {
@@ -133,6 +135,4 @@ extension UIView {
             }
         }
     }
-    
-
 }

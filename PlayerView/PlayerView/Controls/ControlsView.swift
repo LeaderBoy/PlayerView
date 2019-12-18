@@ -51,19 +51,19 @@ class ControlsView : UIView {
     @IBOutlet weak var slider: UISlider!
     @IBOutlet weak var progressView: UIProgressView!
     @IBOutlet weak var controlsStackView: UIStackView!
-    @IBOutlet weak var containerView: UIView!
-    @IBOutlet weak var containerLeftLayout: NSLayoutConstraint!
-    
-    public var isSliding = false {
+    /// hide every 5 seconds
+    let hideTimeInterval = 5.0
+    /// is UISlider sliding
+    var isSliding = false {
         didSet {
             if isSliding {
                 playButton(hide: true)
             }
         }
     }
-    var isBufferFull = false
+
     var isSeeking = false
-    var hideTimeInterval = 5.0
+    var isBufferFull = false
     var isReadyToPlay = false {
         didSet {
             if isReadyToPlay {
@@ -73,17 +73,11 @@ class ControlsView : UIView {
         }
     }
     
-    var oldPosition : TimeInterval = 0
-    
-    var mode : PlayerModeState = .portrait
-    
     var duration : TimeInterval = 0 {
         didSet {
             let intValue = ceil(duration)
-            
             slider.minimumValue = 0
             slider.maximumValue = Float(intValue)
-                    
             let label = self.transformSecondsToMMSS(intValue)
             endLabel.text = label
         }
@@ -118,8 +112,10 @@ class ControlsView : UIView {
         }
     }
     
-    var state : PlayerState = .unknown
-           
+    private var state : PlayerState = .unknown
+    private var oldPosition : TimeInterval = 0
+    private var mode : PlayerModeState = .portrait
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
@@ -150,7 +146,7 @@ class ControlsView : UIView {
     }
     
 
-    func setup() {
+    private func setup() {
         fromNib()
         resetVariables()
         setupSlider()
@@ -158,7 +154,7 @@ class ControlsView : UIView {
         configUI()
     }
     
-    func configUI() {
+    private func configUI() {
         // Slider
         slider.minimumTrackTintColor = ControlsViewOptions.sliderMinTrackColor
         slider.maximumTrackTintColor = ControlsViewOptions.sliderMaxTrackColor
@@ -179,7 +175,7 @@ class ControlsView : UIView {
         controlsStackView.isHidden = ControlsViewOptions.disableSlideControls
     }
     
-    func resetVariables() {
+    fileprivate func resetVariables() {
         isSliding = false
         isSeeking = false
         isReadyToPlay = false
@@ -196,17 +192,16 @@ class ControlsView : UIView {
         controlsStackView.isHidden = true
     }
     
-    func setupButtons() {
+    private func setupButtons() {
         playButton.setImage(#imageLiteral(resourceName: "controls_pause"), for: UIControl.State.init(arrayLiteral: .selected,.highlighted))
         fullButton.setImage(#imageLiteral(resourceName: "full_screen_selected"), for: UIControl.State.init(arrayLiteral: .selected,.highlighted))
     }
     
-    func setupSlider() {
+    private func setupSlider() {
         slider.addTarget(self, action: #selector(sliderTouchDown(_:)), for: [.touchDown,.touchDragExit,.touchDragOutside])
         slider.addTarget(self, action: #selector(sliderTouchCancel(_:)), for: [.touchCancel,.touchUpInside,.touchUpOutside])
         slider.addTarget(self, action: #selector(sliderValueChange(_:)), for: .valueChanged)
     }
-    
     
     // MARK: - Event
     @IBAction func play(_ sender: UIButton) {
@@ -258,15 +253,16 @@ class ControlsView : UIView {
         }
     }
     
-    func updatePosition(_ time : TimeInterval) {
+    private func updatePosition(_ time : TimeInterval) {
         startLabel.text = transformSecondsToMMSS(time)
     }
     
-    func updateSliderValue(_ time : TimeInterval) {
+    private func updateSliderValue(_ time : TimeInterval) {
         slider.value = Float(position)
     }
     
-    func updateShowState() {
+    /// hide every 5 seconds
+    private func updateShowState() {
         if (self.isHidden) {
             oldPosition = position
         } else {
@@ -278,7 +274,7 @@ class ControlsView : UIView {
         }
     }
     
-    func transformSecondsToMMSS(_ seconds : TimeInterval) -> String {
+    private func transformSecondsToMMSS(_ seconds : TimeInterval) -> String {
         let time    = Int(round(seconds))
         let hour    = String(format: "%02ld", arguments: [time / 3600] )
         let minute  = String(format: "%02ld", arguments: [(time % 3600)/60] )
@@ -311,7 +307,7 @@ class ControlsView : UIView {
         case .finished,.stop:
             playButton(selected: true)
             playButton(hide: false)
-        case .bufferFull(_),.bufferEmpty(_),.error(_),.mode(_),.network(_),.unknown:
+        case .bufferFull(_),.bufferEmpty(_),.error(_),.mode(_),.network(_),.unknown,.interrupted(_):
             break
         }
     }
@@ -364,7 +360,7 @@ class ControlsView : UIView {
         }
     }
     
-    func handle(item : PlayerItem) {
+    fileprivate func handle(item : PlayerItem) {
         switch item {
         case .status(let s):
             if s == .readyToPlay {
@@ -379,17 +375,13 @@ class ControlsView : UIView {
             bufferTime = t
         case .bufferFull(let f):
             isBufferFull = f
-        case .interrupted(let t):
-            if t == .began {
-                publish(state: .paused)
-            }else if t == .ended {
-                publish(state: .play)
-            }
         default:
             break
         }
     }
     
+    /// ignore gesture in controlsStackView
+    /// - Parameter gesture: gesture
     func ignore(gesture : UIGestureRecognizer) -> Bool {
         if !isHidden && controlsStackView.frame.contains(gesture.location(in: self))  {
             return true

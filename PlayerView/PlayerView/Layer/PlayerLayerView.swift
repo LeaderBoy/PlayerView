@@ -31,10 +31,6 @@ import AVKit
 
 
 class PlayerLayerView: UIView {
-    
-    let cache = MemoryCache.shared
-    
-    var state : PlayerState = .unknown
     var player : AVPlayer
     
     var bus : EventBus! {
@@ -43,17 +39,23 @@ class PlayerLayerView: UIView {
         }
     }
     
-    var isReadyToPlay = false
-    var isSeekingInProgress = false
-    var chaseTime : CMTime = .zero
     var isReadyToDisplay = false {
         didSet {
             playerLayer.isHidden = !isReadyToDisplay
         }
     }
+    
+    var videoGravity : AVLayerVideoGravity = .resizeAspect
+    
+    private var url : String?
+    private var isReadyToPlay = false
+    private var isSeekingInProgress = false
+    private var chaseTime : CMTime = .zero
     private let isReadyForDisplayKeyPath = #keyPath(AVPlayerLayer.isReadyForDisplay)
     private var isReadyForDisplayContext = 0
-        
+    private let cache = MemoryCache.shared
+    private var state : PlayerState = .unknown
+    
     var playerLayer : AVPlayerLayer {
         return self.layer as! AVPlayerLayer
     }
@@ -70,7 +72,7 @@ class PlayerLayerView: UIView {
         self.player = player
         super.init(frame: .zero)
         playerLayer.player = player
-        playerLayer.videoGravity = .resizeAspect
+        playerLayer.videoGravity = videoGravity
         playerLayer.isHidden = true
         observerFirstFrame()
     }
@@ -87,34 +89,31 @@ class PlayerLayerView: UIView {
         }
     }
     
-    func play() {
+    public func play() {
         player.play()
     }
     
-    func pause() {
+    public func pause() {
         player.pause()
     }
     
-    func replay(completionHandler: ((Bool) -> Void)? = nil) {
+    public func replay(completionHandler: ((Bool) -> Void)? = nil) {
         seekToTime(0, completionHandler: completionHandler)
     }
     
-    func stop() {
+    public func stop() {
         pause()
         player.replaceCurrentItem(with: nil)
     }
     
     /// https://developer.apple.com/library/archive/qa/qa1820/_index.html
-    func seekToTime(_ time:TimeInterval,completionHandler: ((Bool) -> Void)? = nil) {
+    public func seekToTime(_ time:TimeInterval,completionHandler: ((Bool) -> Void)? = nil) {
         let timeScale = player.currentItem?.asset.duration.timescale ?? 600
         let newChaseTime = CMTimeMakeWithSeconds(time, preferredTimescale: timeScale)
-        // when seek to zero,it always paued even called play,
         if CMTimeCompare(newChaseTime, chaseTime) != 0 {
             chaseTime = newChaseTime;
             if !isSeekingInProgress {
                 trySeekToChaseTime(completionHandler: completionHandler)
-            }else {
-                print("正在seek")
             }
         }
     }
@@ -122,6 +121,8 @@ class PlayerLayerView: UIView {
     private func trySeekToChaseTime(completionHandler: ((Bool) -> Void)? = nil) {
         if isReadyToPlay {
             actuallySeekToTime(completionHandler: completionHandler)
+        }else {
+            print("player is not ready to seek")
         }
     }
     
@@ -170,6 +171,7 @@ class PlayerLayerView: UIView {
         isReadyToDisplay = false
         isSeekingInProgress = false
         chaseTime = .zero
+        url = nil
     }
     
     func cachePlayProgress() {
@@ -179,8 +181,8 @@ class PlayerLayerView: UIView {
         
         if let key = getVideoUrl(from: player) {
             let seconds = CMTimeGetSeconds(player.currentTime())
-            // for show original frame
             if seconds >= 5.0 {
+                // for show original frame
                 let number = NSNumber(floatLiteral: seconds - 3)
                 cache.setObject(number, forKey: key)
             }
@@ -226,9 +228,14 @@ class PlayerLayerView: UIView {
     }
     
     func getVideoUrl(from player : AVPlayer) -> NSString? {
+        if let urlString = self.url {
+            return urlString as NSString
+        }
         if let asset = player.currentItem?.asset {
             if let urlAsset = asset as? AVURLAsset {
-                return urlAsset.url.absoluteString as NSString
+                let url = urlAsset.url.absoluteString
+                self.url = url
+                return url as NSString
             }
         }
         return nil

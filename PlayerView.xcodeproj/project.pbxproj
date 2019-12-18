@@ -35,9 +35,9 @@
 		52A797272386A4CB0043EB99 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A797252386A4CB0043EB99 /* PlayerViewController.swift */; };
 		52A797282386A4CB0043EB99 /* PlayerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52A797262386A4CB0043EB99 /* PlayerViewController.xib */; };
 		52A7972D2386A7BA0043EB99 /* Animator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A7972C2386A7BA0043EB99 /* Animator.swift */; };
-		52A7973123878A640043EB99 /* UIView + FullAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A7973023878A640043EB99 /* UIView + FullAnimation.swift */; };
 		52A7973C238E15B90043EB99 /* IndicatorLoading.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A7973B238E15B90043EB99 /* IndicatorLoading.swift */; };
-		52CCE62B23A6530800DAAD1B /* Debouncer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52CCE62A23A6530800DAAD1B /* Debouncer.swift */; };
+		52B3571D23AA0EC700CE98EA /* UIView + LayerAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52B3571C23AA0EC700CE98EA /* UIView + LayerAnimation.swift */; };
+		52B3571F23AA206400CE98EA /* Error + NSError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52B3571E23AA206400CE98EA /* Error + NSError.swift */; };
 		52D7421C239412F90068C08D /* PlayerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52D7421B239412F90068C08D /* PlayerState.swift */; };
 		52D7421E239550E70068C08D /* EventBus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52D7421D239550E70068C08D /* EventBus.swift */; };
 		52F8967C2385123D00D87D9E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52F8967B2385123D00D87D9E /* AppDelegate.swift */; };
@@ -102,9 +102,9 @@
 		52A797252386A4CB0043EB99 /* PlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
 		52A797262386A4CB0043EB99 /* PlayerViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PlayerViewController.xib; sourceTree = "<group>"; };
 		52A7972C2386A7BA0043EB99 /* Animator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animator.swift; sourceTree = "<group>"; };
-		52A7973023878A640043EB99 /* UIView + FullAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView + FullAnimation.swift"; sourceTree = "<group>"; };
 		52A7973B238E15B90043EB99 /* IndicatorLoading.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndicatorLoading.swift; sourceTree = "<group>"; };
-		52CCE62A23A6530800DAAD1B /* Debouncer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Debouncer.swift; sourceTree = "<group>"; };
+		52B3571C23AA0EC700CE98EA /* UIView + LayerAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView + LayerAnimation.swift"; sourceTree = "<group>"; };
+		52B3571E23AA206400CE98EA /* Error + NSError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Error + NSError.swift"; sourceTree = "<group>"; };
 		52D7421B239412F90068C08D /* PlayerState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerState.swift; sourceTree = "<group>"; };
 		52D7421D239550E70068C08D /* EventBus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventBus.swift; sourceTree = "<group>"; };
 		52F896782385123D00D87D9E /* PlayerView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PlayerView.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -345,10 +345,10 @@
 		52F896A32385142300D87D9E /* Extension */ = {
 			isa = PBXGroup;
 			children = (
-				52CCE62A23A6530800DAAD1B /* Debouncer.swift */,
+				52B3571E23AA206400CE98EA /* Error + NSError.swift */,
 				52F896A42385151300D87D9E /* UIView + Constraints.swift */,
 				52F896A82385155200D87D9E /* UIView + XIB.swift */,
-				52A7973023878A640043EB99 /* UIView + FullAnimation.swift */,
+				52B3571C23AA0EC700CE98EA /* UIView + LayerAnimation.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -552,14 +552,13 @@
 				52F896AB23852B3A00D87D9E /* ItemObserver.swift in Sources */,
 				529E2D1A239229E50026055D /* Publisher.swift in Sources */,
 				52138F5323A867140064785D /* TextCell.swift in Sources */,
-				52CCE62B23A6530800DAAD1B /* Debouncer.swift in Sources */,
 				52F896A92385155200D87D9E /* UIView + XIB.swift in Sources */,
 				52F896802385123D00D87D9E /* ViewController.swift in Sources */,
 				529E2D18239226BB0026055D /* Subscriber.swift in Sources */,
-				52A7973123878A640043EB99 /* UIView + FullAnimation.swift in Sources */,
 				52D7421E239550E70068C08D /* EventBus.swift in Sources */,
 				52F8967C2385123D00D87D9E /* AppDelegate.swift in Sources */,
 				52F8969F2385136D00D87D9E /* PlayerView.swift in Sources */,
+				52B3571F23AA206400CE98EA /* Error + NSError.swift in Sources */,
 				2FCEBEA3239E21F5000FEDB6 /* RootTabBarViewController.swift in Sources */,
 				52F896B22386273100D87D9E /* Reachability.swift in Sources */,
 				52138F4D23A792660064785D /* Transition.swift in Sources */,
@@ -568,6 +567,7 @@
 				52A7972D2386A7BA0043EB99 /* Animator.swift in Sources */,
 				2FE975A0239E61E800DF782D /* VideoDetailViewController.swift in Sources */,
 				520595822385938300BBEF77 /* IndicatorView.swift in Sources */,
+				52B3571D23AA0EC700CE98EA /* UIView + LayerAnimation.swift in Sources */,
 				2FB2B5D1239FBDD90028E130 /* PlayerViewOptions.swift in Sources */,
 				52138F5E23A869800064785D /* MovieDataSource.swift in Sources */,
 				52F896B623866B5A00D87D9E /* ControlsView.swift in Sources */,
