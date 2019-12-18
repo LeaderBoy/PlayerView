@@ -43,16 +43,12 @@ class PlayerViewController: UIViewController {
     }
         
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        // design work for window plan
         return [.landscapeRight,.landscapeLeft]
     }
     
 //    override var preferredScreenEdgesDeferringSystemGestures: UIRectEdge {
 //        return .bottom
 //    }
-    
-    deinit {
-        print("调用")
-    }
-    
     
 }

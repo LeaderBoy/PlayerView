@@ -97,15 +97,11 @@ extension UITabBarController {
     }
     
     override open var shouldAutorotate: Bool {
-        return self.selectedViewController?.shouldAutorotate ?? false
+        return self.selectedViewController?.shouldAutorotate ?? true
     }
     
     override open var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return self.selectedViewController?.supportedInterfaceOrientations ?? UIInterfaceOrientationMask.portrait
-    }
-    
-    override open var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
-        return self.selectedViewController?.preferredInterfaceOrientationForPresentation ?? UIInterfaceOrientation.portrait
     }
 }
 
@@ -120,16 +116,11 @@ extension UINavigationController {
     }
     
     override open var shouldAutorotate: Bool {
-        return self.topViewController?.shouldAutorotate ?? false
+        return self.topViewController?.shouldAutorotate ?? true
     }
     
     override open var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        print(UIInterfaceOrientationMask.portrait)
         return self.topViewController?.supportedInterfaceOrientations ?? UIInterfaceOrientationMask.portrait
-    }
-    
-    override open var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
-        return self.topViewController?.preferredInterfaceOrientationForPresentation ?? UIInterfaceOrientation.portrait
     }
     
 }

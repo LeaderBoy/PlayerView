@@ -74,6 +74,7 @@ public class PlayerView: UIView {
     public var shouldStatusBarHidden = false
     public var shouldAutorotate = true
     public var supportedInterfaceOrientations : UIInterfaceOrientationMask = .portrait
+
     public var item : AVPlayerItem?
     /// current plan
     public var plan : Plan = .window
