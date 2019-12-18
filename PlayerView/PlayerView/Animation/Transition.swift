@@ -29,7 +29,7 @@
 import UIKit
 
 class Transition : NSObject {
-    var animator : UIViewControllerAnimatedTransitioning?
+    weak var animator : UIViewControllerAnimatedTransitioning?
 }
 
 extension Transition : UIViewControllerTransitioningDelegate {

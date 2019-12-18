@@ -35,186 +35,205 @@ class Animator : NSObject {
         case animating
         case animated
     }
-
+    
     weak var sourceView : UIView?
-    var sourceFrame : CGRect
+    var plan : Plan
+    let sourceFrame : CGRect
     var superView : UIView
-    var keyView : UIView
     var sourceShotView : UIView!
+    var keyView : UIView
     var keyWindow : UIWindow!
-    var flashTime : TimeInterval = 0.02
-
-    private let lanVC = PlayerViewController()
-
+    
+    var state : State = .animated
+    var mode : PlayerModeState = .portrait
+    
+    lazy var lanVC : PlayerViewController = {
+        let vc = PlayerViewController()
+        if plan == .present {
+            vc.transitioningDelegate = transition
+            vc.modalPresentationStyle = .overFullScreen
+        }
+        return vc
+    }()
+    
     private var destinationView : UIView {
         return lanVC.view
     }
 
-    var lanWindow : UIWindow = {
+    /// Present Plan
+    lazy var transition: Transition = {
+        let t = Transition()
+        t.animator = self
+        return t
+    }()
+        
+    /// Window Plan
+    lazy var lanWindow : UIWindow = {
         let size = UIScreen.main.bounds.size
         let window = UIWindow(frame: CGRect(origin: .zero, size: CGSize(width: size.height, height: size.width)))
         window.windowLevel = .statusBar
         window.backgroundColor = .clear
+        window.rootViewController = lanVC
         return window
     }()
+    
+    fileprivate let flashTime : TimeInterval = 0.02
+    
+    fileprivate let portraitSnapshotViewTag = 9991
+    fileprivate let landscapeSnapshotViewTag = 9992
+    fileprivate let playerContrainerTag = 9993
 
-    var state : State = .animated
-    var mode : PlayerModeState = .portrait
+    typealias Completed = (()->Void)?
 
-    init(with sourceView : UIView) {
+    init(with sourceView : UIView,plan : Plan) {
         self.sourceView = sourceView
+        self.plan = plan
         self.sourceFrame = sourceView.convert(sourceView.bounds, to: nil)
-        self.superView = sourceView.superview!
-        if let w = UIApplication.shared.keyWindow,let rootView = w.rootViewController?.view {
-            keyWindow = w
-            keyView = rootView
+        if let superView = sourceView.superview {
+            self.superView = superView
+        } else {
+            fatalError("could not find playerView's superView")
+        }
+        
+        if let window = UIApplication.shared.keyWindow,let rootView = window.rootViewController?.view {
             let view = rootView.snapshotView(afterScreenUpdates: false)
             self.sourceShotView = view
-        }else {
-            fatalError("keyWindow not exist")
+            self.keyWindow = window
+            self.keyView = rootView
+        } else {
+            fatalError("key window not found")
         }
-        lanWindow.rootViewController = lanVC
-
         super.init()
     }
-
-    /// update frame superView and snapshotView
-    /// - Parameter sourceView: player view
-    func update(sourceView : UIView) {
-        self.sourceView = sourceView
-        self.sourceFrame = sourceView.convert(sourceView.bounds, to: nil)
-        self.superView = sourceView.superview!
-        if let rootView = UIApplication.shared.keyWindow?.rootViewController?.view {
-            keyView = rootView
-            let view = rootView.snapshotView(afterScreenUpdates: false)
-            self.sourceShotView = view
+    
+    func present(animated : Bool,completed:Completed = nil) {
+        if state == .animating || mode == .landscape {
+            return
+        }
+        switch plan {
+        case .window:
+            windowPresent(animated: animated, completed: completed)
+        case .present:
+            controllerPresent(animated: animated, completed: completed)
+        }
+    }
+    
+    func dismiss(animated:Bool,completed:Completed = nil) {
+        if state == .animating || mode == .portrait {
+            return
+        }
+        
+        switch plan {
+        case .window:
+            windowDismiss(animated: animated, completed: completed)
+        case .present:
+            controllerDismiss(animated: animated, completed: completed)
+        }
+    }
+    
+    fileprivate func windowPresent(animated : Bool,completed:Completed = nil) {
+        windowPresentWillBegin(animated: animated, completed: completed)
+    }
+    
+    fileprivate func windowDismiss(animated : Bool,completed:Completed = nil) {
+        windowDismissWillBegin(animated: animated, completed: completed)
+    }
+    
+    fileprivate func controllerPresent(animated : Bool,completed:Completed = nil) {
+        insertSnapshotViewForKeyView()
+        if let top = keyWindow.rootViewController?.topLevelViewController() {
+            top.present(lanVC, animated: animated, completion: completed)
         }else {
-            fatalError("keyWindow not exist")
+            print("Warn : present failed,could not find the most top viewcontroller")
         }
     }
-
-    func captureSnapshotView() -> UIView? {
-        if let snapshotView = lanVC.view.snapshotView(afterScreenUpdates: true) {
-            return snapshotView
-        }
-        return nil
+    
+    fileprivate func controllerDismiss(animated : Bool,completed:Completed = nil) {
+        lanVC.dismiss(animated: animated, completion: completed)
     }
+}
 
-    func insertSnapshotView() {
-        if let snapshotView = captureSnapshotView() {
-            snapshotView.tag = 999
-            snapshotView.frame = sourceView!.frame
-            snapshotView.center = keyWindow.center
-            snapshotView.transform = .init(rotationAngle: .pi / 2)
-            keyWindow.addSubview(snapshotView)
-            keyWindow.bringSubviewToFront(snapshotView)
-        }
-    }
-
-    func removeSnapshotView() {
-        let view = keyWindow.viewWithTag(999)
-        view?.removeFromSuperview()
-    }
-
-    /// Present fullScreen view
-    func present(animated : Bool = true) {
-        presentWillBegin(animated: animated)
-    }
-
-    // Dismiss from fullScreen view
-    func dismiss(animated : Bool = true) {
-        dismissWillBegin(animated: animated)
-    }
-
-    func presentWillBegin(animated : Bool) {
-        /// To prevent multiple calls
-        if state == .animating {
-            return
-        }
-
-        if mode == .landscape {
-            return
-        }
-
-        guard let sourceView = self.sourceView else { return }
-
-        /// insert snapshotview as background
+extension Animator {
+    // MARK: - Present
+    /// 1.
+    /// insert SnapshotView as background
+    func insertSnapshotViewForKeyView() {
+        sourceShotView.frame = keyView.bounds
         keyView.addSubview(sourceShotView)
+    }
+    
+    func removeSnapshotViewForKeyView() {
+        sourceShotView.removeFromSuperview()
+    }
+    
+    /// 2.
+    /// remove from old superView and move to new superView
+    func moveToLandscapeSuperView() {
+        guard let sourceView = self.sourceView else {
+            fatalError("source could not be nil")
+        }
 
         sourceView.removeConstraints()
         sourceView.frame = CGRect(x: sourceFrame.origin.y, y: sourceFrame.origin.x, width: sourceFrame.width, height: sourceFrame.height)
         sourceView.center = CGPoint(x: sourceFrame.midY, y: sourceFrame.midX)
         sourceView.transform = .init(rotationAngle: .pi / -2)
+        /// apply superView's configuation
         sourceView.layer.cornerRadius = superView.layer.cornerRadius
-        sourceView.layer.masksToBounds = true
+        sourceView.layer.masksToBounds = superView.layer.masksToBounds
+        
         destinationView.addSubview(sourceView)
-
-        lanWindow.alpha = 0
-        lanWindow.makeKeyAndVisible()
-
-        if animated {
-            /// When sourceView removeFromSuperView and add to destinationView,view will flash
-            /// so I add an fade animation to prevent the flash
-            UIView.animate(withDuration: flashTime, animations: {
-                self.lanWindow.alpha = 1
-                self.state = .animating
-            }) { (_) in
-                self.sourceShotView.removeFromSuperview()
-                self.presentAnimating(animated: animated)
-            }
-        }else {
-            self.lanWindow.alpha = 1
-            self.state = .animating
-            self.sourceShotView.removeFromSuperview()
-            self.presentAnimating(animated: animated)
-        }
     }
-
-    fileprivate func presentAnimating(animated : Bool) {
+    
+    /// 3.
+    /// present animation
+    func excutePresent(animated : Bool,completed: Completed = nil) {
         guard let sourceView = self.sourceView else { return }
         let width   = lanWindow.bounds.size.width
         let height  = lanWindow.bounds.size.height
-
-        if animated {
-            UIView.animate(withDuration: playerAnimationTime, delay: 0, options: .layoutSubviews, animations: {
-                sourceView.center = CGPoint(x: height / 2.0, y: width / 2.0)
-                sourceView.transform = .identity
-                let newFrame = CGRect(x: 0, y: 0, width: width, height: height)
-                sourceView.frame = newFrame
-                sourceView.layer.cornerRadius = 0
-            }) { (_) in
-                self.mode = .landscape
-                self.state = .animated
-            }
-        } else {
+        
+        let change = {
             sourceView.center = CGPoint(x: height / 2.0, y: width / 2.0)
             sourceView.transform = .identity
             let newFrame = CGRect(x: 0, y: 0, width: width, height: height)
             sourceView.frame = newFrame
             sourceView.layer.cornerRadius = 0
+        }
+        
+        let complete = {
             self.mode = .landscape
             self.state = .animated
+            completed?()
+        }
+
+        if animated {
+            UIView.animate(withDuration: playerAnimationTime, delay: 0, options: .layoutSubviews, animations: {
+                change()
+            }) { (_) in
+                complete()
+            }
+        } else {
+            change()
+            complete()
         }
     }
-
-    fileprivate func dismissWillBegin(animated : Bool) {
-        /// To prevent multiple calls
-        if state == .animating {
-            return
-        }
-
-        if mode == .portrait {
-            return
-        }
-
-        /// insert snapshotview as background
-        /// when exit app snapshotView will be nil
-        var snapshotView : UIView?
+    
+    // MARK: - Dismiss
+    /// 1.
+    /// insert snapshotView to prevent flash
+    func insertSnapshotViewForLandscapeView() {
         if let snap = destinationView.snapshotView(afterScreenUpdates: true) {
+            snap.tag = landscapeSnapshotViewTag
             destinationView.insertSubview(snap, at: 0)
-            snapshotView = snap
         }
-
+    }
+    
+    func removeSnapshotViewForLandscapeView() {
+        if let snap = destinationView.viewWithTag(landscapeSnapshotViewTag) {
+            snap.removeFromSuperview()
+        }
+    }
+    
+    func moveToPortraitView() {
         guard let sourceView = self.sourceView else { return }
 
         let width = UIScreen.main.bounds.width
@@ -223,69 +242,124 @@ class Animator : NSObject {
         sourceView.center = CGPoint(x: height / 2.0, y: width / 2.0)
         sourceView.removeLayerAnimation()
         keyView.addSubview(sourceView)
-
-        if animated {
-            /// when sourceView removeFromSuperView and add to keyView,view will flash
-            /// so I add an fade animation to prevent the flash
-            UIView.animate(withDuration: flashTime, animations: {
-                self.lanWindow.alpha = 0
-                self.state = .animating
-            }) { (_) in
-                /// 1. when in landscape
-                /// 2. exit the app
-                /// 3. and in
-                /// UITableView will be scaled
-                /// so use makeKeyAndVisible and layoutIfNeeded to fix that problem
-                self.keyWindow.makeKeyAndVisible()
-                self.keyView.layoutIfNeeded()
-
-                self.lanWindow.isHidden = true
-                self.lanWindow.alpha = 1.0
-                snapshotView?.removeFromSuperview()
-                self.dismissAnimating(animated: animated)
-            }
-        } else {
+    }
+    
+    // Dismiss from fullScreen view
+    func windowDismissWillBegin(animated : Bool = true,completed:Completed = nil) {
+        self.state = .animating
+        self.mode = .portrait
+        /// insert snapshotview as background
+        /// when exit app snapshotView will be nil
+        insertSnapshotViewForLandscapeView()
+        moveToPortraitView()
+        
+        let change = {
             self.lanWindow.alpha = 0
-            self.state = .animating
+        }
+        
+        let complete = {
+            /// 1. when in landscape
+            /// 2. exit the app
+            /// 3. and in
+            /// UITableView will be scaled
+            /// so use makeKeyAndVisible and layoutIfNeeded to fix that problem
             self.keyWindow.makeKeyAndVisible()
             self.keyView.layoutIfNeeded()
 
             self.lanWindow.isHidden = true
             self.lanWindow.alpha = 1.0
-            snapshotView?.removeFromSuperview()
-            self.dismissAnimating(animated: animated)
+            self.removeSnapshotViewForLandscapeView()
+            self.windowDismissAnimating(animated: animated, completed: completed)
         }
 
+        if animated {
+            /// when sourceView removeFromSuperView and add to keyView,view will flash
+            /// so I add an fade animation to prevent the flash
+            UIView.animate(withDuration: flashTime, animations: {
+                change()
+            }) { (_) in
+                complete()
+            }
+        } else {
+            complete()
+        }
+    }
+    
+
+    func windowPresentWillBegin(animated : Bool,completed:Completed = nil) {
+        
+        self.state = .animating
+        self.mode = .landscape
+        
+        insertSnapshotViewForKeyView()
+        moveToLandscapeSuperView()
+
+        let complete = {
+            self.removeSnapshotViewForKeyView()
+            self.excutePresent(animated: animated, completed: completed)
+        }
+
+        lanWindow.makeKeyAndVisible()
+
+        if animated {
+            lanWindow.alpha = 0
+            /// When sourceView removeFromSuperView and add to destinationView,view will flash
+            /// so I add an fade animation to prevent the flash
+            UIView.animate(withDuration: flashTime, animations: {
+                self.lanWindow.alpha = 1
+            }) { (_) in
+                complete()
+            }
+        }else {
+            complete()
+        }
     }
 
-    fileprivate func dismissAnimating(animated : Bool) {
+    fileprivate func windowPresentAnimating(animated : Bool,completed:Completed = nil) {
+        guard let sourceView = self.sourceView else { return }
+        let width   = lanWindow.bounds.size.width
+        let height  = lanWindow.bounds.size.height
+        
+        let change = {
+            sourceView.center = CGPoint(x: height / 2.0, y: width / 2.0)
+            sourceView.transform = .identity
+            let newFrame = CGRect(x: 0, y: 0, width: width, height: height)
+            sourceView.frame = newFrame
+            sourceView.layer.cornerRadius = 0
+        }
+        
+        let complete = {
+            self.mode = .landscape
+            self.state = .animated
+            completed?()
+        }
+
+        if animated {
+            UIView.animate(withDuration: playerAnimationTime, delay: 0, options: .layoutSubviews, animations: {
+                change()
+            }) { (_) in
+                complete()
+            }
+        } else {
+            change()
+            complete()
+        }
+    }
+
+    fileprivate func windowDismissAnimating(animated : Bool,completed:Completed = nil) {
         guard let sourceView = self.sourceView else { return }
         let sourceFrame = self.sourceFrame
         let superView = self.superView
-
-        if animated {
-            UIView.animate(withDuration: playerAnimationTime, delay: 0, options:.layoutSubviews, animations: {
-                sourceView.frame = CGRect(x: sourceFrame.origin.x, y: sourceFrame.origin.y, width: sourceFrame.height, height: sourceFrame.width)
-                sourceView.center = CGPoint(x: sourceFrame.midX, y: sourceFrame.midY)
-                sourceView.transform = .identity
-                sourceView.layer.cornerRadius = superView.layer.cornerRadius
-                sourceView.layer.masksToBounds = false
-            }) { (_) in
-                superView.addSubview(sourceView)
-                sourceView.transform = .identity
-                sourceView.edges(to: superView)
-                sourceView.layer.cornerRadius = 0
-                superView.layoutIfNeeded()
-                self.state = .animated
-                self.mode = .portrait
-            }
-        } else {
+        
+        let change = {
             sourceView.frame = CGRect(x: sourceFrame.origin.x, y: sourceFrame.origin.y, width: sourceFrame.height, height: sourceFrame.width)
             sourceView.center = CGPoint(x: sourceFrame.midX, y: sourceFrame.midY)
             sourceView.transform = .identity
             sourceView.layer.cornerRadius = superView.layer.cornerRadius
             sourceView.layer.masksToBounds = false
-
+        }
+        
+        let complete = {
             superView.addSubview(sourceView)
             sourceView.transform = .identity
             sourceView.edges(to: superView)
@@ -293,6 +367,183 @@ class Animator : NSObject {
             superView.layoutIfNeeded()
             self.state = .animated
             self.mode = .portrait
+            completed?()
+        }
+
+        if animated {
+            UIView.animate(withDuration: playerAnimationTime, delay: 0, options:.layoutSubviews, animations: {
+                change()
+            }) { (_) in
+                complete()
+            }
+        } else {
+            change()
+            complete()
+        }
+    }
+    
+    
+    func insertTempSnapshotView() {
+        if let snapshotView = lanVC.view.snapshotView(afterScreenUpdates: true) {
+            snapshotView.tag = portraitSnapshotViewTag
+            snapshotView.frame = sourceView!.frame
+            snapshotView.center = keyWindow.center
+            snapshotView.transform = .init(rotationAngle: .pi / 2)
+            keyWindow.addSubview(snapshotView)
+            keyWindow.bringSubviewToFront(snapshotView)
+        }
+    }
+
+    func removeTempSnapshotView() {
+        let view = keyWindow.viewWithTag(portraitSnapshotViewTag)
+        view?.removeFromSuperview()
+    }
+}
+
+
+extension Animator : UIViewControllerAnimatedTransitioning {
+    
+    func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
+        return playerAnimationTime
+    }
+    
+    func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
+        let context = TransitionContext(transitionContext)
+        let isDismiss = context.fromViewController.presentingViewController == context.toViewController
+        if isDismiss {
+            dismissAnimation(context: context)
+        }else {
+            presentAnimation(context: context)
+        }
+    }
+    
+    fileprivate func presentAnimation(context : TransitionContext) {
+        guard let sourceView = self.sourceView else {
+            fatalError("playerView is nil")
+        }
+        
+        state = .animating
+        mode = .landscape
+        
+        let containerView = context.containerView
+        let toView = context.toView
+        let fromView = context.fromView
+        /// 2.
+        /// setup fromView's transform
+        /// thought system already setup this
+        fromView.frame = containerView.bounds
+        fromView.transform = .init(rotationAngle: .pi / -2)
+        /// 3.
+        /// add toView
+        toView.frame = containerView.bounds
+        containerView.addSubview(toView)
+        /// 4.
+        /// create a new view as playerView's container
+        let playerContainer = UIView()
+        playerContainer.tag = playerContrainerTag
+        toView.addSubview(playerContainer)
+        let newCenter   = CGPoint(x: self.sourceFrame.midY, y: self.sourceFrame.midX)
+        playerContainer.frame    = self.sourceFrame
+        playerContainer.center   = newCenter
+        playerContainer.transform = .init(rotationAngle: .pi / -2)
+        /// 5.
+        /// remove all playerView's contraints
+        sourceView.removeFromSuperview()
+        sourceView.removeConstraints()
+        playerContainer.addSubview(sourceView)
+        sourceView.edges(to: playerContainer)
+        sourceView.removeLayerAnimation()
+        playerContainer.layoutIfNeeded()
+        /// 6.
+        /// animating
+        let w = toView.bounds.width
+        let h = toView.bounds.height
+        let center = toView.center
+
+        UIView.animate(withDuration: self.transitionDuration(using: context.transitionContext), delay: 0, options: .layoutSubviews, animations: {
+            let newFrame = CGRect(x: 0, y: 0, width: h, height: w)
+            playerContainer.frame = newFrame
+            playerContainer.center = center
+            playerContainer.transform = .identity
+        }) { (_) in
+            self.state = .animated
+            context.transitionContext.completeTransition(true)
+        }
+    }
+    
+    fileprivate func dismissAnimation(context : TransitionContext) {
+        guard let sourceView = self.sourceView else {
+            fatalError("playerView is nil")
+        }
+        
+        state = .animating
+        mode = .portrait
+        
+        let containerView = context.containerView
+        let fromView = context.fromView
+        let toView = context.toView
+        
+        /// 1.
+        /// snapshotView should transform identity
+        sourceShotView.center = toView.center
+        sourceShotView.transform = .identity
+        sourceShotView.frame = containerView.bounds
+        /// 2.
+        /// toView and fromView should rotate to satisfy safearea change immediately
+        /// this step is very important otherwise safearea will not work properly
+        toView.transform = .identity
+        toView.frame = containerView.bounds
+        fromView.transform = .identity
+        fromView.frame = containerView.bounds
+        /// 3.
+        /// player stay in current orientation should also rotate
+        let playerContainer = fromView.viewWithTag(playerContrainerTag)!
+        playerContainer.center = fromView.center
+        playerContainer.transform = .init(rotationAngle: .pi / 2)
+        /// 4.
+        /// animating
+        UIView.animate(withDuration: transitionDuration(using: context.transitionContext), delay: 0, options:.layoutSubviews, animations: {
+            playerContainer.center = CGPoint(x: self.sourceFrame.midX, y: self.sourceFrame.midY)
+            playerContainer.transform = .identity
+            playerContainer.frame = self.sourceFrame
+        }) { (_) in
+            fromView.transform = .init(rotationAngle: .pi / 2)
+            self.sourceShotView.removeFromSuperview()
+            let superView = self.superView
+            sourceView.removeFromSuperview()
+            sourceView.removeConstraints()
+            superView.addSubview(sourceView)
+            sourceView.edges(to: superView)
+            superView.layoutIfNeeded()
+            playerContainer.removeFromSuperview()
+            self.state = .animated
+            context.transitionContext.completeTransition(true)
         }
     }
 }
+
+
+//protocol PresentAnimation {
+//    func presentAnimationWillBegin(for animator : Animator)
+//    func presentAnimationDidBegin(for animator : Animator,complete:@escaping ()->Void)
+//}
+//
+//protocol DismissAnimation {
+//    func dismissAnimationWillBegin(for animator : Animator)
+//    func dismissAnimationDidBegin(for animator : Animator,complete:@escaping ()->Void)
+//    func dismissAnimationWillEnd(for animator : Animator)
+//    func dismissAnimationDidEnd(for animator : Animator)
+//
+//}
+//
+//extension PresentAnimation {
+//    func presentAnimationWillBegin(for animator : Animator){}
+//    func presentAnimationDidBegin(for animator : Animator,complete:@escaping ()->Void){}
+//}
+//
+//extension DismissAnimation {
+//    func dismissAnimationWillBegin(for animator : Animator){}
+//    func dismissAnimationDidBegin(for animator : Animator,complete:@escaping ()->Void){}
+//    func dismissAnimationWillEnd(for animator : Animator){}
+//    func dismissAnimationDidEnd(for animator : Animator){}
+//}

@@ -56,26 +56,48 @@ public enum Plan {
     case present
 }
 
+
+/// Why Why do you need to use it?
+/// Blog :
+/// We need a container to wrap the playerView
 public protocol PlayerContainerable {
     var playerContainer : UIView { get }
 }
 
 public class PlayerView: UIView {
-        
+    
     weak public var dataSource : PlayerViewDataSource?
     weak public var delegate : PlayerViewDelegate?
     
-    public var indexPath : IndexPath?
+    /// when you need to register as a subscriber,you must confirm to protocol EventBusIdentifiable
+    /// return the eventBus rather than implement a eventbus yourself
     public var eventBus = EventBus()
     
+    /// current indexPath
+    public var indexPath : IndexPath?
+    /// current state
     public var state : PlayerState = .unknown
+    /// current mode state
+    public var modeState : PlayerModeState = .portrait
     public var shouldStatusBarHidden = false
     public var item : AVPlayerItem?
-    
+    /// current plan
     public var plan : Plan = .window
+    /// is presenting or dismissing
     public var isAnimating = false
     
-    private var keyWindow : UIWindow? = UIApplication.shared.keyWindow
+    private var reachability = Reachability.forInternetConnection()
+    private var animator : Animator?
+
+    private lazy var layerView = PlayerLayerView(player: player)
+    private lazy var indicatorView = IndicatorView()
+    private lazy var controlsView  = ControlsView()
+    private lazy var itemObserver = ItemObserver()
+    private lazy var loadingView = IndicatorLoading()
+    private lazy var motionManager = MotionManager()
+    private lazy var animatable = true
+    private lazy var recoverFromPortrait = false
+    private lazy var offset : CGPoint = .zero
     
     private var player : AVPlayer = {
         let p = AVPlayer()
@@ -93,31 +115,6 @@ public class PlayerView: UIView {
         }
         return p
     }()
-    
-    private var reachability = Reachability.forInternetConnection()
-    
-    private lazy var layerView = PlayerLayerView(player: player)
-    private lazy var indicatorView = IndicatorView()
-    private lazy var controlsView  = ControlsView()
-    private lazy var itemObserver = ItemObserver()
-    private lazy var loadingView = IndicatorLoading()
-    private lazy var motionManager = MotionManager()
-    
-    var animator : Animator?
-    var modeState : PlayerModeState = .portrait
-    var animatable = true
-    var recoverFromPortrait = false
-    
-    var transitionAnimator : TransitionAnimator?
-    lazy var transition = Transition()
-    lazy var fullVC: FullPlayerViewController = {
-        let full = FullPlayerViewController()
-        full.transitioningDelegate = transition
-        full.modalPresentationStyle = .overFullScreen
-        return full
-    }()
-    
-    private var offset : CGPoint = .zero
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -135,15 +132,11 @@ public class PlayerView: UIView {
     }
     
     func setup() {
+        registerAsStateSubscriber()
         configUI()
         addGestures()
         addObserver()
         reachabilityCallBack()
-        registerAsStateSubscriber()
-    }
-    
-    public func reload() {
-        
     }
     
     public func prepare(url : URL,in container : UIView,at indexPath : IndexPath? = nil) {
@@ -175,6 +168,22 @@ public class PlayerView: UIView {
         publish(state: .stop(self.indexPath))
     }
     
+    public func play() {
+        publish(state: .play)
+    }
+    
+    public func paused() {
+        publish(state: .paused)
+    }
+    
+    public func seekTo(time : TimeInterval) {
+        publish(state: .seeking(time))
+    }
+    
+    public func updateMode(_ mode : PlayerModeState) {
+        publish(state: .mode(mode))
+    }
+    
     public func updateWillChangeTableView(_ tableView : UITableView) {
         offset = tableView.contentOffset
     }
@@ -187,7 +196,7 @@ public class PlayerView: UIView {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.016) {
                     if let cell = tableView.cellForRow(at: i) as? PlayerContainerable {
                         let container = cell.playerContainer
-                        self.transitionAnimator?.superView = container
+                        self.animator?.superView = container
                     }else {
                         fatalError("your cell must confirm to protocol PlayerContainerable")
                     }
@@ -302,26 +311,13 @@ public class PlayerView: UIView {
         modeState = .landscape
         shouldStatusBarHidden = true
         
-        if plan == .window {
-            PlayerUIInterfaceOrientation.shared.current = [.landscapeRight,.portrait]
-            let animator = Animator(with: self)
-            self.animator = animator
-            animator.present(animated: animatable)
-        } else {
-            if let top = UIApplication.shared.keyWindow?.rootViewController?.topLevelViewController() {
-                let animator = TransitionAnimator(with: self)
-                animator.presentWillBegin()
-                transition.animator = animator
-                transitionAnimator = animator
-                isAnimating = true
-                
-                top.present(fullVC, animated: true, completion: ({
-                    self.isAnimating = false
-                }))
-            } else {
-                fatalError("could not find rootViewController's topLevelViewController")
-            }
+        let animator = Animator(with: self, plan: plan)
+        isAnimating = true
+        let animated = plan == .window ? animatable : true
+        animator.present(animated: animated) {
+            self.isAnimating = false
         }
+        self.animator = animator
     }
     
     func handlePortrait() {
@@ -329,24 +325,18 @@ public class PlayerView: UIView {
             print("Warn : current modeState is already portrait, do not portrait again")
             return
         }
+        modeState = .portrait
+        shouldStatusBarHidden = false
+        isAnimating = true
         
-        if plan == .window {
-            modeState = .portrait
-            shouldStatusBarHidden = false
-            if animator != nil {
-                PlayerUIInterfaceOrientation.shared.current = [.portrait,.landscapeRight]
-                animator!.dismiss(animated: animatable)
-            }
-        } else {
-            modeState = .portrait
-            shouldStatusBarHidden = false
-            isAnimating = true
-            fullVC.dismiss(animated: true, completion: ({
+        let animated = plan == .window ? animatable : true
+
+        if let animator = self.animator {
+            animator.dismiss(animated: animated) {
                 self.isAnimating = false
-            }))
+            }
         }
     }
-    
     
     private func addObserver() {
         NotificationCenter.default.addObserver(self, selector: #selector(didBecomeActiveNotification), name: UIApplication.didBecomeActiveNotification, object: nil)
@@ -369,7 +359,7 @@ public class PlayerView: UIView {
                     self.animatable = false
                     self.publish(state: .mode(.landscape))
                     self.animatable = true
-                    self.animator?.removeSnapshotView()
+                    self.animator?.removeTempSnapshotView()
                 }
             }
         }
@@ -383,7 +373,7 @@ public class PlayerView: UIView {
         if plan == .window {
             if modeState == .landscape {
                 DispatchQueue.main.asyncAfter(deadline: .now()) {
-                    self.animator?.insertSnapshotView()
+                    self.animator?.insertTempSnapshotView()
                     self.animatable = false
                     self.publish(state: .mode(.portrait))
                     self.animatable = true
