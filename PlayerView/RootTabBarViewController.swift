@@ -124,6 +124,7 @@ extension UINavigationController {
     }
     
     override open var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        print(UIInterfaceOrientationMask.portrait)
         return self.topViewController?.supportedInterfaceOrientations ?? UIInterfaceOrientationMask.portrait
     }
     
