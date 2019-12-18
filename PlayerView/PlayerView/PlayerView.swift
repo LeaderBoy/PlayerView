@@ -365,7 +365,7 @@ public class PlayerView: UIView {
                     self.animatable = false
                     self.publish(state: .mode(.landscape))
                     self.animatable = true
-                    self.animator?.removeTempSnapshotView()
+                    self.animator?.windowDismissRemoveTempSnapshotView()
                 }
             }
         }
@@ -379,7 +379,7 @@ public class PlayerView: UIView {
         if plan == .window {
             if modeState == .landscape {
                 DispatchQueue.main.asyncAfter(deadline: .now()) {
-                    self.animator?.insertTempSnapshotView()
+                    self.animator?.windowDismissInsertTempSnapshotView()
                     self.animatable = false
                     self.publish(state: .mode(.portrait))
                     self.animatable = true
