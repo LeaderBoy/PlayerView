@@ -53,7 +53,7 @@ class MotionManager {
     var updateOrientation : UpdateOrientation?
     
     private var orientation : UIInterfaceOrientationMask = .portrait
-    
+        
     private func startMonitor() {
         motion.startDeviceMotionUpdates(to: motionQueue) { (deviceMotion, error) in
             if let motion = deviceMotion {
@@ -82,7 +82,7 @@ class MotionManager {
             self.orientation = newOrientation
             self.updateOrientation?(newOrientation)
         }
-        
+
         if fabs(y) > sensitive {
             if y < 0 {
                 update(.portrait)
@@ -93,9 +93,9 @@ class MotionManager {
         
         if fabs(x) > sensitive {
             if x < 0 {
-                update(.landscapeLeft)
-            } else {
                 update(.landscapeRight)
+            } else {
+                update(.landscapeLeft)
             }
         }
     }

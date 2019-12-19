@@ -94,6 +94,7 @@ public class PlayerView: UIView {
     private lazy var recoverFromPortrait = false
     private lazy var offset : CGPoint = .zero
     
+    private var aimOrientation : UIInterfaceOrientationMask?
     
     private var player : AVPlayer = {
         let p = AVPlayer()
@@ -206,6 +207,7 @@ public class PlayerView: UIView {
         item = nil
         shouldStatusBarHidden = false
         state = .unknown
+        aimOrientation = nil
     }
     
     func configUI() {
@@ -234,7 +236,12 @@ public class PlayerView: UIView {
         }
         
         if !PlayerViewOptions.disableMotionMonitor {
-//            motionManager.bus = eventBus
+            motionManager.bus = eventBus
+            print(UIInterfaceOrientationMask.portrait)
+            print(UIInterfaceOrientationMask.landscapeLeft)
+            print(UIInterfaceOrientationMask.landscapeRight)
+            print(UIInterfaceOrientationMask.allButUpsideDown)
+//
 //            motionManager.updateOrientation = { ori in
 //                print(ori)
 //            }
@@ -314,6 +321,10 @@ public class PlayerView: UIView {
         shouldStatusBarHidden = true
         
         let animator = Animator(with: self, plan: plan)
+        
+        print(aimOrientation?.rawValue)
+        animator.aimOrientation = aimOrientation
+
         isAnimating = true
         supportedInterfaceOrientations = [.landscapeLeft,.landscapeRight]
         
@@ -342,15 +353,17 @@ public class PlayerView: UIView {
             }
         }
     }
-    
+        
     private func addObserver() {
         NotificationCenter.default.addObserver(self, selector: #selector(didBecomeActiveNotification), name: UIApplication.didBecomeActiveNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(willResignActiveNotification), name: UIApplication.willResignActiveNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(notification(note:)), name: UIDevice.orientationDidChangeNotification, object: nil)
     }
     
     private func removeAllObserver() {
         NotificationCenter.default.removeObserver(self, name: UIApplication.didBecomeActiveNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: UIApplication.willResignActiveNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIDevice.orientationDidChangeNotification, object: nil)
     }
     
     
@@ -385,6 +398,25 @@ public class PlayerView: UIView {
                     self.recoverFromPortrait = true
                 }
             }
+        }
+    }
+    
+    @objc func notification(note : Notification) {
+        let value = UIDevice.current.orientation
+        if value == .landscapeLeft {
+            aimOrientation = .landscapeRight
+            animator?.aimOrientation = aimOrientation
+        } else if value == .landscapeRight {
+            aimOrientation = .landscapeLeft
+            animator?.aimOrientation = aimOrientation
+        } else if value == .portrait {
+            aimOrientation = .portrait
+        } else if value == .portraitUpsideDown {
+            aimOrientation = .portraitUpsideDown
+        } else if value == .faceUp {
+            aimOrientation = .portrait
+        } else if value == .faceDown {
+            aimOrientation = .portrait
         }
     }
 }

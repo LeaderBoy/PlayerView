@@ -28,7 +28,7 @@
 
 import UIKit
 
-public let playerAnimationTime : TimeInterval =   0.5
+public let playerAnimationTime : TimeInterval = 0.5
 
 class Animator : NSObject {
     enum State {
@@ -78,10 +78,12 @@ class Animator : NSObject {
     }()
     
     fileprivate let flashTime : TimeInterval = 0.02
-    
     fileprivate let portraitSnapshotViewTag = 9991
     fileprivate let windowDismissSnapshotViewTag = 9992
     fileprivate let playerContrainerTag = 9993
+    /// before full screen
+    /// the orientation of the device will rotate to
+    var aimOrientation : UIInterfaceOrientationMask?
 
     typealias Completed = (()->Void)?
 
@@ -202,9 +204,19 @@ extension Animator {
         /// 2.
         /// remove from old superView and move to new superView
         sourceView.removeConstraints()
-        sourceView.frame = CGRect(x: sourceFrame.origin.y, y: sourceFrame.origin.x, width: sourceFrame.width, height: sourceFrame.height)
-        sourceView.center = CGPoint(x: sourceFrame.midY, y: sourceFrame.midX)
-        sourceView.transform = .init(rotationAngle: .pi / -2)
+        
+        if let aim = aimOrientation,aim == .landscapeLeft {
+            let width = lanWindow.bounds.width
+            let height = lanWindow.bounds.height
+        
+            sourceView.frame = CGRect(x:sourceFrame.origin.y, y:sourceFrame.origin.x, width: sourceFrame.width, height: sourceFrame.height)
+            sourceView.center = CGPoint(x: width - sourceFrame.midY, y: height - sourceFrame.midX)
+            sourceView.transform = .init(rotationAngle:  .pi / 2.0)
+        } else {
+            sourceView.frame = CGRect(x: sourceFrame.origin.y, y: sourceFrame.origin.x, width: sourceFrame.width, height: sourceFrame.height)
+            sourceView.center = CGPoint(x: sourceFrame.midY, y: sourceFrame.midX)
+            sourceView.transform = .init(rotationAngle: .pi / -2)
+        }
         /// apply superView's configuation
         sourceView.layer.cornerRadius = superView.layer.cornerRadius
         sourceView.layer.masksToBounds = superView.layer.masksToBounds
@@ -296,11 +308,18 @@ extension Animator {
         
         let width = UIScreen.main.bounds.width
         let height = UIScreen.main.bounds.height
-        sourceView.transform = .init(rotationAngle: .pi / 2)
-        sourceView.center = CGPoint(x: height / 2.0, y: width / 2.0)
+        
+        if let aim = aimOrientation,aim == .landscapeLeft {
+            sourceView.transform = .init(rotationAngle: .pi / -2)
+            sourceView.center = CGPoint(x: height / 2.0, y: width / 2.0)
+        } else {
+            sourceView.transform = .init(rotationAngle: .pi / 2)
+            sourceView.center = CGPoint(x: height / 2.0, y: width / 2.0)
+        }
+        
         sourceView.removeLayerAnimation()
         keyView.addSubview(sourceView)
-        
+                
         let change = {
             self.lanWindow.alpha = 0
         }
@@ -313,7 +332,6 @@ extension Animator {
             /// so use makeKeyAndVisible and layoutIfNeeded to fix that problem
             self.keyWindow.makeKeyAndVisible()
             self.keyView.layoutIfNeeded()
-
             self.lanWindow.isHidden = true
             self.lanWindow.alpha = 1.0
             self.windowDismissRemoveSnapshotView()
@@ -403,8 +421,8 @@ extension Animator : UIViewControllerAnimatedTransitioning {
         /// 2.
         /// setup fromView's transform
         /// thought system already setup this
-        fromView.frame = containerView.bounds
-        fromView.transform = .init(rotationAngle: .pi / -2)
+//        fromView.frame = containerView.bounds
+//        fromView.transform = .init(rotationAngle: .pi / -2)
         /// 3.
         /// add toView
         toView.frame = containerView.bounds
