@@ -237,10 +237,10 @@ public class PlayerView: UIView {
         
         if !PlayerViewOptions.disableMotionMonitor {
             motionManager.bus = eventBus
-            print(UIInterfaceOrientationMask.portrait)
-            print(UIInterfaceOrientationMask.landscapeLeft)
-            print(UIInterfaceOrientationMask.landscapeRight)
-            print(UIInterfaceOrientationMask.allButUpsideDown)
+//            print(UIInterfaceOrientationMask.portrait)
+//            print(UIInterfaceOrientationMask.landscapeLeft)
+//            print(UIInterfaceOrientationMask.landscapeRight)
+//            print(UIInterfaceOrientationMask.allButUpsideDown)
 //
 //            motionManager.updateOrientation = { ori in
 //                print(ori)
@@ -321,8 +321,6 @@ public class PlayerView: UIView {
         shouldStatusBarHidden = true
         
         let animator = Animator(with: self, plan: plan)
-        
-        print(aimOrientation?.rawValue)
         animator.aimOrientation = aimOrientation
 
         isAnimating = true
