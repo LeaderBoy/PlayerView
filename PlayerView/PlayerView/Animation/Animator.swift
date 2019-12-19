@@ -28,7 +28,7 @@
 
 import UIKit
 
-public let playerAnimationTime : TimeInterval = 0.5
+public let playerAnimationTime : TimeInterval = 5
 
 class Animator : NSObject {
     enum State {
@@ -432,10 +432,21 @@ extension Animator : UIViewControllerAnimatedTransitioning {
         let playerContainer = UIView()
         playerContainer.tag = playerContrainerTag
         toView.addSubview(playerContainer)
-        let newCenter   = CGPoint(x: self.sourceFrame.midY, y: self.sourceFrame.midX)
-        playerContainer.frame    = self.sourceFrame
-        playerContainer.center   = newCenter
-        playerContainer.transform = .init(rotationAngle: .pi / -2)
+                
+        if let aim = aimOrientation,aim == .landscapeLeft {
+            let width = containerView.bounds.width
+            let height = containerView.bounds.height
+            let newCenter   = CGPoint(x: width - self.sourceFrame.midY, y: height -  self.sourceFrame.midX)
+            playerContainer.frame    = self.sourceFrame
+            playerContainer.center   = newCenter
+            playerContainer.transform = .init(rotationAngle: .pi / 2)
+        } else {
+            let newCenter   = CGPoint(x: self.sourceFrame.midY, y: self.sourceFrame.midX)
+            playerContainer.frame    = self.sourceFrame
+            playerContainer.center   = newCenter
+            playerContainer.transform = .init(rotationAngle: .pi / -2)
+        }
+        
         /// 5.
         /// remove all playerView's contraints
         sourceView.removeFromSuperview()
@@ -490,7 +501,11 @@ extension Animator : UIViewControllerAnimatedTransitioning {
         /// player stay in current orientation should also rotate
         let playerContainer = fromView.viewWithTag(playerContrainerTag)!
         playerContainer.center = fromView.center
-        playerContainer.transform = .init(rotationAngle: .pi / 2)
+        if let aim = aimOrientation,aim == .landscapeLeft {
+            playerContainer.transform = .init(rotationAngle: .pi / -2)
+        } else {
+            playerContainer.transform = .init(rotationAngle: .pi / 2)
+        }
         /// 4.
         /// animating
         UIView.animate(withDuration: transitionDuration(using: context.transitionContext), delay: 0, options:.layoutSubviews, animations: {
