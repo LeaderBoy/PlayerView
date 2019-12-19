@@ -40,14 +40,6 @@ public protocol PlayerViewDelegate : class {
     func playerWillExitFullScreen()
 }
 
-
-
-public class PlayerUIInterfaceOrientation {
-    static let shared = PlayerUIInterfaceOrientation()
-    var current : UIInterfaceOrientationMask = .portrait
-}
-
-
 /// two implement about player fullscreen
 /// window : present a landscaped UIWindow
 /// present : present a landscaped controller
@@ -80,6 +72,9 @@ public class PlayerView: UIView {
     /// current mode state
     public var modeState : PlayerModeState = .portrait
     public var shouldStatusBarHidden = false
+    public var shouldAutorotate = true
+    public var supportedInterfaceOrientations : UIInterfaceOrientationMask = .portrait
+
     public var item : AVPlayerItem?
     /// current plan
     public var plan : Plan = .window
@@ -98,6 +93,7 @@ public class PlayerView: UIView {
     private lazy var animatable = true
     private lazy var recoverFromPortrait = false
     private lazy var offset : CGPoint = .zero
+    
     
     private var player : AVPlayer = {
         let p = AVPlayer()
@@ -319,6 +315,8 @@ public class PlayerView: UIView {
         
         let animator = Animator(with: self, plan: plan)
         isAnimating = true
+        supportedInterfaceOrientations = [.landscapeLeft,.landscapeRight]
+        
         let animated = plan == .window ? animatable : true
         animator.present(animated: animated) {
             self.isAnimating = false
@@ -334,12 +332,13 @@ public class PlayerView: UIView {
         modeState = .portrait
         shouldStatusBarHidden = false
         isAnimating = true
+        supportedInterfaceOrientations = [.portrait]
         
         let animated = plan == .window ? animatable : true
-
         if let animator = self.animator {
             animator.dismiss(animated: animated) {
                 self.isAnimating = false
+                self.animator = nil
             }
         }
     }

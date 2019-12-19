@@ -61,11 +61,11 @@ class PresentPlanViewController: UIViewController {
     }
     
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        return .portrait
+        return player.supportedInterfaceOrientations
     }
     
     override var shouldAutorotate: Bool {
-        return true
+        return player.shouldAutorotate
     }
     
     override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
