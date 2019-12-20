@@ -97,7 +97,15 @@ class Animator : NSObject {
             fatalError("could not find playerView's superView")
         }
         
-        if let window = UIApplication.shared.keyWindow,let rootView = window.rootViewController?.view {
+        var keyWindow : UIWindow?
+        
+        if #available(iOS 13.0, *) {
+            keyWindow = UIApplication.shared.windows.first(where: { $0.isKeyWindow })
+        } else {
+            keyWindow = UIApplication.shared.keyWindow
+        }
+        
+        if let window = keyWindow,let rootView = window.rootViewController?.view {
             let view = rootView.snapshotView(afterScreenUpdates: false)
             self.sourceShotView = view
             self.keyWindow = window
@@ -105,6 +113,7 @@ class Animator : NSObject {
         } else {
             fatalError("key window not found")
         }
+        
         super.init()
     }
     
