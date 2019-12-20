@@ -184,7 +184,7 @@ class IndicatorLoading: UIView {
     
     override func safeAreaInsetsDidChange() {
         let animation = {
-            UIView.animate(withDuration: playerAnimationTime, delay: 0, options: [], animations: {
+            UIView.animate(withDuration: playerTransitionDuration, delay: 0, options: [], animations: {
                 self.layoutIfNeeded()
             }, completion: nil)
         }

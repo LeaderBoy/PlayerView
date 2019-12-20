@@ -189,7 +189,7 @@ public class PlayerView: UIView {
         if let i = indexPath {
             DispatchQueue.main.async {
                 tableView.contentOffset = self.offset
-                /// deadline should less than playerAnimationTime
+                /// deadline should less than playerTransitionDuration
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.016) {
                     if let cell = tableView.cellForRow(at: i) as? PlayerContainerable {
                         let container = cell.playerContainer

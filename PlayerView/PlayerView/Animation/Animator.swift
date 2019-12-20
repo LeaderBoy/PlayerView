@@ -28,7 +28,8 @@
 
 import UIKit
 
-public let playerAnimationTime : TimeInterval = 0.5
+/// present and dismiss animation duration
+public let playerTransitionDuration : TimeInterval = 0.5
 
 class Animator : NSObject {
     enum State {
@@ -36,18 +37,27 @@ class Animator : NSObject {
         case animated
     }
     
-    weak var sourceView : UIView?
-    var plan : Plan
-    let sourceFrame : CGRect
-    var superView : UIView
-    var sourceShotView : UIView!
-    var keyView : UIView
-    var keyWindow : UIWindow!
+    public weak var sourceView : UIView?
+    public var plan : Plan
+    public let sourceFrame : CGRect
+    public var superView : UIView
+    public var sourceShotView : UIView!
+    public var keyView : UIView
+    public var keyWindow : UIWindow!
+    public var state : State = .animated
+    public var mode : PlayerModeState = .portrait
+    /// before full screen
+    /// the orientation of the device will rotate to
+    public var aimOrientation : UIInterfaceOrientationMask?
     
-    var state : State = .animated
-    var mode : PlayerModeState = .portrait
+    fileprivate let flashTime : TimeInterval = 0.02
+    fileprivate let portraitSnapshotViewTag = 9991
+    fileprivate let windowDismissSnapshotViewTag = 9992
+    fileprivate let playerContrainerTag = 9993
     
-    lazy var lanVC : PlayerViewController = {
+    typealias Completed = (()->Void)?
+    
+    fileprivate lazy var lanVC : PlayerViewController = {
         let vc = PlayerViewController()
         if plan == .present {
             vc.transitioningDelegate = transition
@@ -56,19 +66,19 @@ class Animator : NSObject {
         return vc
     }()
     
-    private var destinationView : UIView {
+    fileprivate lazy var destinationView : UIView = {
         return lanVC.view
-    }
+    }()
 
     /// Present Plan
-    lazy var transition: Transition = {
+    fileprivate lazy var transition: Transition = {
         let t = Transition()
         t.animator = self
         return t
     }()
         
     /// Window Plan
-    lazy var lanWindow : UIWindow = {
+    fileprivate lazy var lanWindow : UIWindow = {
         let size = UIScreen.main.bounds.size
         let window = UIWindow(frame: CGRect(origin: .zero, size: CGSize(width: size.height, height: size.width)))
         window.windowLevel = .statusBar
@@ -77,15 +87,7 @@ class Animator : NSObject {
         return window
     }()
     
-    fileprivate let flashTime : TimeInterval = 0.02
-    fileprivate let portraitSnapshotViewTag = 9991
-    fileprivate let windowDismissSnapshotViewTag = 9992
-    fileprivate let playerContrainerTag = 9993
-    /// before full screen
-    /// the orientation of the device will rotate to
-    var aimOrientation : UIInterfaceOrientationMask?
-
-    typealias Completed = (()->Void)?
+    
 
     init(with sourceView : UIView,plan : Plan) {
         self.sourceView = sourceView
@@ -275,7 +277,7 @@ extension Animator {
         }
 
         if animated {
-            UIView.animate(withDuration: playerAnimationTime, delay: 0, options: .layoutSubviews, animations: {
+            UIView.animate(withDuration: playerTransitionDuration, delay: 0, options: .layoutSubviews, animations: {
                 change()
             }) { (_) in
                 complete()
@@ -385,7 +387,7 @@ extension Animator {
         }
 
         if animated {
-            UIView.animate(withDuration: playerAnimationTime, delay: 0, options:.layoutSubviews, animations: {
+            UIView.animate(withDuration: playerTransitionDuration, delay: 0, options:.layoutSubviews, animations: {
                 change()
             }) { (_) in
                 complete()
@@ -402,7 +404,7 @@ extension Animator {
 extension Animator : UIViewControllerAnimatedTransitioning {
     
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        return playerAnimationTime
+        return playerTransitionDuration
     }
     
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
