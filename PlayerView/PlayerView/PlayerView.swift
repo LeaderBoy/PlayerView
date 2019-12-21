@@ -56,6 +56,8 @@ public protocol PlayerContainerable {
     var playerContainer : UIView { get }
 }
 
+import WebKit
+
 public class PlayerView: UIView {
     
     weak public var dataSource : PlayerViewDataSource?
@@ -114,12 +116,22 @@ public class PlayerView: UIView {
     }()
 
     override init(frame: CGRect) {
+        self.configuration = PlayerConfiguration()
         super.init(frame: frame)
         setup()
     }
-    
+
     required init?(coder: NSCoder) {
+        self.configuration = PlayerConfiguration()
         super.init(coder: coder)
+        setup()
+    }
+    
+    private(set) var configuration : PlayerConfiguration
+    
+    public init(frame: CGRect, configuration: PlayerConfiguration) {
+        self.configuration = configuration
+        super.init(frame:frame)
         setup()
     }
     
@@ -216,6 +228,10 @@ public class PlayerView: UIView {
         addSubview(layerView)
         layerView.bus = eventBus
         layerView.edges(to: self)
+        
+//        if configuration {
+//            <#code#>
+//        }
         
         if !PlayerViewOptions.disableControlsView {
             addSubview(controlsView)

@@ -27,6 +27,25 @@
 //
 
 import UIKit
+import WebKit
+
+class A {
+    func aaa() {
+        let webview = WKWebView(frame: .zero, configuration: WKWebViewConfiguration())
+    }
+}
+
+
+
+
+//public enum Style : Int {
+//    case large
+//    case medium
+//    case small
+//}
+
+
+
 
 
 struct PlayerViewOptions {

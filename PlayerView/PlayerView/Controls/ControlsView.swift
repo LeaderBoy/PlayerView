@@ -116,14 +116,23 @@ class ControlsView : UIView {
     private var oldPosition : TimeInterval = 0
     private var mode : PlayerModeState = .portrait
     
+    private (set) var preferences : ControlsPreferences
+    
     override init(frame: CGRect) {
+        self.preferences = ControlsPreferences()
         super.init(frame: frame)
         setup()
     }
     
     required init?(coder: NSCoder) {
+        self.preferences = ControlsPreferences()
         super.init(coder: coder)
         setup()
+    }
+    
+    init(preferences : ControlsPreferences) {
+        self.preferences = preferences
+        super.init(frame: .zero)
     }
     
     public func show() {
@@ -156,23 +165,30 @@ class ControlsView : UIView {
     
     private func configUI() {
         // Slider
-        slider.minimumTrackTintColor = ControlsViewOptions.sliderMinTrackColor
-        slider.maximumTrackTintColor = ControlsViewOptions.sliderMaxTrackColor
-        slider.thumbImage = ControlsViewOptions.sliderImage
+        slider.minimumTrackTintColor = preferences.sliderMinTrackColor
+        slider.maximumTrackTintColor = preferences.sliderMaxTrackColor
+        slider.thumbImage = preferences.sliderImage
+//        slider.thumbTintColor = preferences.themeColor
         // ProgressView
-        progressView.trackTintColor = ControlsViewOptions.progressTrackTintColor
-        progressView.tintColor = ControlsViewOptions.progressTintColor
+        progressView.trackTintColor = preferences.progressTrackTintColor
+        progressView.tintColor = preferences.progressTintColor
         // Button
-        playButton.setImage(ControlsViewOptions.playButtonImage, for: .normal)
-        playButton.setImage(ControlsViewOptions.playButtonSelectedImage, for: .selected)
-        playButton.setImage(ControlsViewOptions.playButtonSelectedImage, for: UIControl.State.init(arrayLiteral: .selected,.highlighted))
-        backButton.setImage(ControlsViewOptions.backButtonImage, for: .normal)
-        fullButton.isHidden = ControlsViewOptions.disableFullScreen
+        playButton.setImage(preferences.playImage, for: .normal)
+        playButton.setImage(preferences.pauseImage, for: .selected)
+        playButton.setImage(preferences.pauseImage, for: .init(arrayLiteral: .selected,.highlighted))
+        
+        backButton.setImage(preferences.backImage, for: .normal)
+        
+        fullButton.isHidden = preferences.disableFullScreen
+        fullButton.setImage(preferences.fullImage, for: .normal)
+        fullButton.setImage(preferences.fullSelectedImage, for: .selected)
+        fullButton.setImage(preferences.fullSelectedImage, for: .init(arrayLiteral: .selected,.highlighted))
+
         // Label
-        startLabel.textColor = ControlsViewOptions.timeLabelColor
-        endLabel.textColor = ControlsViewOptions.timeLabelColor
+        startLabel.textColor = preferences.timeLableColor
+        endLabel.textColor = preferences.timeLableColor
         // StackView
-        controlsStackView.isHidden = ControlsViewOptions.disableSlideControls
+        controlsStackView.isHidden = preferences.disableSlideControls
     }
     
     fileprivate func resetVariables() {
