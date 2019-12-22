@@ -77,10 +77,10 @@ extension UIView {
     }
     
     @discardableResult
-    func center(to view: UIView) -> [NSLayoutConstraint] {
+    func center(to view: UIView,offset : CGPoint = .zero) -> [NSLayoutConstraint] {
         translatesAutoresizingMaskIntoConstraints = false
-        let x = centerXAnchor.constraint(equalTo: view.centerXAnchor)
-        let y = centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        let x = centerXAnchor.constraint(equalTo: view.centerXAnchor,constant: offset.x)
+        let y = centerYAnchor.constraint(equalTo: view.centerYAnchor,constant: offset.y)
         
         NSLayoutConstraint.activate([
             x,y

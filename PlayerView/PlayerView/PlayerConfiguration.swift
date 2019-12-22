@@ -34,6 +34,8 @@ public final class PlayerConfiguration : NSObject {
     /// use NSCache to cache the video's playback progress,video will play at cached progress next time
     /// if set to false,video will play from the start time
     public var disableCacheProgress : Bool
+    public var backgroundColor : UIColor = .black
+    
     public var indicatorPreferences : IndicatorPreferences
     public var controlsPreferences : ControlsPreferences
     
@@ -101,16 +103,14 @@ public final class ControlsPreferences : NSObject {
     /// cancel display of bottom controls,show only play button
     var disableSlideControls    : Bool = false
     /// full screen button image
-    var fullImage               : UIImage = #imageLiteral(resourceName: "full_screen").tintedImage
+    var fullImage               : UIImage = #imageLiteral(resourceName: "full_screen")
     /// full screen button selected image
-    var fullSelectedImage       : UIImage = #imageLiteral(resourceName: "full_screen_selected").tintedImage
-    var backImage          : UIImage = #imageLiteral(resourceName: "ZYPlayer_controls_back_white").tintedImage
-    var playImage          : UIImage = #imageLiteral(resourceName: "controls_play").tintedImage
-    var pauseImage         : UIImage = #imageLiteral(resourceName: "controls_pause").tintedImage
+    var fullSelectedImage       : UIImage = #imageLiteral(resourceName: "full_screen_selected")
+    var backImage          : UIImage = #imageLiteral(resourceName: "ZYPlayer_controls_back_white")
+    var playImage          : UIImage = #imageLiteral(resourceName: "controls_play")
+    var pauseImage         : UIImage = #imageLiteral(resourceName: "controls_pause")
     /// slider thumb image
     var sliderImage        : UIImage = #imageLiteral(resourceName: "ZYPlayer_controls_thumb")
-    
-    //tintedImage
     /// playback progress color
     var sliderMinTrackColor     : UIColor = #colorLiteral(red: 1, green: 0.1490196078, blue: 0, alpha: 1)
     var sliderMaxTrackColor     : UIColor = .clear
@@ -119,17 +119,6 @@ public final class ControlsPreferences : NSObject {
     /// track color
     var progressTrackTintColor  : UIColor = .lightGray
     var timeLableColor          : UIColor = .white
-    /// theme color for button label 
-    var themeColor              : UIColor = .red
 }
  
-
-
-extension UIImage {
-    var tintedImage : UIImage {
-        return withRenderingMode(.alwaysTemplate)
-    }
-}
-
-
 

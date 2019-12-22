@@ -68,7 +68,7 @@ class ControlsView : UIView {
         didSet {
             if isReadyToPlay {
                 hide()
-                controlsStackView.isHidden = ControlsViewOptions.disableSlideControls
+                controlsStackView.isHidden = preferences.disable
             }
         }
     }
@@ -133,6 +133,7 @@ class ControlsView : UIView {
     init(preferences : ControlsPreferences) {
         self.preferences = preferences
         super.init(frame: .zero)
+        setup()
     }
     
     public func show() {
@@ -168,7 +169,6 @@ class ControlsView : UIView {
         slider.minimumTrackTintColor = preferences.sliderMinTrackColor
         slider.maximumTrackTintColor = preferences.sliderMaxTrackColor
         slider.thumbImage = preferences.sliderImage
-//        slider.thumbTintColor = preferences.themeColor
         // ProgressView
         progressView.trackTintColor = preferences.progressTrackTintColor
         progressView.tintColor = preferences.progressTintColor
@@ -178,7 +178,7 @@ class ControlsView : UIView {
         playButton.setImage(preferences.pauseImage, for: .init(arrayLiteral: .selected,.highlighted))
         
         backButton.setImage(preferences.backImage, for: .normal)
-        
+
         fullButton.isHidden = preferences.disableFullScreen
         fullButton.setImage(preferences.fullImage, for: .normal)
         fullButton.setImage(preferences.fullSelectedImage, for: .selected)

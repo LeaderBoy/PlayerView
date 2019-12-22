@@ -85,12 +85,15 @@ public class PlayerView: UIView {
     
     private var reachability = Reachability.forInternetConnection()
     private var animator : Animator?
+    
+    private lazy var isControlsDisabled = configuration.controlsPreferences.disable
+    private lazy var isLoadingDisabled = configuration.indicatorPreferences.disable
 
     private lazy var layerView = PlayerLayerView(player: player)
     private lazy var indicatorView = IndicatorView()
-    private lazy var controlsView  = ControlsView()
+    private lazy var controlsView = ControlsView(preferences: configuration.controlsPreferences)
     private lazy var itemObserver = ItemObserver()
-    private lazy var loadingView = IndicatorLoading()
+    private lazy var loadingView = IndicatorLoading(preferences: configuration.indicatorPreferences)
     private lazy var motionManager = MotionManager()
     private lazy var animatable = true
     private lazy var recoverFromPortrait = false
@@ -129,9 +132,9 @@ public class PlayerView: UIView {
     
     private(set) var configuration : PlayerConfiguration
     
-    public init(frame: CGRect, configuration: PlayerConfiguration) {
+    public init(configuration: PlayerConfiguration) {
         self.configuration = configuration
-        super.init(frame:frame)
+        super.init(frame:.zero)
         setup()
     }
     
@@ -155,6 +158,8 @@ public class PlayerView: UIView {
         }
         /// record indexPath
         self.indexPath = indexPath
+        /// loading
+        publish(state: .prepare(indexPath))
         /// prepare new item
         let item = AVPlayerItem(url: url)
         item.preferredForwardBufferDuration = 10
@@ -162,8 +167,6 @@ public class PlayerView: UIView {
         player.replaceCurrentItem(with: item)
         itemObserver.item = item
         itemObserver.player = player
-        /// loading
-        publish(state: .prepare(indexPath))
         /// add player
         container.addSubview(self)
         translatesAutoresizingMaskIntoConstraints = false
@@ -223,49 +226,27 @@ public class PlayerView: UIView {
     }
     
     func configUI() {
-        backgroundColor = PlayerViewOptions.backgroundColor
-
+        backgroundColor = configuration.backgroundColor
+        /// layer
         addSubview(layerView)
         layerView.bus = eventBus
         layerView.edges(to: self)
-        
-//        if configuration {
-//            <#code#>
-//        }
-        
-        if !PlayerViewOptions.disableControlsView {
+        layerView.disableCacheProgress = configuration.disableCacheProgress
+        /// item
+        itemObserver.bus = eventBus
+        /// controls
+        if !isControlsDisabled {
             addSubview(controlsView)
             controlsView.edges(to: self)
             controlsView.bus = eventBus
         }
-        
-        if !PlayerViewOptions.disableIndicatorLoading {
+        /// loading
+        if !isLoadingDisabled {
             addSubview(loadingView)
             loadingView.edges(to: self)
             loadingView.bus = eventBus
         }
-        
-        if !PlayerViewOptions.disableIndicatorView {
-            addSubview(indicatorView)
-            indicatorView.edges(to: self)
-            indicatorView.bus = eventBus
-        }
-        
-        if !PlayerViewOptions.disableMotionMonitor {
-            motionManager.bus = eventBus
-//            print(UIInterfaceOrientationMask.portrait)
-//            print(UIInterfaceOrientationMask.landscapeLeft)
-//            print(UIInterfaceOrientationMask.landscapeRight)
-//            print(UIInterfaceOrientationMask.allButUpsideDown)
-//
-//            motionManager.updateOrientation = { ori in
-//                print(ori)
-//            }
-        }
-        
-        itemObserver.bus = eventBus
     }
-    
     
     func addGestures() {
         let oneTap = UITapGestureRecognizer(target: controlsView, action: #selector(ControlsView.switchHiddenState(gesture:)))
@@ -400,7 +381,9 @@ public class PlayerView: UIView {
     }
     
     @objc func willResignActiveNotification() {
-        controlsView.hide()
+        if !isControlsDisabled {
+            controlsView.hide()
+        }
         publish(state: .paused)
         if plan == .window {
             if modeState == .landscape {

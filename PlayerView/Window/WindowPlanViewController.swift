@@ -15,7 +15,11 @@ class WindowPlanViewController: UIViewController {
     var dataSource : MovieDataSource!
     
     lazy var player : PlayerView = {
-        let player = PlayerView()
+        let configuration = PlayerConfiguration()
+        let indicatorPre = IndicatorPreferences()
+        indicatorPre.style = .activity(.white)
+        configuration.indicatorPreferences = indicatorPre
+        let player = PlayerView(configuration: configuration)
         player.plan = .window
         return player
     }()

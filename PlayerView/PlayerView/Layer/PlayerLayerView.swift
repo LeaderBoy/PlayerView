@@ -45,6 +45,8 @@ class PlayerLayerView: UIView {
         }
     }
     
+    var disableCacheProgress = false
+    
     var videoGravity : AVLayerVideoGravity = .resizeAspect
     
     private var url : String?
@@ -175,7 +177,7 @@ class PlayerLayerView: UIView {
     }
     
     func cachePlayProgress() {
-        if PlayerViewOptions.disableCacheProgress {
+        if disableCacheProgress {
             return
         }
         
@@ -190,7 +192,7 @@ class PlayerLayerView: UIView {
     }
     
     func seekToCachedProgress() {
-        if PlayerViewOptions.disableCacheProgress {
+        if disableCacheProgress {
             return
         }
         

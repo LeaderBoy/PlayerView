@@ -31,7 +31,7 @@ import UIKit
 class IndicatorLoading: UIView {
     let radius : CGFloat = 20.0
     var strokeColor : UIColor = .white
-    var strokeThickness : CGFloat = 1.0
+    var strokeThickness : CGFloat = 3.0
     
     var bottomGradientLayer : CAGradientLayer!
     var topGradientLayer : CAGradientLayer!
@@ -61,67 +61,43 @@ class IndicatorLoading: UIView {
     var isBufferFull = false
     var indexPath : IndexPath?
     
+    var preferences : IndicatorPreferences
     
+    lazy var indicatorView = UIActivityIndicatorView(style: .whiteLarge)
+    lazy var indicatorLayer = InfiniteIndicator()
+    var customIndicator : Indicator!
     override init(frame: CGRect) {
+        preferences = IndicatorPreferences()
         super.init(frame: frame)
         setup()
     }
     
     required init?(coder: NSCoder) {
+        preferences = IndicatorPreferences()
         super.init(coder: coder)
         setup()
     }
     
-    func setup() {
-        setupTopLayer()
-        setupBottomLayer()
-        setupShapLayer()
-        setupSubLayer()
-        setupLayerView()
-        
-        isUserInteractionEnabled = false
-    }
-    
-    func setupTopLayer() {
-        let width = centerX * 2
-        let gradientLayer = CAGradientLayer()
-        gradientLayer.contentsScale = UIScreen.main.scale
-        gradientLayer.startPoint = CGPoint(x: 1, y: 0)
-        gradientLayer.endPoint = .zero
-        gradientLayer.frame = CGRect(origin: .zero, size: CGSize(width: width, height: width / 2))
-        gradientLayer.colors = [strokeColor.cgColor,strokeColor.withAlphaComponent(0.5).cgColor]
-        topGradientLayer = gradientLayer
-    }
-    
-    func setupBottomLayer() {
-        let width = centerX * 2
-        let gradientLayer = CAGradientLayer()
-        gradientLayer.contentsScale = UIScreen.main.scale
-        gradientLayer.startPoint = CGPoint(x: 0, y: 1)
-        gradientLayer.endPoint = CGPoint(x: 1, y: 1)
-        gradientLayer.frame = CGRect(x: 0, y: centerX, width: width, height: centerX)
-        gradientLayer.colors = [strokeColor.withAlphaComponent(0.5).cgColor,strokeColor.withAlphaComponent(0.1).cgColor]
-        bottomGradientLayer = gradientLayer
-    }
-    
-    func setupShapLayer() {
-        let center = CGPoint(x: centerX, y: centerX)
-        let circlePath = UIBezierPath(arcCenter: center, radius: radius, startAngle: 0, endAngle: 2 * .pi, clockwise: true)
-        let shapLayer = CAShapeLayer()
-        shapLayer.contentsScale = UIScreen.main.scale
-        shapLayer.lineWidth = strokeThickness
-        shapLayer.strokeColor = strokeColor.cgColor
-        shapLayer.fillColor = UIColor.clear.cgColor
-        shapLayer.path = circlePath.cgPath
-        shapLayer.frame = layerFrame
-        indefiniteLayer = shapLayer
+    init(preferences : IndicatorPreferences) {
+        self.preferences = preferences
+        super.init(frame: .zero)
+        setup()
     }
     
     func show() {
         if !isHidden {
-            return
+           return
         }
         isHidden = false
+        switch preferences.style {
+        case .activity(_):
+            indicatorView.startAnimating()
+        case .infiniteLayer:
+//            indicatorLayer
+            break
+        case .custom(_):
+            customIndicator.startAnimating()
+        }
     }
     
     func hide() {
@@ -129,57 +105,45 @@ class IndicatorLoading: UIView {
             return
         }
         isHidden = true
-    }
-    
-    func setupSubLayer() {
-        let layer = CALayer()
-        layer.bounds = layerFrame
-        subLayer = layer
-        
-        subLayer.addSublayer(topGradientLayer)
-        subLayer.addSublayer(bottomGradientLayer)
-        subLayer.mask = indefiniteLayer
-        
-        let keyPath = "transform.rotation"
-        let key = "RotationAnimation"
-        let rotationAnimation = CABasicAnimation(keyPath: keyPath)
-        rotationAnimation.fromValue = NSNumber(value: 0)
-        let toValue : Float = .pi * 2
-        rotationAnimation.toValue = NSNumber(value: toValue)
-        rotationAnimation.repeatCount = Float.infinity
-        rotationAnimation.isRemovedOnCompletion = false
-        rotationAnimation.timingFunction = CAMediaTimingFunction(name: .linear)
-        rotationAnimation.duration = 1.0
-        rotationAnimation.fillMode = .forwards
-        subLayer.add(rotationAnimation, forKey: key)
-        subLayer.position = CGPoint(x: centerX, y: centerX)
-    }
-    
-    func setupLayerView() {
-        let width = centerX * 2
-        let layerView = UIView()
-        layerView.layer.addSublayer(subLayer)
-        layerView.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(layerView)
-        
-        if #available(iOS 11.0, *) {
-            NSLayoutConstraint.activate([
-                layerView.widthAnchor.constraint(equalToConstant: width),
-                layerView.heightAnchor.constraint(equalToConstant: width),
-                layerView.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.centerYAnchor),
-                layerView.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor)
-            ])
-        } else {
-            NSLayoutConstraint.activate([
-                layerView.widthAnchor.constraint(equalToConstant: width),
-                layerView.heightAnchor.constraint(equalToConstant: width),
-                layerView.centerYAnchor.constraint(equalTo: centerYAnchor),
-                layerView.centerXAnchor.constraint(equalTo: centerXAnchor)
-            ])
+        switch preferences.style {
+        case .activity(_):
+            indicatorView.stopAnimating()
+        case .infiniteLayer:
+//            indicatorLayer
+            break
+        case .custom(_):
+            customIndicator.stopAnimating()
         }
-        
-        layerView.backgroundColor = .clear
-        self.layerView = layerView
+    }
+    
+    func setup() {
+        addSubViews()
+        isUserInteractionEnabled = false
+    }
+    
+    func addSubViews() {
+        switch preferences.style {
+        case .activity(let style):
+            indicatorView.style = style
+            indicatorView.startAnimating()
+            addSubview(indicatorView)
+            indicatorView.center(to: self)
+        case .infiniteLayer:
+            addSubview(indicatorLayer)
+            indicatorLayer.center(to: self)
+        case .custom(let indicator):
+            let view = indicator.view
+            addSubview(view)
+            switch indicator.size {
+            case .intrinsicSize:
+                view.center(to: self, offset: indicator.centerOffset)
+            case .full:
+                view.edges(to: self)
+            case .size(let size):
+                view.frame.size = size
+                view.center(to: self)
+            }
+        }
     }
     
     override func safeAreaInsetsDidChange() {
