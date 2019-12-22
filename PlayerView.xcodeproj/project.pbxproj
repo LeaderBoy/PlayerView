@@ -31,6 +31,8 @@
 		524AC45123AD2FE5006A412E /* PlayerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 524AC45023AD2FE5006A412E /* PlayerConfiguration.swift */; };
 		526C9F0623A1CE4F007F10A3 /* MotionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 526C9F0523A1CE4F007F10A3 /* MotionManager.swift */; };
 		52978E4723AF9B270043846B /* InfiniteIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52978E4623AF9B270043846B /* InfiniteIndicator.swift */; };
+		52978E4B23AFB2920043846B /* CustomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52978E4923AFB2920043846B /* CustomViewController.swift */; };
+		52978E4C23AFB2920043846B /* CustomViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52978E4A23AFB2920043846B /* CustomViewController.xib */; };
 		529E2D18239226BB0026055D /* Subscriber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 529E2D17239226BB0026055D /* Subscriber.swift */; };
 		529E2D1A239229E50026055D /* Publisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 529E2D19239229E50026055D /* Publisher.swift */; };
 		52A797272386A4CB0043EB99 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A797252386A4CB0043EB99 /* PlayerViewController.swift */; };
@@ -99,6 +101,8 @@
 		524AC45023AD2FE5006A412E /* PlayerConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerConfiguration.swift; sourceTree = "<group>"; };
 		526C9F0523A1CE4F007F10A3 /* MotionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionManager.swift; sourceTree = "<group>"; };
 		52978E4623AF9B270043846B /* InfiniteIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfiniteIndicator.swift; sourceTree = "<group>"; };
+		52978E4923AFB2920043846B /* CustomViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomViewController.swift; sourceTree = "<group>"; };
+		52978E4A23AFB2920043846B /* CustomViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomViewController.xib; sourceTree = "<group>"; };
 		529E2D17239226BB0026055D /* Subscriber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Subscriber.swift; sourceTree = "<group>"; };
 		529E2D19239229E50026055D /* Publisher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Publisher.swift; sourceTree = "<group>"; };
 		52A797252386A4CB0043EB99 /* PlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
@@ -235,6 +239,15 @@
 			path = PubSub;
 			sourceTree = "<group>";
 		};
+		52978E4823AFB2780043846B /* Custom */ = {
+			isa = PBXGroup;
+			children = (
+				52978E4923AFB2920043846B /* CustomViewController.swift */,
+				52978E4A23AFB2920043846B /* CustomViewController.xib */,
+			);
+			path = Custom;
+			sourceTree = "<group>";
+		};
 		52A797292386A7340043EB99 /* Animation */ = {
 			isa = PBXGroup;
 			children = (
@@ -290,6 +303,7 @@
 				2FCEBEA1239E21F5000FEDB6 /* RootTabBarViewController.swift */,
 				2FCEBEA2239E21F5000FEDB6 /* RootViewControllerInitial.swift */,
 				52138F5D23A869800064785D /* MovieDataSource.swift */,
+				52978E4823AFB2780043846B /* Custom */,
 				52138F6223A8719F0064785D /* Detail */,
 				52138F6123A871690064785D /* View */,
 				52138F6023A871400064785D /* Present */,
@@ -475,6 +489,7 @@
 				52138F5423A867140064785D /* TextCell.xib in Resources */,
 				2FCEBEAC239E2D72000FEDB6 /* HomeListCell.xib in Resources */,
 				2FCEBEA0239E216B000FEDB6 /* movie.json in Resources */,
+				52978E4C23AFB2920043846B /* CustomViewController.xib in Resources */,
 				52138F5C23A8683B0064785D /* PresentPlanViewController.xib in Resources */,
 				52F896852385124000D87D9E /* Assets.xcassets in Resources */,
 				2FE975A1239E61E800DF782D /* VideoDetailViewController.xib in Resources */,
@@ -572,6 +587,7 @@
 				52A7972D2386A7BA0043EB99 /* Animator.swift in Sources */,
 				2FE975A0239E61E800DF782D /* VideoDetailViewController.swift in Sources */,
 				520595822385938300BBEF77 /* IndicatorView.swift in Sources */,
+				52978E4B23AFB2920043846B /* CustomViewController.swift in Sources */,
 				52B3571D23AA0EC700CE98EA /* UIView + LayerAnimation.swift in Sources */,
 				52138F5E23A869800064785D /* MovieDataSource.swift in Sources */,
 				52F896B623866B5A00D87D9E /* ControlsView.swift in Sources */,
