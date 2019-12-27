@@ -29,6 +29,7 @@
 		52138F5C23A8683B0064785D /* PresentPlanViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52138F5A23A8683B0064785D /* PresentPlanViewController.xib */; };
 		52138F5E23A869800064785D /* MovieDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52138F5D23A869800064785D /* MovieDataSource.swift */; };
 		524AC45123AD2FE5006A412E /* PlayerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 524AC45023AD2FE5006A412E /* PlayerConfiguration.swift */; };
+		524AC46323B60233006A412E /* CALayer + Animation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 524AC46223B60233006A412E /* CALayer + Animation.swift */; };
 		526C9F0623A1CE4F007F10A3 /* MotionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 526C9F0523A1CE4F007F10A3 /* MotionManager.swift */; };
 		52978E4723AF9B270043846B /* InfiniteIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52978E4623AF9B270043846B /* InfiniteIndicator.swift */; };
 		52978E4B23AFB2920043846B /* CustomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52978E4923AFB2920043846B /* CustomViewController.swift */; };
@@ -99,6 +100,7 @@
 		52138F5A23A8683B0064785D /* PresentPlanViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PresentPlanViewController.xib; sourceTree = "<group>"; };
 		52138F5D23A869800064785D /* MovieDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDataSource.swift; sourceTree = "<group>"; };
 		524AC45023AD2FE5006A412E /* PlayerConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerConfiguration.swift; sourceTree = "<group>"; };
+		524AC46223B60233006A412E /* CALayer + Animation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CALayer + Animation.swift"; sourceTree = "<group>"; };
 		526C9F0523A1CE4F007F10A3 /* MotionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionManager.swift; sourceTree = "<group>"; };
 		52978E4623AF9B270043846B /* InfiniteIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfiniteIndicator.swift; sourceTree = "<group>"; };
 		52978E4923AFB2920043846B /* CustomViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomViewController.swift; sourceTree = "<group>"; };
@@ -366,6 +368,7 @@
 				52F896A42385151300D87D9E /* UIView + Constraints.swift */,
 				52F896A82385155200D87D9E /* UIView + XIB.swift */,
 				52B3571C23AA0EC700CE98EA /* UIView + LayerAnimation.swift */,
+				524AC46223B60233006A412E /* CALayer + Animation.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -563,6 +566,7 @@
 				52D7421C239412F90068C08D /* PlayerState.swift in Sources */,
 				2FCEBEAB239E2D72000FEDB6 /* HomeListCell.swift in Sources */,
 				52046AE323A0DE63008B0B43 /* MemoryCache.swift in Sources */,
+				524AC46323B60233006A412E /* CALayer + Animation.swift in Sources */,
 				52138F4B23A792660064785D /* TransitionContext.swift in Sources */,
 				526C9F0623A1CE4F007F10A3 /* MotionManager.swift in Sources */,
 				52A7973C238E15B90043EB99 /* IndicatorLoading.swift in Sources */,

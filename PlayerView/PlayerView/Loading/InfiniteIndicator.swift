@@ -28,7 +28,14 @@
 
 import UIKit
 
-class InfiniteIndicator: UIView {
+
+public class InfiniteIndicator: UIView {
+    public enum Style : Int {
+        case `default`
+        case medium
+        case large
+    }
+    var style : Style = .default 
     let radius : CGFloat = 20.0
     var strokeColor : UIColor = .white
     var strokeThickness : CGFloat = 3.0
@@ -51,7 +58,7 @@ class InfiniteIndicator: UIView {
     var layerFrame : CGRect {
         return CGRect(origin: .zero, size: CGSize(width: layerWidth, height: layerWidth))
     }
-        
+            
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
@@ -172,7 +179,7 @@ class InfiniteIndicator: UIView {
         self.layerView = layerView
     }
     
-    override func safeAreaInsetsDidChange() {
+    override public func safeAreaInsetsDidChange() {
         let animation = {
             UIView.animate(withDuration: playerTransitionDuration, delay: 0, options: [], animations: {
                 self.layoutIfNeeded()
@@ -183,3 +190,29 @@ class InfiniteIndicator: UIView {
 }
 
 
+extension InfiniteIndicator : Indicator {
+    public var view: UIView {
+        return self
+    }
+    
+    public var isAnimating: Bool {
+        return false
+    }
+    
+    public var color: UIColor {
+        get {
+            return strokeColor
+        }
+        set {
+            strokeColor = newValue
+        }
+    }
+    
+    public func startAnimating() {
+        subLayer.startAnimating()
+    }
+    
+    public func stopAnimating() {
+        subLayer.stopAnimating()
+    }
+}

@@ -52,13 +52,13 @@ public final class PlayerConfiguration : NSObject {
 public class IndicatorPreferences: NSObject {
     /// disable indicator or not
     var disable : Bool = false
-    var style : IndicatorStyle = .infiniteLayer
+    var style : IndicatorStyle = .infiniteLayer(.default)
 }
 
 extension IndicatorPreferences {
     public enum IndicatorStyle {
         case activity(UIActivityIndicatorView.Style)
-        case infiniteLayer
+        case infiniteLayer(InfiniteIndicator.Style)
         case custom(Indicator)
     }
 }
@@ -68,7 +68,7 @@ public protocol Indicator {
     var view : UIView { get }
     var isAnimating: Bool { get }
     var color: UIColor { set get }
-    var hidesWhenStopped: Bool { set get }// default is YES. calls -setHidden when animating gets set to NO
+//    var hidesWhenStopped: Bool { set get }// default is YES. calls -setHidden when animating gets set to NO
     var centerOffset : CGPoint { get }
     var size : IndicatorSize { get }
     func startAnimating()
@@ -76,10 +76,10 @@ public protocol Indicator {
 }
 
 extension Indicator {
-    var size : IndicatorSize {
+    public var size : IndicatorSize {
         return .full
     }
-    var centerOffset : CGPoint {
+    public var centerOffset : CGPoint {
         return .zero
     }
 }
@@ -88,6 +88,21 @@ public enum IndicatorSize {
     case full
     case intrinsicSize
     case size(CGSize)
+}
+
+extension UIActivityIndicatorView : Indicator {
+    public var view: UIView {
+        return self
+    }
+    
+    public var color: UIColor {
+        get {
+            return tintColor
+        }
+        set {
+            tintColor = newValue
+        }
+    }
 }
 
 // MARK: - Controls

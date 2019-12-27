@@ -63,9 +63,8 @@ class IndicatorLoading: UIView {
     
     var preferences : IndicatorPreferences
     
-    lazy var indicatorView = UIActivityIndicatorView(style: .whiteLarge)
-    lazy var indicatorLayer = InfiniteIndicator()
-    var customIndicator : Indicator!
+    var indicator : Indicator!
+
     override init(frame: CGRect) {
         preferences = IndicatorPreferences()
         super.init(frame: frame)
@@ -89,15 +88,7 @@ class IndicatorLoading: UIView {
            return
         }
         isHidden = false
-        switch preferences.style {
-        case .activity(_):
-            indicatorView.startAnimating()
-        case .infiniteLayer:
-//            indicatorLayer
-            break
-        case .custom(_):
-            customIndicator.startAnimating()
-        }
+        indicator.startAnimating()
     }
     
     func hide() {
@@ -105,15 +96,7 @@ class IndicatorLoading: UIView {
             return
         }
         isHidden = true
-        switch preferences.style {
-        case .activity(_):
-            indicatorView.stopAnimating()
-        case .infiniteLayer:
-//            indicatorLayer
-            break
-        case .custom(_):
-            customIndicator.stopAnimating()
-        }
+        indicator.stopAnimating()
     }
     
     func setup() {
@@ -122,27 +105,32 @@ class IndicatorLoading: UIView {
     }
     
     func addSubViews() {
+        /// assign style
         switch preferences.style {
         case .activity(let style):
-            indicatorView.style = style
-            indicatorView.startAnimating()
-            addSubview(indicatorView)
-            indicatorView.center(to: self)
-        case .infiniteLayer:
-            addSubview(indicatorLayer)
-            indicatorLayer.center(to: self)
+            let activityView = UIActivityIndicatorView(style: .white)
+            activityView.style = style
+            indicator = activityView
+        case .infiniteLayer(let style):
+            let layerView = InfiniteIndicator()
+            layerView.style = style
+            indicator = layerView
         case .custom(let indicator):
-            let view = indicator.view
-            addSubview(view)
-            switch indicator.size {
-            case .intrinsicSize:
-                view.center(to: self, offset: indicator.centerOffset)
-            case .full:
-                view.edges(to: self)
-            case .size(let size):
-                view.frame.size = size
-                view.center(to: self)
-            }
+            self.indicator = indicator
+        }
+        /// addSubview
+        let view = indicator.view
+        indicator.startAnimating()
+        addSubview(view)
+        /// layout
+        switch indicator.size {
+        case .intrinsicSize:
+            view.center(to: self, offset: indicator.centerOffset)
+        case .full:
+            view.edges(to: self)
+        case .size(let size):
+            view.frame.size = size
+            view.center(to: self)
         }
     }
     
