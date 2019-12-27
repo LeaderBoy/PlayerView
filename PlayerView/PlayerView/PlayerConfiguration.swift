@@ -52,6 +52,7 @@ public final class PlayerConfiguration : NSObject {
 public class IndicatorPreferences: NSObject {
     /// disable indicator or not
     var disable : Bool = false
+    var color : UIColor = .white
     var style : IndicatorStyle = .infiniteLayer(.default)
 }
 

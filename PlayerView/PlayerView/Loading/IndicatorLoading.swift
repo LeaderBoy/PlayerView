@@ -31,7 +31,7 @@ import UIKit
 class IndicatorLoading: UIView {
     let radius : CGFloat = 20.0
     var strokeColor : UIColor = .white
-    var strokeThickness : CGFloat = 3.0
+    var strokeThickness : CGFloat = 1.0
     
     var bottomGradientLayer : CAGradientLayer!
     var topGradientLayer : CAGradientLayer!
@@ -118,6 +118,9 @@ class IndicatorLoading: UIView {
         case .custom(let indicator):
             self.indicator = indicator
         }
+        
+        indicator.color = preferences.color
+        
         /// addSubview
         let view = indicator.view
         indicator.startAnimating()

@@ -30,15 +30,29 @@ import UIKit
 
 
 public class InfiniteIndicator: UIView {
+    
+    /// Indicator radius and strokeThickness
+    /// - case default : radius = 20,strokeThickness = 1
+    /// - case medium : radius = 15,strokeThickness = 2
+    /// - case large : radius = 20,strokeThickness = 3
     public enum Style : Int {
         case `default`
         case medium
         case large
     }
-    var style : Style = .default 
-    let radius : CGFloat = 20.0
-    var strokeColor : UIColor = .white
-    var strokeThickness : CGFloat = 3.0
+    
+    var style : Style = .default {
+        didSet {
+            relayout(accordingTo: style)
+        }
+    }
+    var radius : CGFloat = 20.0
+    var strokeThickness : CGFloat = 1.0
+    var strokeColor : UIColor = .white {
+        didSet {
+            resetColor()
+        }
+    }
     
     var bottomGradientLayer : CAGradientLayer!
     var topGradientLayer : CAGradientLayer!
@@ -47,7 +61,7 @@ public class InfiniteIndicator: UIView {
     var layerView : UIView!
     var centerX : CGFloat {
         get {
-            return radius + strokeThickness / 2 + 5
+            return radius + strokeThickness / 2
         }
     }
     
@@ -75,62 +89,36 @@ public class InfiniteIndicator: UIView {
         setupShapLayer()
         setupSubLayer()
         setupLayerView()
-        
+        resetColor()
+        relayout(accordingTo: style)
         isUserInteractionEnabled = false
     }
     
     func setupTopLayer() {
-        let width = centerX * 2
         let gradientLayer = CAGradientLayer()
         gradientLayer.contentsScale = UIScreen.main.scale
         gradientLayer.startPoint = CGPoint(x: 1, y: 0)
         gradientLayer.endPoint = .zero
-        gradientLayer.frame = CGRect(origin: .zero, size: CGSize(width: width, height: width / 2))
-        gradientLayer.colors = [strokeColor.cgColor,strokeColor.withAlphaComponent(0.5).cgColor]
         topGradientLayer = gradientLayer
     }
     
     func setupBottomLayer() {
-        let width = centerX * 2
         let gradientLayer = CAGradientLayer()
         gradientLayer.contentsScale = UIScreen.main.scale
         gradientLayer.startPoint = CGPoint(x: 0, y: 1)
         gradientLayer.endPoint = CGPoint(x: 1, y: 1)
-        gradientLayer.frame = CGRect(x: 0, y: centerX, width: width, height: centerX)
-        gradientLayer.colors = [strokeColor.withAlphaComponent(0.5).cgColor,strokeColor.withAlphaComponent(0.1).cgColor]
         bottomGradientLayer = gradientLayer
     }
     
     func setupShapLayer() {
-        let center = CGPoint(x: centerX, y: centerX)
-        let circlePath = UIBezierPath(arcCenter: center, radius: radius, startAngle: 0, endAngle: 2 * .pi, clockwise: true)
         let shapLayer = CAShapeLayer()
         shapLayer.contentsScale = UIScreen.main.scale
-        shapLayer.lineWidth = strokeThickness
-        shapLayer.strokeColor = strokeColor.cgColor
         shapLayer.fillColor = UIColor.clear.cgColor
-        shapLayer.path = circlePath.cgPath
-        shapLayer.frame = layerFrame
         indefiniteLayer = shapLayer
-    }
-    
-    func show() {
-        if !isHidden {
-            return
-        }
-        isHidden = false
-    }
-    
-    func hide() {
-        if isHidden {
-            return
-        }
-        isHidden = true
     }
     
     func setupSubLayer() {
         let layer = CALayer()
-        layer.bounds = layerFrame
         subLayer = layer
         
         subLayer.addSublayer(topGradientLayer)
@@ -149,16 +137,52 @@ public class InfiniteIndicator: UIView {
         rotationAnimation.duration = 1.0
         rotationAnimation.fillMode = .forwards
         subLayer.add(rotationAnimation, forKey: key)
-        subLayer.position = CGPoint(x: centerX, y: centerX)
     }
     
     func setupLayerView() {
-        let width = centerX * 2
         let layerView = UIView()
         layerView.layer.addSublayer(subLayer)
-        layerView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(layerView)
+        layerView.backgroundColor = .clear
+        self.layerView = layerView
+    }
+    
+    func resetColor() {
+        topGradientLayer.colors = [strokeColor.cgColor,strokeColor.withAlphaComponent(0.5).cgColor]
+        bottomGradientLayer.colors = [strokeColor.withAlphaComponent(0.5).cgColor,strokeColor.withAlphaComponent(0.1).cgColor]
+        indefiniteLayer.strokeColor = strokeColor.cgColor
+    }
+    
+    func relayout(accordingTo style : Style) {
         
+        switch style {
+        case .default:
+            radius = 20
+            strokeThickness = 1.0
+        case .medium:
+            radius = 10
+            strokeThickness = 3.0
+        case .large:
+            radius = 20
+            strokeThickness = 3.0
+        }
+        
+        let width = centerX * 2
+        topGradientLayer.frame = CGRect(x: 0, y: 0, width: width, height: centerX)
+        bottomGradientLayer.frame = CGRect(x: 0, y: centerX, width: width, height: centerX)
+        indefiniteLayer.lineWidth = strokeThickness
+        
+        let center = CGPoint(x: centerX, y: centerX)
+        let circlePath = UIBezierPath(arcCenter: center, radius: radius, startAngle: 0, endAngle: 2 * .pi, clockwise: true)
+        indefiniteLayer.path = circlePath.cgPath
+        indefiniteLayer.frame = layerFrame
+        
+        subLayer.bounds = layerFrame
+        subLayer.position = CGPoint(x: centerX, y: centerX)
+
+        layerView.removeConstraints()
+        layerView.translatesAutoresizingMaskIntoConstraints = false
+
         if #available(iOS 11.0, *) {
             NSLayoutConstraint.activate([
                 layerView.widthAnchor.constraint(equalToConstant: width),
@@ -175,8 +199,6 @@ public class InfiniteIndicator: UIView {
             ])
         }
         
-        layerView.backgroundColor = .clear
-        self.layerView = layerView
     }
     
     override public func safeAreaInsetsDidChange() {
