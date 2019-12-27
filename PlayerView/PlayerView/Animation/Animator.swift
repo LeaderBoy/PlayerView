@@ -37,7 +37,7 @@ class Animator : NSObject {
         case animated
     }
     
-    public weak var sourceView : UIView?
+    public unowned var sourceView : UIView
     public var plan : Plan
     public let sourceFrame : CGRect
     public var superView : UIView
@@ -184,7 +184,7 @@ extension Animator {
     func windowDismissInsertTempSnapshotView() {
         if let snapshotView = lanVC.view.snapshotView(afterScreenUpdates: true) {
             snapshotView.tag = portraitSnapshotViewTag
-            snapshotView.frame = sourceView!.frame
+            snapshotView.frame = sourceView.frame
             snapshotView.center = keyWindow.center
             snapshotView.transform = .init(rotationAngle: .pi / 2)
             keyView.addSubview(snapshotView)
@@ -202,11 +202,6 @@ extension Animator {
     /// 2.
     ///
     func windowPresentBegin(animated : Bool,completed:Completed = nil) {
-        
-        guard let sourceView = self.sourceView else {
-            print("Error: playerView could not be nil")
-            return
-        }
         
         self.state = .animating
         self.mode = .landscape
@@ -258,9 +253,10 @@ extension Animator {
     /// 3.
     /// present animation
     func windowPresentAnimating(animated : Bool,completed: Completed = nil) {
-        guard let sourceView = self.sourceView else { return }
         let width   = lanWindow.bounds.size.width
         let height  = lanWindow.bounds.size.height
+        
+        let sourceView = self.sourceView
         
         let change = {
             sourceView.center = CGPoint(x: height / 2.0, y: width / 2.0)
@@ -306,10 +302,6 @@ extension Animator {
     
     // Dismiss from fullScreen view
     fileprivate func windowDismissBegin(animated : Bool = true,completed:Completed = nil) {
-        guard let sourceView = self.sourceView else {
-            print("Error: playerView could not be nil")
-            return
-        }
 
         self.state = .animating
         self.mode = .portrait
@@ -363,7 +355,9 @@ extension Animator {
     }
 
     fileprivate func windowDismissAnimating(animated : Bool,completed:Completed = nil) {
-        guard let sourceView = self.sourceView else { return }
+        
+        let sourceView = self.sourceView
+        
         let sourceFrame = self.sourceFrame
         let superView = self.superView
         
@@ -418,11 +412,6 @@ extension Animator : UIViewControllerAnimatedTransitioning {
     }
     
     fileprivate func controllerPresentAnimation(context : TransitionContext) {
-        guard let sourceView = self.sourceView else {
-            print("Error: playerView could not be nil")
-            return
-        }
-        
         state = .animating
         mode = .landscape
         
@@ -484,10 +473,8 @@ extension Animator : UIViewControllerAnimatedTransitioning {
     }
     
     fileprivate func controllerDismissAnimation(context : TransitionContext) {
-        guard let sourceView = self.sourceView else {
-            print("Error: playerView could not be nil")
-            return
-        }
+        
+        let sourceView = self.sourceView
         
         state = .animating
         mode = .portrait
