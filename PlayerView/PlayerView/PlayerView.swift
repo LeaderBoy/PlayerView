@@ -49,14 +49,12 @@ public enum Plan {
 }
 
 
-/// Why Why do you need to use it?
+/// Why do you need to use it?
 /// Blog :
 /// We need a container to wrap the playerView
 public protocol PlayerContainerable {
     var playerContainer : UIView { get }
 }
-
-import WebKit
 
 public class PlayerView: UIView {
     

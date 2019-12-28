@@ -53,7 +53,6 @@ class ControlsView : UIView {
     @IBOutlet weak var controlsStackView: UIStackView!
     /// hide every 5 seconds
     let hideTimeInterval = 5.0
-    /// is UISlider sliding
     var isSliding = false {
         didSet {
             if isSliding {
@@ -176,14 +175,11 @@ class ControlsView : UIView {
         playButton.setImage(preferences.playImage, for: .normal)
         playButton.setImage(preferences.pauseImage, for: .selected)
         playButton.setImage(preferences.pauseImage, for: .init(arrayLiteral: .selected,.highlighted))
-        
         backButton.setImage(preferences.backImage, for: .normal)
-
         fullButton.isHidden = preferences.disableFullScreen
         fullButton.setImage(preferences.fullImage, for: .normal)
         fullButton.setImage(preferences.fullSelectedImage, for: .selected)
         fullButton.setImage(preferences.fullSelectedImage, for: .init(arrayLiteral: .selected,.highlighted))
-
         // Label
         startLabel.textColor = preferences.timeLableColor
         endLabel.textColor = preferences.timeLableColor

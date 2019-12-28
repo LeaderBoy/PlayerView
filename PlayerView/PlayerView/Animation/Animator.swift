@@ -417,17 +417,11 @@ extension Animator : UIViewControllerAnimatedTransitioning {
         
         let containerView = context.containerView
         let toView = context.toView
-        let fromView = context.fromView
         /// 2.
-        /// setup fromView's transform
-        /// thought system already setup this
-//        fromView.frame = containerView.bounds
-//        fromView.transform = .init(rotationAngle: .pi / -2)
-        /// 3.
         /// add toView
         toView.frame = containerView.bounds
         containerView.addSubview(toView)
-        /// 4.
+        /// 3.
         /// create a new view as playerView's container
         let playerContainer = UIView()
         playerContainer.tag = playerContrainerTag

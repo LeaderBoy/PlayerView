@@ -31,7 +31,7 @@
                         </view>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6xf-ds-13k">
                             <rect key="frame" x="16" y="54" width="31" height="30"/>
-                            <state key="normal" image="ZYPlayer_controls_back_white"/>
+                            <state key="normal" image="player_controls_back"/>
                             <connections>
                                 <action selector="back:" destination="-1" eventType="touchUpInside" id="hNs-73-dyk"/>
                             </connections>
@@ -59,6 +59,6 @@
         </view>
     </objects>
     <resources>
-        <image name="ZYPlayer_controls_back_white" width="31" height="30"/>
+        <image name="player_controls_back" width="31" height="30"/>
     </resources>
 </document>

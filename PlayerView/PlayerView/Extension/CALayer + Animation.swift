@@ -30,6 +30,18 @@ import UIKit
 
 
 extension CALayer {
+    /// start layer animation
+    func startAnimating() {
+       if isPaused() {
+           let pausedTime = timeOffset
+           speed = 1.0
+           timeOffset = 0.0
+           let timeSincePause = convertTime(CACurrentMediaTime(), from: nil) - pausedTime
+           beginTime = timeSincePause
+       }
+    }
+    
+    /// stop layer animation
     func stopAnimating() {
         if isPaused() == false {
             let pausedTime = convertTime(CACurrentMediaTime(), from: nil)
@@ -38,17 +50,7 @@ extension CALayer {
         }
     }
 
-    func startAnimating() {
-        if isPaused() {
-            let pausedTime = timeOffset
-            speed = 1.0
-            timeOffset = 0.0
-            let timeSincePause = convertTime(CACurrentMediaTime(), from: nil) - pausedTime
-            beginTime = timeSincePause
-        }
-    }
-
-    func isPaused() -> Bool {
+    private func isPaused() -> Bool {
         return speed == 0
     }
 }

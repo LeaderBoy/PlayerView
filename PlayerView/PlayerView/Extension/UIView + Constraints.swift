@@ -76,6 +76,9 @@ extension UIView {
         return [top,left,bottom,right]
     }
     
+    /// center layout relative to view
+    /// - Parameter view: view
+    /// - Parameter offset: center offset
     @discardableResult
     func center(to view: UIView,offset : CGPoint = .zero) -> [NSLayoutConstraint] {
         translatesAutoresizingMaskIntoConstraints = false
@@ -89,6 +92,7 @@ extension UIView {
     }
     
     /// remove constraints inclued width and height
+    /// reset translatesAutoresizingMaskIntoConstraints
     func removeConstraints() {
         if let superView = self.superview {
             for constraint in superView.constraints {
