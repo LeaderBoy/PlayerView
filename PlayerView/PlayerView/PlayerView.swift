@@ -49,7 +49,7 @@ public enum Plan {
 }
 
 
-/// Why do you need to use it?
+/// Why do you need this?
 /// Blog :
 /// We need a container to wrap the playerView
 public protocol PlayerContainerable {
@@ -60,11 +60,9 @@ public class PlayerView: UIView {
     
     weak public var dataSource : PlayerViewDataSource?
     weak public var delegate : PlayerViewDelegate?
-    
     /// when you need to register as a subscriber,you must confirm to protocol EventBusIdentifiable
     /// return the eventBus rather than implement a eventbus yourself
     public var eventBus = EventBus()
-    
     /// current indexPath
     public var indexPath : IndexPath?
     /// current state
@@ -74,7 +72,6 @@ public class PlayerView: UIView {
     public var shouldStatusBarHidden = false
     public var shouldAutorotate = true
     public var supportedInterfaceOrientations : UIInterfaceOrientationMask = .portrait
-
     public var item : AVPlayerItem?
     /// current plan
     public var plan : Plan = .window
@@ -101,7 +98,6 @@ public class PlayerView: UIView {
     private lazy var animatable = true
     private lazy var recoverFromPortrait = false
     private lazy var offset : CGPoint = .zero
-    
     
     private var aimOrientation : UIInterfaceOrientationMask?
     

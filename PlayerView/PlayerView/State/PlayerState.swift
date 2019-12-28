@@ -59,17 +59,24 @@ public enum PlayerState : Equatable {
     case prepare(_ indexPath : IndexPath?)
     case play
     case paused
+    /// seek to specified time
     case seeking(_ time : TimeInterval)
+    /// seek completed
     case seekDone
     case loading
     case finished
     case bufferFull(_ full : Bool)
     case bufferEmpty(_ empty : Bool)
+    /// stop the player view and remove it from superView at indexPath(if has)
     case stop(_ indexPath : IndexPath?)
     case error(_ error  : Error)
+    /// screen state full or portrait full or portrait
     case mode(_ mode    : PlayerModeState)
+    /// network state changed
     case network(_ net  : PlayerNetworkState)
+    /// player has been interrupted start or end
     case interrupted(AVAudioSession.InterruptionType)
+    /// initial state
     case unknown
     
     public static func prepare(at indexPath : IndexPath) -> PlayerState {
