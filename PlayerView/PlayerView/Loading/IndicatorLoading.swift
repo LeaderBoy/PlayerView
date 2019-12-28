@@ -119,7 +119,7 @@ class IndicatorLoading: UIView {
             self.indicator = indicator
         }
         
-        indicator.color = preferences.color
+        indicator.foregroundColor = preferences.color
         
         /// addSubview
         let view = indicator.view

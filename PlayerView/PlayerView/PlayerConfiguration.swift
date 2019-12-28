@@ -68,7 +68,7 @@ extension IndicatorPreferences {
 public protocol Indicator {
     var view : UIView { get }
     var isAnimating: Bool { get }
-    var color: UIColor { set get }
+    var foregroundColor : UIColor { set get }
 //    var hidesWhenStopped: Bool { set get }// default is YES. calls -setHidden when animating gets set to NO
     var centerOffset : CGPoint { get }
     var size : IndicatorSize { get }
@@ -91,18 +91,19 @@ public enum IndicatorSize {
     case size(CGSize)
 }
 
+
 extension UIActivityIndicatorView : Indicator {
-    public var view: UIView {
-        return self
-    }
-    
-    public var color: UIColor {
+    public var foregroundColor: UIColor {
         get {
-            return tintColor
+            return color
         }
         set {
-            tintColor = newValue
+            color = newValue
         }
+    }
+    
+    public var view: UIView {
+        return self
     }
 }
 

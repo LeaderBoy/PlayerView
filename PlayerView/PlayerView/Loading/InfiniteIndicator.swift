@@ -221,7 +221,7 @@ extension InfiniteIndicator : Indicator {
         return false
     }
     
-    public var color: UIColor {
+    public var foregroundColor: UIColor {
         get {
             return strokeColor
         }

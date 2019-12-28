@@ -17,7 +17,8 @@ class WindowPlanViewController: UIViewController {
     lazy var player : PlayerView = {
         let configuration = PlayerConfiguration()
         let indicatorPre = IndicatorPreferences()
-        indicatorPre.style = .activity(.white)
+        indicatorPre.style = .infiniteLayer(.default)
+        indicatorPre.color = .red
         configuration.indicatorPreferences = indicatorPre
         let player = PlayerView(configuration: configuration)
         player.plan = .window
