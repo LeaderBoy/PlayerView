@@ -69,7 +69,6 @@ public protocol Indicator {
     var view : UIView { get }
     var isAnimating: Bool { get }
     var foregroundColor : UIColor { set get }
-//    var hidesWhenStopped: Bool { set get }// default is YES. calls -setHidden when animating gets set to NO
     var centerOffset : CGPoint { get }
     var size : IndicatorSize { get }
     func startAnimating()

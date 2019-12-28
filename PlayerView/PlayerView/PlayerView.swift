@@ -82,6 +82,11 @@ public class PlayerView: UIView {
     public var plan : Plan = .window
     /// is presenting or dismissing
     public var isAnimating = false
+    /// when player is not visable
+    /// do not response some event
+    public var isVisable : Bool {
+        return self.window != nil
+    }
     
     private var reachability = Reachability.forInternetConnection()
     private var animator : Animator?
@@ -98,6 +103,7 @@ public class PlayerView: UIView {
     private lazy var animatable = true
     private lazy var recoverFromPortrait = false
     private lazy var offset : CGPoint = .zero
+    
     
     private var aimOrientation : UIInterfaceOrientationMask?
     
@@ -376,7 +382,9 @@ public class PlayerView: UIView {
                 }
             }
         }
-        
+        if !isVisable {
+            return
+        }
         self.publish(state: .play)
     }
     

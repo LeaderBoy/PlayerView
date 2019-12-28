@@ -223,6 +223,22 @@
 			path = Detail;
 			sourceTree = "<group>";
 		};
+		523DAFE423B7666600D8186B /* Confugutation */ = {
+			isa = PBXGroup;
+			children = (
+				524AC45023AD2FE5006A412E /* PlayerConfiguration.swift */,
+			);
+			path = Confugutation;
+			sourceTree = "<group>";
+		};
+		523DAFE523B7668100D8186B /* State */ = {
+			isa = PBXGroup;
+			children = (
+				52D7421B239412F90068C08D /* PlayerState.swift */,
+			);
+			path = State;
+			sourceTree = "<group>";
+		};
 		526C9F0423A1CE2C007F10A3 /* Motion */ = {
 			isa = PBXGroup;
 			children = (
@@ -334,9 +350,9 @@
 		52F8969D2385125D00D87D9E /* PlayerView */ = {
 			isa = PBXGroup;
 			children = (
-				524AC45023AD2FE5006A412E /* PlayerConfiguration.swift */,
 				52F8969E2385136D00D87D9E /* PlayerView.swift */,
-				52D7421B239412F90068C08D /* PlayerState.swift */,
+				523DAFE523B7668100D8186B /* State */,
+				523DAFE423B7666600D8186B /* Confugutation */,
 				526C9F0423A1CE2C007F10A3 /* Motion */,
 				52B74E7323A100DE002CCAEE /* Controller */,
 				52B74E7223A10058002CCAEE /* Loading */,
