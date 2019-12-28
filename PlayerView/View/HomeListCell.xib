@@ -34,7 +34,7 @@
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YqV-vE-sjf">
                                 <rect key="frame" x="122.5" y="55.5" width="43" height="43"/>
-                                <state key="normal" image="controls_play"/>
+                                <state key="normal" image="player_controls_play"/>
                                 <connections>
                                     <action selector="play:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="Wtr-mW-5Jg"/>
                                 </connections>
@@ -74,6 +74,6 @@
         </tableViewCell>
     </objects>
     <resources>
-        <image name="controls_play" width="43" height="43"/>
+        <image name="player_controls_play" width="43" height="43"/>
     </resources>
 </document>

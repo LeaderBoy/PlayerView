@@ -30,7 +30,7 @@
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="F8w-dK-18L">
                             <rect key="frame" x="220.5" y="146" width="43" height="43"/>
-                            <state key="normal" image="controls_play"/>
+                            <state key="normal" image="player_controls_play"/>
                             <state key="selected" image="controls_pause"/>
                             <connections>
                                 <action selector="play:" destination="-1" eventType="touchUpInside" id="YER-3q-ndR"/>
@@ -58,7 +58,7 @@
                                             <color key="minimumTrackTintColor" red="1" green="0.14901960784313725" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <color key="maximumTrackTintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <userDefinedRuntimeAttributes>
-                                                <userDefinedRuntimeAttribute type="image" keyPath="thumbImage" value="ZYPlayer_controls_thumb"/>
+                                                <userDefinedRuntimeAttribute type="image" keyPath="thumbImage" value="player_controls_thumb"/>
                                             </userDefinedRuntimeAttributes>
                                         </slider>
                                     </subviews>
@@ -83,8 +83,8 @@
                                     <constraints>
                                         <constraint firstAttribute="width" constant="44" id="J2A-zS-gI2"/>
                                     </constraints>
-                                    <state key="normal" image="full_screen"/>
-                                    <state key="selected" image="full_screen_selected"/>
+                                    <state key="normal" image="player_controls_full"/>
+                                    <state key="selected" image="player_controls_full_selected"/>
                                     <connections>
                                         <action selector="full:" destination="-1" eventType="touchUpInside" id="mAp-0E-1wG"/>
                                     </connections>
@@ -100,7 +100,7 @@
                                 <constraint firstAttribute="width" constant="40" id="IhY-q2-CRf"/>
                                 <constraint firstAttribute="width" secondItem="fsR-Gl-wYF" secondAttribute="height" multiplier="1:1" id="gGb-nw-HGf"/>
                             </constraints>
-                            <state key="normal" image="ZYPlayer_controls_back_white"/>
+                            <state key="normal" image="player_controls_back"/>
                             <connections>
                                 <action selector="back:" destination="-1" eventType="touchUpInside" id="JfJ-Gp-zel"/>
                             </connections>
@@ -131,11 +131,11 @@
         </view>
     </objects>
     <resources>
-        <image name="ZYPlayer_controls_back_white" width="31" height="30"/>
-        <image name="ZYPlayer_controls_thumb" width="13" height="13"/>
         <image name="controls_pause" width="43" height="43"/>
-        <image name="controls_play" width="43" height="43"/>
-        <image name="full_screen" width="20" height="20"/>
-        <image name="full_screen_selected" width="20" height="21"/>
+        <image name="player_controls_back" width="31" height="30"/>
+        <image name="player_controls_full" width="20" height="20"/>
+        <image name="player_controls_full_selected" width="20" height="21"/>
+        <image name="player_controls_play" width="43" height="43"/>
+        <image name="player_controls_thumb" width="13" height="13"/>
     </resources>
 </document>

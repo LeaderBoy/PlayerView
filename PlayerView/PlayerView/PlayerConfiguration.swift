@@ -112,21 +112,21 @@ public final class ControlsPreferences : NSObject {
     /// if set to true,controls will not add to playerView
     /// so all the following properties will not take effect even if they are set
     var disable                 : Bool = false
-    /// that is to say disable full screen feature
+    /// that is to say disable full screen button
     var disableFullScreen       : Bool = false
     /// cancel display of start and end times
     var disableTime             : Bool = false
     /// cancel display of bottom controls,show only play button
     var disableSlideControls    : Bool = false
     /// full screen button image
-    var fullImage               : UIImage = #imageLiteral(resourceName: "full_screen")
+    var fullImage               : UIImage = UIImage.imageFromBundle(name: "player_controls_full")
     /// full screen button selected image
-    var fullSelectedImage       : UIImage = #imageLiteral(resourceName: "full_screen_selected")
-    var backImage          : UIImage = #imageLiteral(resourceName: "ZYPlayer_controls_back_white")
-    var playImage          : UIImage = #imageLiteral(resourceName: "controls_play")
-    var pauseImage         : UIImage = #imageLiteral(resourceName: "controls_pause")
+    var fullSelectedImage       : UIImage = UIImage.imageFromBundle(name: "player_controls_full_selected")
+    var backImage          : UIImage = UIImage.imageFromBundle(name: "player_controls_back")
+    var playImage          : UIImage = UIImage.imageFromBundle(name: "player_controls_play")
+    var pauseImage         : UIImage = UIImage.imageFromBundle(name: "player_controls_pause")
     /// slider thumb image
-    var sliderImage        : UIImage = #imageLiteral(resourceName: "ZYPlayer_controls_thumb")
+    var sliderImage        : UIImage = UIImage.imageFromBundle(name: "player_controls_thumb")
     /// playback progress color
     var sliderMinTrackColor     : UIColor = #colorLiteral(red: 1, green: 0.1490196078, blue: 0, alpha: 1)
     var sliderMaxTrackColor     : UIColor = .clear
@@ -135,6 +135,16 @@ public final class ControlsPreferences : NSObject {
     /// track color
     var progressTrackTintColor  : UIColor = .lightGray
     var timeLableColor          : UIColor = .white
+}
+
+
+extension UIImage {
+    fileprivate static func imageFromBundle(name :String) -> UIImage {
+        let bundle = Bundle.main
+        //(for: PlayerView.self)
+        let image = UIImage(named: name, in: bundle, compatibleWith: nil)
+        return image!
+    }
 }
  
 

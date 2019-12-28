@@ -209,8 +209,8 @@ class ControlsView : UIView {
     }
     
     private func setupButtons() {
-        playButton.setImage(#imageLiteral(resourceName: "controls_pause"), for: UIControl.State.init(arrayLiteral: .selected,.highlighted))
-        fullButton.setImage(#imageLiteral(resourceName: "full_screen_selected"), for: UIControl.State.init(arrayLiteral: .selected,.highlighted))
+        playButton.setImage(preferences.pauseImage, for: UIControl.State.init(arrayLiteral: .selected,.highlighted))
+        fullButton.setImage(preferences.fullSelectedImage, for: UIControl.State.init(arrayLiteral: .selected,.highlighted))
     }
     
     private func setupSlider() {
