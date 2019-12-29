@@ -8,6 +8,8 @@
 
 import UIKit
 
+
+/// https://developer.apple.com/documentation/uikit/uicollectionview/customizing_collection_view_layouts
 class WaterFallLayout: UICollectionViewLayout {
     var contentBounds : CGRect = .zero
     var cachedAttributes : [UICollectionViewLayoutAttributes] = []
@@ -51,19 +53,15 @@ class WaterFallLayout: UICollectionViewLayout {
             var x : CGFloat = 0
             var y : CGFloat = 0
             
+            if column == 0 {
+                x = 0 + sectionInsets.left
+            }else {
+                x = itemWidth + itemSpacing + sectionInsets.left
+            }
+            
             if lastRow == row {
-                if column == 0 {
-                    x = 0 + sectionInsets.left
-                }else {
-                    x = itemWidth + itemSpacing + sectionInsets.left
-                }
                 y = lastFrame.minY
             } else {
-                if column == 0 {
-                    x = 0 + sectionInsets.left
-                }else {
-                    x = itemWidth + itemSpacing + sectionInsets.left
-                }
                 y = lastFrame.maxY + itemSpacing
                 lastRow = row
             }
