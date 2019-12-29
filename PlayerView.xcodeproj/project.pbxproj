@@ -42,6 +42,8 @@
 		52A7973C238E15B90043EB99 /* IndicatorLoading.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A7973B238E15B90043EB99 /* IndicatorLoading.swift */; };
 		52B3571D23AA0EC700CE98EA /* UIView + LayerAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52B3571C23AA0EC700CE98EA /* UIView + LayerAnimation.swift */; };
 		52B3571F23AA206400CE98EA /* Error + NSError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52B3571E23AA206400CE98EA /* Error + NSError.swift */; };
+		52C5DAAA23B78E9C00D4D9D6 /* InteractivePlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52C5DAA823B78E9C00D4D9D6 /* InteractivePlayerViewController.swift */; };
+		52C5DAAB23B78E9C00D4D9D6 /* InteractivePlayerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52C5DAA923B78E9C00D4D9D6 /* InteractivePlayerViewController.xib */; };
 		52D7421C239412F90068C08D /* PlayerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52D7421B239412F90068C08D /* PlayerState.swift */; };
 		52D7421E239550E70068C08D /* EventBus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52D7421D239550E70068C08D /* EventBus.swift */; };
 		52F8967C2385123D00D87D9E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52F8967B2385123D00D87D9E /* AppDelegate.swift */; };
@@ -113,6 +115,8 @@
 		52A7973B238E15B90043EB99 /* IndicatorLoading.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndicatorLoading.swift; sourceTree = "<group>"; };
 		52B3571C23AA0EC700CE98EA /* UIView + LayerAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView + LayerAnimation.swift"; sourceTree = "<group>"; };
 		52B3571E23AA206400CE98EA /* Error + NSError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Error + NSError.swift"; sourceTree = "<group>"; };
+		52C5DAA823B78E9C00D4D9D6 /* InteractivePlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractivePlayerViewController.swift; sourceTree = "<group>"; };
+		52C5DAA923B78E9C00D4D9D6 /* InteractivePlayerViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InteractivePlayerViewController.xib; sourceTree = "<group>"; };
 		52D7421B239412F90068C08D /* PlayerState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerState.swift; sourceTree = "<group>"; };
 		52D7421D239550E70068C08D /* EventBus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventBus.swift; sourceTree = "<group>"; };
 		52F896782385123D00D87D9E /* PlayerView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PlayerView.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -290,6 +294,8 @@
 			children = (
 				52A797252386A4CB0043EB99 /* PlayerViewController.swift */,
 				52A797262386A4CB0043EB99 /* PlayerViewController.xib */,
+				52C5DAA823B78E9C00D4D9D6 /* InteractivePlayerViewController.swift */,
+				52C5DAA923B78E9C00D4D9D6 /* InteractivePlayerViewController.xib */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -508,6 +514,7 @@
 				52138F5423A867140064785D /* TextCell.xib in Resources */,
 				2FCEBEAC239E2D72000FEDB6 /* HomeListCell.xib in Resources */,
 				2FCEBEA0239E216B000FEDB6 /* movie.json in Resources */,
+				52C5DAAB23B78E9C00D4D9D6 /* InteractivePlayerViewController.xib in Resources */,
 				52978E4C23AFB2920043846B /* CustomViewController.xib in Resources */,
 				52138F5C23A8683B0064785D /* PresentPlanViewController.xib in Resources */,
 				52F896852385124000D87D9E /* Assets.xcassets in Resources */,
@@ -593,6 +600,7 @@
 				52F896A92385155200D87D9E /* UIView + XIB.swift in Sources */,
 				52F896802385123D00D87D9E /* ViewController.swift in Sources */,
 				529E2D18239226BB0026055D /* Subscriber.swift in Sources */,
+				52C5DAAA23B78E9C00D4D9D6 /* InteractivePlayerViewController.swift in Sources */,
 				52D7421E239550E70068C08D /* EventBus.swift in Sources */,
 				52F8967C2385123D00D87D9E /* AppDelegate.swift in Sources */,
 				52F8969F2385136D00D87D9E /* PlayerView.swift in Sources */,

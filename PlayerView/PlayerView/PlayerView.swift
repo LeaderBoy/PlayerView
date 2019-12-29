@@ -293,6 +293,8 @@ public class PlayerView: UIView {
             handleLandscape()
         case .mode(.portrait):
             handlePortrait()
+        case .mode(.portraitFull):
+            handlePortraitFull()
         case .stop(_):
             resetVariables()
             removeFromSuperview()
@@ -347,6 +349,12 @@ public class PlayerView: UIView {
                 self.animator = nil
             }
         }
+    }
+    
+    func handlePortraitFull() {
+        let animator = Animator(with: self, plan: .present)
+        animator.presentInteractive(.spring)
+        self.animator = animator
     }
         
     private func addObserver() {

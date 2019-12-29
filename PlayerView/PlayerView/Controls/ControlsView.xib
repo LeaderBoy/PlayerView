@@ -31,7 +31,7 @@
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="F8w-dK-18L">
                             <rect key="frame" x="220.5" y="146" width="43" height="43"/>
                             <state key="normal" image="player_controls_play"/>
-                            <state key="selected" image="controls_pause"/>
+                            <state key="selected" image="player_controls_pause"/>
                             <connections>
                                 <action selector="play:" destination="-1" eventType="touchUpInside" id="YER-3q-ndR"/>
                             </connections>
@@ -131,10 +131,10 @@
         </view>
     </objects>
     <resources>
-        <image name="controls_pause" width="43" height="43"/>
         <image name="player_controls_back" width="31" height="30"/>
         <image name="player_controls_full" width="20" height="20"/>
         <image name="player_controls_full_selected" width="20" height="21"/>
+        <image name="player_controls_pause" width="43" height="43"/>
         <image name="player_controls_play" width="43" height="43"/>
         <image name="player_controls_thumb" width="13" height="13"/>
     </resources>

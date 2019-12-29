@@ -232,7 +232,7 @@ class ControlsView : UIView {
         if sender.isSelected {
             publish(state: .mode(.portrait))
         }else {
-            publish(state: .mode(.landscape))
+            publish(state: .mode(.portraitFull))
         }
     }
     
