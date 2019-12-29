@@ -44,6 +44,11 @@
 		52B3571F23AA206400CE98EA /* Error + NSError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52B3571E23AA206400CE98EA /* Error + NSError.swift */; };
 		52C5DAAA23B78E9C00D4D9D6 /* InteractivePlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52C5DAA823B78E9C00D4D9D6 /* InteractivePlayerViewController.swift */; };
 		52C5DAAB23B78E9C00D4D9D6 /* InteractivePlayerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52C5DAA923B78E9C00D4D9D6 /* InteractivePlayerViewController.xib */; };
+		52C5DAB223B8647200D4D9D6 /* CollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52C5DAB023B8647200D4D9D6 /* CollectionViewController.swift */; };
+		52C5DAB323B8647200D4D9D6 /* CollectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52C5DAB123B8647200D4D9D6 /* CollectionViewController.xib */; };
+		52C5DAB623B8657000D4D9D6 /* WaterFallCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52C5DAB423B8657000D4D9D6 /* WaterFallCell.swift */; };
+		52C5DAB723B8657000D4D9D6 /* WaterFallCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52C5DAB523B8657000D4D9D6 /* WaterFallCell.xib */; };
+		52C5DAB923B867E600D4D9D6 /* WaterFallLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52C5DAB823B867E600D4D9D6 /* WaterFallLayout.swift */; };
 		52D7421C239412F90068C08D /* PlayerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52D7421B239412F90068C08D /* PlayerState.swift */; };
 		52D7421E239550E70068C08D /* EventBus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52D7421D239550E70068C08D /* EventBus.swift */; };
 		52F8967C2385123D00D87D9E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52F8967B2385123D00D87D9E /* AppDelegate.swift */; };
@@ -117,6 +122,11 @@
 		52B3571E23AA206400CE98EA /* Error + NSError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Error + NSError.swift"; sourceTree = "<group>"; };
 		52C5DAA823B78E9C00D4D9D6 /* InteractivePlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractivePlayerViewController.swift; sourceTree = "<group>"; };
 		52C5DAA923B78E9C00D4D9D6 /* InteractivePlayerViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InteractivePlayerViewController.xib; sourceTree = "<group>"; };
+		52C5DAB023B8647200D4D9D6 /* CollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewController.swift; sourceTree = "<group>"; };
+		52C5DAB123B8647200D4D9D6 /* CollectionViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CollectionViewController.xib; sourceTree = "<group>"; };
+		52C5DAB423B8657000D4D9D6 /* WaterFallCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaterFallCell.swift; sourceTree = "<group>"; };
+		52C5DAB523B8657000D4D9D6 /* WaterFallCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WaterFallCell.xib; sourceTree = "<group>"; };
+		52C5DAB823B867E600D4D9D6 /* WaterFallLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaterFallLayout.swift; sourceTree = "<group>"; };
 		52D7421B239412F90068C08D /* PlayerState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerState.swift; sourceTree = "<group>"; };
 		52D7421D239550E70068C08D /* EventBus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventBus.swift; sourceTree = "<group>"; };
 		52F896782385123D00D87D9E /* PlayerView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PlayerView.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -264,8 +274,11 @@
 		52978E4823AFB2780043846B /* Custom */ = {
 			isa = PBXGroup;
 			children = (
-				52978E4923AFB2920043846B /* CustomViewController.swift */,
-				52978E4A23AFB2920043846B /* CustomViewController.xib */,
+				52C5DAB023B8647200D4D9D6 /* CollectionViewController.swift */,
+				52C5DAB123B8647200D4D9D6 /* CollectionViewController.xib */,
+				52C5DAB823B867E600D4D9D6 /* WaterFallLayout.swift */,
+				52C5DAB423B8657000D4D9D6 /* WaterFallCell.swift */,
+				52C5DAB523B8657000D4D9D6 /* WaterFallCell.xib */,
 			);
 			path = Custom;
 			sourceTree = "<group>";
@@ -327,6 +340,8 @@
 				2FCEBEA1239E21F5000FEDB6 /* RootTabBarViewController.swift */,
 				2FCEBEA2239E21F5000FEDB6 /* RootViewControllerInitial.swift */,
 				52138F5D23A869800064785D /* MovieDataSource.swift */,
+				52978E4923AFB2920043846B /* CustomViewController.swift */,
+				52978E4A23AFB2920043846B /* CustomViewController.xib */,
 				52978E4823AFB2780043846B /* Custom */,
 				52138F6223A8719F0064785D /* Detail */,
 				52138F6123A871690064785D /* View */,
@@ -515,6 +530,7 @@
 				2FCEBEAC239E2D72000FEDB6 /* HomeListCell.xib in Resources */,
 				2FCEBEA0239E216B000FEDB6 /* movie.json in Resources */,
 				52C5DAAB23B78E9C00D4D9D6 /* InteractivePlayerViewController.xib in Resources */,
+				52C5DAB323B8647200D4D9D6 /* CollectionViewController.xib in Resources */,
 				52978E4C23AFB2920043846B /* CustomViewController.xib in Resources */,
 				52138F5C23A8683B0064785D /* PresentPlanViewController.xib in Resources */,
 				52F896852385124000D87D9E /* Assets.xcassets in Resources */,
@@ -522,6 +538,7 @@
 				52046ADD23A0B116008B0B43 /* IndicatorView.xib in Resources */,
 				52F896832385123D00D87D9E /* Main.storyboard in Resources */,
 				52A797282386A4CB0043EB99 /* PlayerViewController.xib in Resources */,
+				52C5DAB723B8657000D4D9D6 /* WaterFallCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -586,6 +603,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				52C5DAB623B8657000D4D9D6 /* WaterFallCell.swift in Sources */,
 				52D7421C239412F90068C08D /* PlayerState.swift in Sources */,
 				2FCEBEAB239E2D72000FEDB6 /* HomeListCell.swift in Sources */,
 				52046AE323A0DE63008B0B43 /* MemoryCache.swift in Sources */,
@@ -600,6 +618,7 @@
 				52F896A92385155200D87D9E /* UIView + XIB.swift in Sources */,
 				52F896802385123D00D87D9E /* ViewController.swift in Sources */,
 				529E2D18239226BB0026055D /* Subscriber.swift in Sources */,
+				52C5DAB923B867E600D4D9D6 /* WaterFallLayout.swift in Sources */,
 				52C5DAAA23B78E9C00D4D9D6 /* InteractivePlayerViewController.swift in Sources */,
 				52D7421E239550E70068C08D /* EventBus.swift in Sources */,
 				52F8967C2385123D00D87D9E /* AppDelegate.swift in Sources */,
@@ -615,6 +634,7 @@
 				52A7972D2386A7BA0043EB99 /* Animator.swift in Sources */,
 				2FE975A0239E61E800DF782D /* VideoDetailViewController.swift in Sources */,
 				520595822385938300BBEF77 /* IndicatorView.swift in Sources */,
+				52C5DAB223B8647200D4D9D6 /* CollectionViewController.swift in Sources */,
 				52978E4B23AFB2920043846B /* CustomViewController.swift in Sources */,
 				52B3571D23AA0EC700CE98EA /* UIView + LayerAnimation.swift in Sources */,
 				52138F5E23A869800064785D /* MovieDataSource.swift in Sources */,

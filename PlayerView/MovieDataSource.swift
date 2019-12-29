@@ -25,6 +25,11 @@ class MovieDataSource: NSObject {
     let TextCellID = "TextCell"
     weak var delegate : CellClick?
     
+    override init() {
+        super.init()
+        fetchMovieModel()
+    }
+    
     init(with delegate :  CellClick) {
         self.delegate = delegate
         super.init()

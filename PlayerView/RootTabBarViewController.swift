@@ -63,7 +63,7 @@ class RootTabBarViewController: UITabBarController {
             [
                 WindowPlanViewController(),
                 PresentPlanViewController(),
-                CustomViewController()
+                CollectionViewController()
         ]
         return vcs
     }
