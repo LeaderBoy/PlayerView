@@ -57,24 +57,6 @@ class Animator : NSObject {
     
     typealias Completed = (()->Void)?
     
-    lazy var panGesture: UIPanGestureRecognizer = {
-        let gesure = UIPanGestureRecognizer()
-        gesure.addTarget(self, action: #selector(panGesureDismiss(_:)))
-        return gesure
-    }()
-    
-    lazy var oldLocation : CGPoint = .zero
-    
-    // The initial center point of the view.
-    var initialCenter : CGPoint = .zero
-    
-    fileprivate lazy var interactiveVC: InteractivePlayerViewController = {
-        let vc = InteractivePlayerViewController()
-        vc.transitioningDelegate = transition
-        vc.modalPresentationStyle = .overFullScreen
-        return vc
-    }()
-    
     fileprivate lazy var lanVC : PlayerViewController = {
         let vc = PlayerViewController()
         if plan == .present {
@@ -89,7 +71,7 @@ class Animator : NSObject {
     }()
 
     /// Present Plan
-    fileprivate lazy var transition: Transition = {
+    public lazy var transition: Transition = {
         let t = Transition()
         t.animator = self
         return t
@@ -561,100 +543,3 @@ extension Animator : UIViewControllerAnimatedTransitioning {
 //    func dismissAnimationWillEnd(for animator : Animator){}
 //    func dismissAnimationDidEnd(for animator : Animator){}
 //}
-
-// MARK: - Interactive Dismiss
-enum Animation {
-    case spring
-    case `default`
-}
-
-extension Animator {
-    func presentInteractive(_ animation : Animation,completed:Completed = nil) {
-        sourceView.removeConstraints()
-        sourceView.frame = sourceFrame
-        keyWindow.addSubview(sourceView)
-        sourceView.addGestureRecognizer(panGesture)
-        
-        keyWindow.addSubview(sourceView)
-        keyWindow.bringSubviewToFront(sourceView)
-
-        let damping : CGFloat = animation == .spring ? 0.8 : 1
-
-        UIView.animate(withDuration: playerTransitionDuration, delay: 0, usingSpringWithDamping: damping, initialSpringVelocity: 0.5, options: [.layoutSubviews,.curveEaseIn], animations: {
-            self.sourceView.frame = self.keyWindow.bounds
-            self.sourceView.layoutIfNeeded()
-        }) { (_) in
-            completed?()
-        }
-    }
-    
-    func dismissInteractive() {
-        
-    }
-    
-    @objc func panGesureDismiss(_ gesure : UIPanGestureRecognizer) {
-        let translation = gesure.translation(in: keyWindow)
-        let location = gesure.location(in: keyWindow)
-        let velocity = gesure.velocity(in: keyWindow)
-        oldLocation = location
-        
-        switch gesure.state {
-        case .began:
-            initialCenter = sourceView.center
-            break
-        case .changed:
-            scale(with: translation)
-        case .cancelled,.ended:
-            cancelOrEndAnimation(with: translation, velocity: velocity)
-        default:
-            break
-        }
-    }
-    
-    func scale(with translation : CGPoint) {
-        let translationX = translation.x
-        let translationY = translation.y
-        let totalH = keyView.bounds.height
-        let x = abs(translationY) / totalH
-        // ax² + bx + c
-        
-        let alpha = max(7 * x * x - 8 * x + 1, 0)
-        
-        var percent = 1 - x
-        percent = max(percent, 0)
-        ///
-        let scale = max(percent, 0.3)
-        
-        let transTransform = CGAffineTransform.init(translationX: translationX / scale, y: translationY / scale)
-        let scaleTransform = CGAffineTransform.init(scaleX: scale, y: scale)
-        sourceView.transform = transTransform.concatenating(scaleTransform)
-    }
-    
-    func cancelOrEndAnimation(with trans : CGPoint,velocity : CGPoint) {
-        let offsetY = trans.y
-        let velocityY = velocity.y
-        if offsetY > 100 || velocityY > 500 {
-            endAnimation()
-        } else {
-            cancelAnimation()
-        }
-    }
-    
-    func cancelAnimation() {
-        UIView.animate(withDuration: 0.2) {
-            self.sourceView.transform = .identity
-        }
-    }
-    
-    func endAnimation() {
-        UIView.animate(withDuration: 0.2, delay: 0, options: .layoutSubviews, animations: {
-            self.sourceView.transform = .identity
-            self.sourceView.frame = self.sourceFrame
-        }) { (_) in
-            self.sourceView.removeFromSuperview()
-            self.superView.addSubview(self.sourceView)
-            self.sourceView.edges(to: self.superView)
-        }
-    }
-}
-

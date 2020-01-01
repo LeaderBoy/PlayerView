@@ -9,12 +9,17 @@
 import UIKit
 
 class CollectionViewController: UIViewController {
+    
+    lazy var player = PlayerView()
 
     @IBOutlet weak var collectionView: UICollectionView!
     
     let waterFallCellIdentifier = String(describing: WaterFallCell.self)
     
     let videos = DouYinDataSource()
+    
+    var animator : InteractiveDismissAnimator!
+    var transition : InteractiveDismissTransition!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,5 +50,24 @@ extension CollectionViewController : UICollectionViewDataSource {
         cell.model = videos.models[indexPath.row]
         
         return cell
+    }
+}
+
+extension CollectionViewController : UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let model = videos.models[indexPath.row]
+        let url = model.video.play_addr.url_list[0]
+        let playerVC = InteractivePlayerViewController()
+        
+        let cell = collectionView.cellForItem(at: indexPath) as! WaterFallCell
+        
+        
+        let animator = InteractiveDismissAnimator(sourceView: cell.container)
+        self.animator = animator
+        let transition = InteractiveDismissTransition(animator: animator)
+        self.transition = transition
+        playerVC.transitioningDelegate = transition
+        playerVC.modalPresentationStyle = .overFullScreen
+        present(playerVC, animated: true, completion: nil)
     }
 }

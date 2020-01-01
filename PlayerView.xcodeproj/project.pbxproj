@@ -33,6 +33,8 @@
 		526C9F0623A1CE4F007F10A3 /* MotionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 526C9F0523A1CE4F007F10A3 /* MotionManager.swift */; };
 		5287C5B623BC675600595A1A /* douyin.json in Resources */ = {isa = PBXBuildFile; fileRef = 5287C5B523BC675600595A1A /* douyin.json */; };
 		5287C5B823BC68DA00595A1A /* DouYinDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5287C5B723BC68DA00595A1A /* DouYinDataSource.swift */; };
+		5287C5BC23BC873A00595A1A /* InteractiveDismissAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5287C5BB23BC873A00595A1A /* InteractiveDismissAnimator.swift */; };
+		5287C5BE23BC895900595A1A /* InteractiveDismissTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5287C5BD23BC895900595A1A /* InteractiveDismissTransition.swift */; };
 		52978E4723AF9B270043846B /* InfiniteIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52978E4623AF9B270043846B /* InfiniteIndicator.swift */; };
 		52978E4B23AFB2920043846B /* CustomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52978E4923AFB2920043846B /* CustomViewController.swift */; };
 		52978E4C23AFB2920043846B /* CustomViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52978E4A23AFB2920043846B /* CustomViewController.xib */; };
@@ -113,6 +115,8 @@
 		526C9F0523A1CE4F007F10A3 /* MotionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionManager.swift; sourceTree = "<group>"; };
 		5287C5B523BC675600595A1A /* douyin.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = douyin.json; sourceTree = "<group>"; };
 		5287C5B723BC68DA00595A1A /* DouYinDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DouYinDataSource.swift; sourceTree = "<group>"; };
+		5287C5BB23BC873A00595A1A /* InteractiveDismissAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractiveDismissAnimator.swift; sourceTree = "<group>"; };
+		5287C5BD23BC895900595A1A /* InteractiveDismissTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractiveDismissTransition.swift; sourceTree = "<group>"; };
 		52978E4623AF9B270043846B /* InfiniteIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfiniteIndicator.swift; sourceTree = "<group>"; };
 		52978E4923AFB2920043846B /* CustomViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomViewController.swift; sourceTree = "<group>"; };
 		52978E4A23AFB2920043846B /* CustomViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomViewController.xib; sourceTree = "<group>"; };
@@ -291,6 +295,8 @@
 			isa = PBXGroup;
 			children = (
 				52A7972C2386A7BA0043EB99 /* Animator.swift */,
+				5287C5BB23BC873A00595A1A /* InteractiveDismissAnimator.swift */,
+				5287C5BD23BC895900595A1A /* InteractiveDismissTransition.swift */,
 				52138F4623A792660064785D /* TransitionContext.swift */,
 				52138F4823A792660064785D /* Transition.swift */,
 			);
@@ -634,6 +640,7 @@
 				52B3571F23AA206400CE98EA /* Error + NSError.swift in Sources */,
 				2FCEBEA3239E21F5000FEDB6 /* RootTabBarViewController.swift in Sources */,
 				52F896B22386273100D87D9E /* Reachability.swift in Sources */,
+				5287C5BE23BC895900595A1A /* InteractiveDismissTransition.swift in Sources */,
 				524AC45123AD2FE5006A412E /* PlayerConfiguration.swift in Sources */,
 				52138F4D23A792660064785D /* Transition.swift in Sources */,
 				52138F5723A868290064785D /* WindowPlanViewController.swift in Sources */,
@@ -645,6 +652,7 @@
 				52C5DAB223B8647200D4D9D6 /* CollectionViewController.swift in Sources */,
 				52978E4B23AFB2920043846B /* CustomViewController.swift in Sources */,
 				52B3571D23AA0EC700CE98EA /* UIView + LayerAnimation.swift in Sources */,
+				5287C5BC23BC873A00595A1A /* InteractiveDismissAnimator.swift in Sources */,
 				52138F5E23A869800064785D /* MovieDataSource.swift in Sources */,
 				52F896B623866B5A00D87D9E /* ControlsView.swift in Sources */,
 				52A797272386A4CB0043EB99 /* PlayerViewController.swift in Sources */,

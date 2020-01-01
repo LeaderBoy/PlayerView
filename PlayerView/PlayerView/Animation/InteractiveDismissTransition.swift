@@ -1,5 +1,5 @@
 //
-//  Copyright (C) 2019 杨志远.
+//  Copyright (C) 2020 杨志远.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a 
 //  copy of this software and associated documentation files (the "Software"), 
@@ -20,21 +20,28 @@
 //  DEALINGS IN THE SOFTWARE.
 //
 //
-//  InteractivePlayerViewController.swift
+//  InteractiveDismissTransition.swift
 //  PlayerView
 //
-//  Created by 杨志远 on 2019/12/28.
+//  Created by 杨志远 on 2020/1/1.
 //
 
 import UIKit
 
-class InteractivePlayerViewController: UIViewController {
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        view.backgroundColor = .clear
-        // Do any additional setup after loading the view.
+class InteractiveDismissTransition: UIPercentDrivenInteractiveTransition {
+    var animator : UIViewControllerAnimatedTransitioning
+    
+    init(animator : UIViewControllerAnimatedTransitioning) {
+        self.animator = animator
     }
+}
 
+extension InteractiveDismissTransition : UIViewControllerTransitioningDelegate {
+    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return animator
+    }
+    
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return animator
+    }
 }
