@@ -18,7 +18,6 @@ class WindowPlanViewController: UIViewController {
         let configuration = PlayerConfiguration()
         let indicatorPre = IndicatorPreferences()
         indicatorPre.style = .infiniteLayer(.default)
-        indicatorPre.color = .red
         configuration.indicatorPreferences = indicatorPre
         let player = PlayerView(configuration: configuration)
         player.plan = .window

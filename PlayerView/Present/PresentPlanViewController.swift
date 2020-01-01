@@ -27,11 +27,7 @@ class PresentPlanViewController: UIViewController {
         return false
     }
 
-    lazy var player : PlayerView = {
-        let player = PlayerView()
-        player.plan = .present
-        return player
-    }()
+    var player : PlayerView?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,6 +36,7 @@ class PresentPlanViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        guard let player = self.player else { return  }
         if player.indexPath != nil {
             player.paused()
         }
@@ -61,20 +58,28 @@ class PresentPlanViewController: UIViewController {
     }
     
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        return player.supportedInterfaceOrientations
+        if let player = self.player {
+            return player.supportedInterfaceOrientations
+        }
+        return .portrait
     }
     
     override var shouldAutorotate: Bool {
-        return player.shouldAutorotate
+        if let player = self.player {
+            return player.shouldAutorotate
+        }
+        return true
     }
     
     override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
+        guard let player = self.player else { return  }
         if newCollection.verticalSizeClass == .compact {
             player.updateWillChangeTableView(tableView)
         }
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        guard let player = self.player else { return  }
         if let pre = previousTraitCollection,pre.verticalSizeClass == .compact {
             player.updateDidChangeTableView(tableView)
         }
@@ -108,6 +113,7 @@ extension PresentPlanViewController : UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        guard let player = self.player else { return  }
         if player.indexPath == indexPath {
             player.stop()
         }
@@ -117,7 +123,11 @@ extension PresentPlanViewController : UITableViewDelegate {
 extension PresentPlanViewController : CellClick {
     func click(model: MovieModel, at container: UIView) {
         if let url = URL(string: model.url) {
-            player.prepare(url: url, in: container, at: model.indexPath)
+            if player == nil {
+                let player = PlayerView()
+                player.plan = .present
+            }
+            player!.prepare(url: url, in: container, at: model.indexPath)
         }
     }
 }

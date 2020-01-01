@@ -57,6 +57,7 @@ class PlayerLayerView: UIView {
     private var isReadyForDisplayContext = 0
     private let cache = MemoryCache.shared
     private var state : PlayerState = .unknown
+    private var pauseBySeeking = false
     
     var playerLayer : AVPlayerLayer {
         return self.layer as! AVPlayerLayer
@@ -117,11 +118,19 @@ class PlayerLayerView: UIView {
     public func seekToTime(_ time:TimeInterval,completionHandler: ((Bool) -> Void)? = nil) {
         let timeScale = player.currentItem?.asset.duration.timescale ?? 600
         let newChaseTime = CMTimeMakeWithSeconds(time, preferredTimescale: timeScale)
+        pauseBySeek()
         if CMTimeCompare(newChaseTime, chaseTime) != 0 {
             chaseTime = newChaseTime;
             if !isSeekingInProgress {
                 trySeekToChaseTime(completionHandler: completionHandler)
             }
+        }
+    }
+    
+    private func pauseBySeek() {
+        if player.timeControlStatus == .playing {
+            pause()
+            pauseBySeeking = true
         }
     }
     
@@ -138,6 +147,9 @@ class PlayerLayerView: UIView {
         let seekTimeInProgress = chaseTime
         player.seek(to: seekTimeInProgress, toleranceBefore: CMTime.zero,toleranceAfter: .zero, completionHandler:{ (isFinished:Bool) -> Void in
             if CMTimeCompare(seekTimeInProgress, self.chaseTime) == 0 {
+                if self.pauseBySeeking {
+                    self.play()
+                }
                 self.isSeekingInProgress = false
                 completionHandler?(true)
             } else {
@@ -155,6 +167,7 @@ class PlayerLayerView: UIView {
             seekToCachedProgress()
             play()
         case .paused:
+            pauseBySeeking = false
             pause()
         case .seeking(let time):
             seekToTime(time) { [weak self](done) in
@@ -163,6 +176,7 @@ class PlayerLayerView: UIView {
                 }
                 self.publish(state: .seekDone)
             }
+        case .seekDone:             player.currentItem?.cancelPendingSeeks()
         case .stop:
             cachePlayProgress()
             resetVariables()

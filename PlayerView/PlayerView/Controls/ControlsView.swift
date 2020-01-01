@@ -63,6 +63,7 @@ class ControlsView : UIView {
 
     var isSeeking = false
     var isBufferFull = false
+    var isLikelyToPlay = false
     var isReadyToPlay = false {
         didSet {
             if isReadyToPlay {
@@ -192,6 +193,7 @@ class ControlsView : UIView {
         isSeeking = false
         isReadyToPlay = false
         isBufferFull = false
+        isLikelyToPlay = false
         duration = 0
         position = 0
         oldPosition = 0
@@ -232,7 +234,7 @@ class ControlsView : UIView {
         if sender.isSelected {
             publish(state: .mode(.portrait))
         }else {
-            publish(state: .mode(.portraitFull))
+            publish(state: .mode(.landscape))
         }
     }
     
@@ -247,6 +249,11 @@ class ControlsView : UIView {
     
     @objc func sliderTouchCancel(_ slider:UISlider) {
         isSliding = false
+        /// when seeking done but slider is still pressed, video will not play,
+        /// so to prevent this
+        if playButton.isSelected && isLikelyToPlay {
+            publish(state: .play)
+        }
     }
 
     @objc func sliderTouchDown(_ slider:UISlider) {
@@ -387,6 +394,8 @@ class ControlsView : UIView {
             bufferTime = t
         case .bufferFull(let f):
             isBufferFull = f
+        case .likelyKeepUp(let likely):
+            isLikelyToPlay = likely
         default:
             break
         }
