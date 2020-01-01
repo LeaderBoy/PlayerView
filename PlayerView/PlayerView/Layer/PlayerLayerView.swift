@@ -105,6 +105,11 @@ class PlayerLayerView: UIView {
     
     public func stop() {
         pause()
+        /// condition: poor network
+        /// dismiss from a viewController
+        /// deinit was called but player still play
+        player.currentItem?.cancelPendingSeeks()
+        player.currentItem?.asset.cancelLoading()
         player.replaceCurrentItem(with: nil)
     }
     

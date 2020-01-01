@@ -31,6 +31,8 @@
 		524AC45123AD2FE5006A412E /* PlayerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 524AC45023AD2FE5006A412E /* PlayerConfiguration.swift */; };
 		524AC46323B60233006A412E /* CALayer + Animation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 524AC46223B60233006A412E /* CALayer + Animation.swift */; };
 		526C9F0623A1CE4F007F10A3 /* MotionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 526C9F0523A1CE4F007F10A3 /* MotionManager.swift */; };
+		5287C5B623BC675600595A1A /* douyin.json in Resources */ = {isa = PBXBuildFile; fileRef = 5287C5B523BC675600595A1A /* douyin.json */; };
+		5287C5B823BC68DA00595A1A /* DouYinDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5287C5B723BC68DA00595A1A /* DouYinDataSource.swift */; };
 		52978E4723AF9B270043846B /* InfiniteIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52978E4623AF9B270043846B /* InfiniteIndicator.swift */; };
 		52978E4B23AFB2920043846B /* CustomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52978E4923AFB2920043846B /* CustomViewController.swift */; };
 		52978E4C23AFB2920043846B /* CustomViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52978E4A23AFB2920043846B /* CustomViewController.xib */; };
@@ -109,6 +111,8 @@
 		524AC45023AD2FE5006A412E /* PlayerConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerConfiguration.swift; sourceTree = "<group>"; };
 		524AC46223B60233006A412E /* CALayer + Animation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CALayer + Animation.swift"; sourceTree = "<group>"; };
 		526C9F0523A1CE4F007F10A3 /* MotionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionManager.swift; sourceTree = "<group>"; };
+		5287C5B523BC675600595A1A /* douyin.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = douyin.json; sourceTree = "<group>"; };
+		5287C5B723BC68DA00595A1A /* DouYinDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DouYinDataSource.swift; sourceTree = "<group>"; };
 		52978E4623AF9B270043846B /* InfiniteIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfiniteIndicator.swift; sourceTree = "<group>"; };
 		52978E4923AFB2920043846B /* CustomViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomViewController.swift; sourceTree = "<group>"; };
 		52978E4A23AFB2920043846B /* CustomViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomViewController.xib; sourceTree = "<group>"; };
@@ -340,6 +344,7 @@
 				2FCEBEA1239E21F5000FEDB6 /* RootTabBarViewController.swift */,
 				2FCEBEA2239E21F5000FEDB6 /* RootViewControllerInitial.swift */,
 				52138F5D23A869800064785D /* MovieDataSource.swift */,
+				5287C5B723BC68DA00595A1A /* DouYinDataSource.swift */,
 				52978E4923AFB2920043846B /* CustomViewController.swift */,
 				52978E4A23AFB2920043846B /* CustomViewController.xib */,
 				52978E4823AFB2780043846B /* Custom */,
@@ -350,6 +355,7 @@
 				52F8967F2385123D00D87D9E /* ViewController.swift */,
 				520595802385937000BBEF77 /* Indicator */,
 				2FCEBE9F239E216B000FEDB6 /* movie.json */,
+				5287C5B523BC675600595A1A /* douyin.json */,
 				52F8969D2385125D00D87D9E /* PlayerView */,
 				52F896812385123D00D87D9E /* Main.storyboard */,
 				52F896842385124000D87D9E /* Assets.xcassets */,
@@ -527,6 +533,7 @@
 				52F896B823866B8100D87D9E /* ControlsView.xib in Resources */,
 				52138F5823A868290064785D /* WindowPlanViewController.xib in Resources */,
 				52138F5423A867140064785D /* TextCell.xib in Resources */,
+				5287C5B623BC675600595A1A /* douyin.json in Resources */,
 				2FCEBEAC239E2D72000FEDB6 /* HomeListCell.xib in Resources */,
 				2FCEBEA0239E216B000FEDB6 /* movie.json in Resources */,
 				52C5DAAB23B78E9C00D4D9D6 /* InteractivePlayerViewController.xib in Resources */,
@@ -623,6 +630,7 @@
 				52D7421E239550E70068C08D /* EventBus.swift in Sources */,
 				52F8967C2385123D00D87D9E /* AppDelegate.swift in Sources */,
 				52F8969F2385136D00D87D9E /* PlayerView.swift in Sources */,
+				5287C5B823BC68DA00595A1A /* DouYinDataSource.swift in Sources */,
 				52B3571F23AA206400CE98EA /* Error + NSError.swift in Sources */,
 				2FCEBEA3239E21F5000FEDB6 /* RootTabBarViewController.swift in Sources */,
 				52F896B22386273100D87D9E /* Reachability.swift in Sources */,

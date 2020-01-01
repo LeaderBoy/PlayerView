@@ -15,19 +15,19 @@ class WaterFallCell: UICollectionViewCell {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var numberLabel: UILabel!
     
-    var model : MovieModel! {
+    var model : DouYinModel! {
         didSet {
-            if let url = URL(string: model.coverImg) {
+            if let url = URL(string: model.video.cover.url_list[0]) {
                 imageView.kf.setImage(with: url,options: [.transition(.fade(1))])
             }
-            titleLabel.text = model.movieName
+            titleLabel.text = model.desc
+            numberLabel.text = "播放\(model.statistics.digg_count)次"
         }
     }
     
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
-        backgroundColor = .red
     }
 
 }

@@ -14,7 +14,7 @@ class CollectionViewController: UIViewController {
     
     let waterFallCellIdentifier = String(describing: WaterFallCell.self)
     
-    let movies = MovieDataSource()
+    let videos = DouYinDataSource()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,13 +36,13 @@ class CollectionViewController: UIViewController {
 
 extension CollectionViewController : UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return movies.models.count
+        return videos.models.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: waterFallCellIdentifier, for: indexPath) as! WaterFallCell
         
-        cell.model = movies.models[indexPath.row]
+        cell.model = videos.models[indexPath.row]
         
         return cell
     }

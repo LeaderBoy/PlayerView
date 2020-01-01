@@ -33,20 +33,12 @@ class WaterFallLayout: UICollectionViewLayout {
         let itemSpacing : CGFloat = 2
         let itemWidth = ((cvWidth - itemSpacing - horInsets) / CGFloat(columns))
             // .rounded(.down)
-        
-        var itemHeights : [CGFloat] = []
 
-        for _ in 0..<count {
-            let height = CGFloat(Int.random(in: 300...400))
-            itemHeights.append(height)
-        }
-        
-        let itemHeight : CGFloat = 400
+        let itemHeight : CGFloat = itemWidth * (4 / 3)
         var lastRow = 0
         
         while currentIndex < count {
             let attributes = UICollectionViewLayoutAttributes(forCellWith: IndexPath(item: currentIndex, section: 0))
-//            let itemHeight = itemHeights[currentIndex]
             let column = currentIndex % 2
             let row = currentIndex / 2
             
@@ -66,14 +58,14 @@ class WaterFallLayout: UICollectionViewLayout {
                 lastRow = row
             }
             
-            
             let frame = CGRect(x: x, y: y, width: itemWidth, height: itemHeight)
             attributes.frame = frame
             cachedAttributes.append(attributes)
-            contentBounds = contentBounds.union(lastFrame)
             
             currentIndex += 1
             lastFrame = frame
+            
+            contentBounds = contentBounds.union(lastFrame)
         }
         
     }
