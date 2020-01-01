@@ -287,6 +287,8 @@
 				52C5DAB823B867E600D4D9D6 /* WaterFallLayout.swift */,
 				52C5DAB423B8657000D4D9D6 /* WaterFallCell.swift */,
 				52C5DAB523B8657000D4D9D6 /* WaterFallCell.xib */,
+				52C5DAA823B78E9C00D4D9D6 /* InteractivePlayerViewController.swift */,
+				52C5DAA923B78E9C00D4D9D6 /* InteractivePlayerViewController.xib */,
 			);
 			path = Custom;
 			sourceTree = "<group>";
@@ -317,8 +319,6 @@
 			children = (
 				52A797252386A4CB0043EB99 /* PlayerViewController.swift */,
 				52A797262386A4CB0043EB99 /* PlayerViewController.xib */,
-				52C5DAA823B78E9C00D4D9D6 /* InteractivePlayerViewController.swift */,
-				52C5DAA923B78E9C00D4D9D6 /* InteractivePlayerViewController.xib */,
 			);
 			path = Controller;
 			sourceTree = "<group>";

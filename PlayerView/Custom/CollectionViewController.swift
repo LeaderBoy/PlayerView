@@ -46,21 +46,18 @@ extension CollectionViewController : UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: waterFallCellIdentifier, for: indexPath) as! WaterFallCell
-        
         cell.model = videos.models[indexPath.row]
-        
         return cell
     }
 }
 
 extension CollectionViewController : UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let model = videos.models[indexPath.row]
-        let url = model.video.play_addr.url_list[0]
-        let playerVC = InteractivePlayerViewController()
-        
         let cell = collectionView.cellForItem(at: indexPath) as! WaterFallCell
         
+        let model = videos.models[indexPath.row]
+        
+        let playerVC = InteractivePlayerViewController(imageView: cell.imageView, model: model)        
         
         let animator = InteractiveDismissAnimator(sourceView: cell.container)
         self.animator = animator

@@ -519,27 +519,28 @@ extension Animator : UIViewControllerAnimatedTransitioning {
 
 
 
-//protocol PresentAnimation {
-//    func presentAnimationWillBegin(for animator : Animator)
-//    func presentAnimationDidBegin(for animator : Animator,complete:@escaping ()->Void)
-//}
-//
-//protocol DismissAnimation {
-//    func dismissAnimationWillBegin(for animator : Animator)
-//    func dismissAnimationDidBegin(for animator : Animator,complete:@escaping ()->Void)
-//    func dismissAnimationWillEnd(for animator : Animator)
-//    func dismissAnimationDidEnd(for animator : Animator)
-//
-//}
-//
-//extension PresentAnimation {
-//    func presentAnimationWillBegin(for animator : Animator){}
-//    func presentAnimationDidBegin(for animator : Animator,complete:@escaping ()->Void){}
-//}
-//
-//extension DismissAnimation {
-//    func dismissAnimationWillBegin(for animator : Animator){}
-//    func dismissAnimationDidBegin(for animator : Animator,complete:@escaping ()->Void){}
-//    func dismissAnimationWillEnd(for animator : Animator){}
-//    func dismissAnimationDidEnd(for animator : Animator){}
-//}
+protocol PresentAnimation {
+    func presentAnimationWillBegin()
+    func presentAnimating()
+    func presentAnimationDidEnd()
+}
+
+protocol DismissAnimation {
+    func dismissAnimationWillBegin()
+    func dismissAnimating()
+    func dismissAnimationCanceled()
+    func dismissAnimationDidEnd()
+}
+
+extension PresentAnimation {
+    func presentAnimationWillBegin(){}
+    func presentAnimating(){}
+    func presentAnimationDidEnd(){}
+}
+
+extension DismissAnimation {
+    func dismissAnimationWillBegin(){}
+    func dismissAnimating(){}
+    func dismissAnimationCanceled(){}
+    func dismissAnimationDidEnd(){}
+}

@@ -14,7 +14,9 @@ class TransitionContext {
     var fromView : UIView
     var toView : UIView
     var fromViewController : UIViewController
+    var fromTopViewController : UIViewController
     var toViewController : UIViewController
+    var toTopViewController : UIViewController
     var containerView : UIView
     
     init(_ transitionContext: UIViewControllerContextTransitioning) {
@@ -22,6 +24,9 @@ class TransitionContext {
         self.fromViewController = transitionContext.viewController(forKey: .from)!
         self.toViewController = transitionContext.viewController(forKey: .to)!
         self.containerView = transitionContext.containerView
+        
+        self.fromTopViewController = fromViewController.topLevelViewController()
+        self.toTopViewController = toViewController.topLevelViewController()
         
         if let fromView = transitionContext.view(forKey: .from) {
             self.fromView = fromView
