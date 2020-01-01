@@ -36,5 +36,9 @@ class InteractivePlayerViewController: UIViewController {
         view.backgroundColor = .clear
         // Do any additional setup after loading the view.
     }
+    
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return .portrait
+    }
 
 }

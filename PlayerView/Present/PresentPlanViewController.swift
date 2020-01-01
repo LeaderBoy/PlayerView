@@ -126,6 +126,7 @@ extension PresentPlanViewController : CellClick {
             if player == nil {
                 let player = PlayerView()
                 player.plan = .present
+                self.player = player
             }
             player!.prepare(url: url, in: container, at: model.indexPath)
         }
