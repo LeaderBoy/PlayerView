@@ -28,22 +28,45 @@
 
 import UIKit
 
+/// Hide the imageView when meet multiple conditions at the same time
+struct ImageViewHiddenOption : OptionSet {
+    let rawValue: Int
+    static let readyToPlay = ImageViewHiddenOption(rawValue: 1 << 0)
+    static let animationEnd = ImageViewHiddenOption(rawValue: 1 << 1)
+    static let all = ImageViewHiddenOption(rawValue: 3)
+}
+
 class InteractivePlayerViewController: UIViewController {
 
-    var imageView : UIImageView
-    var model : DouYinModel
+    private var container : UIView
+    private var imageView : UIImageView
+    private var model : DouYinModel
+    
+    lazy var player: PlayerView = {
+        let configuration = PlayerConfiguration()
+        configuration.backgroundColor = .clear
+        configuration.repeatWhenFinished = true
+        configuration.controlsPreferences.disable = true
+        configuration.disableCacheProgress = true
+        configuration.videoGravity = .resizeAspectFill
+        let player = PlayerView(configuration: configuration)
+        return player
+    }()
+
+    var imageViewHiddenOptions : ImageViewHiddenOption = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .clear
-        // Do any additional setup after loading the view.
+        container.backgroundColor = .red
     }
     
     
-    init(imageView : UIImageView,model : DouYinModel) {
+    init(container :UIView , imageView : UIImageView,model : DouYinModel) {
         self.imageView = imageView
         self.model = model
+        self.container = container
         super.init(nibName: nil, bundle: nil)
+        registerAsStateSubscriber()
     }
     
     required init?(coder: NSCoder) {
@@ -57,19 +80,75 @@ class InteractivePlayerViewController: UIViewController {
 }
 
 extension InteractivePlayerViewController : PresentAnimation {
+        
     func presentAnimationWillBegin() {
+        let urlString = model.video.play_addr.url_list[0]
+        if let url = URL(string: urlString) {
+            player.prepare(url: url, in: container)
+            container.layoutIfNeeded()
+        }
         if let url = URL(string: model.video.origin_cover.url_list[0]) {
             imageView.contentMode = .scaleAspectFill
             imageView.kf.setImage(with: url,options: [])
         }
     }
-}
+    
+    func presentAnimating() {
 
-extension InteractivePlayerViewController : DismissAnimation {
-    func dismissAnimationWillBegin(){
-        if let url = URL(string: model.video.cover.url_list[0]) {
-            imageView.contentMode = .scaleAspectFit
-            imageView.kf.setImage(with: url,options: [])
+    }
+    
+    func presentAnimationDidEnd() {
+        imageViewHiddenOptions = imageViewHiddenOptions.union(.animationEnd)
+        
+        if imageViewHiddenOptions == ImageViewHiddenOption.all {
+            imageView.isHidden = true
         }
     }
 }
+
+extension InteractivePlayerViewController : DismissAnimation {
+    
+    func dismissWillBegin() {
+        player.paused()
+    }
+    
+    func dismissAnimationWillBegin(){
+        if let url = URL(string: model.video.cover.url_list[0]) {
+            imageView.kf.setImage(with: url,options: [])
+        }
+    }
+    
+    func dismissAnimationDidEnd() {
+        imageView.contentMode = .scaleAspectFit
+    }
+    
+    func dismissAnimationCanceled() {
+        player.play()
+    }
+    
+    func dismissAnimating() {
+        player.stop()
+    }
+}
+
+extension InteractivePlayerViewController : PlayerStateSubscriber {
+    func receive(state: PlayerState) {
+        if state == .play {
+            if !imageView.isHidden {
+                imageViewHiddenOptions = imageViewHiddenOptions.union(.readyToPlay)
+                if imageViewHiddenOptions == ImageViewHiddenOption.all {
+                    imageView.isHidden = true
+                }
+            }
+        }else if state == .stop(nil) {
+            imageView.isHidden = false
+        }else if state == .paused {
+            print("停止")
+        }
+    }
+    
+    var eventBus: EventBus {
+        return player.eventBus
+    }
+}
+

@@ -144,6 +144,7 @@ public class PlayerView: UIView {
     }
     
     func setup() {
+        registerAsItemSubscriber()
         registerAsStateSubscriber()
         configUI()
         addGestures()
@@ -181,6 +182,11 @@ public class PlayerView: UIView {
     }
     
     public func play() {
+        publish(state: .play)
+    }
+    
+    public func replay() {
+        layerView.replay()
         publish(state: .play)
     }
     
@@ -232,6 +238,7 @@ public class PlayerView: UIView {
         layerView.bus = eventBus
         layerView.edges(to: self)
         layerView.disableCacheProgress = configuration.disableCacheProgress
+        layerView.videoGravity = configuration.videoGravity
         /// item
         itemObserver.bus = eventBus
         /// controls
@@ -300,6 +307,21 @@ public class PlayerView: UIView {
             if t == .began {
                 publish(state: .paused)
             }else if t == .ended {
+                publish(state: .play)
+            }
+        case .finished:
+            if configuration.repeatWhenFinished {
+                replay()
+            }
+        default:
+            break
+        }
+    }
+    
+    fileprivate func handle(item : PlayerItem) {
+        switch item {
+        case .status(let s):
+            if s == .readyToPlay {
                 publish(state: .play)
             }
         default:
@@ -442,6 +464,11 @@ extension PlayerView : PlayerStateSubscriber {
 
 extension PlayerView : PlayerStatePublisher {}
 
+extension PlayerView : PlayerItemSubscriber {
+    public func receive(item: PlayerItem) {
+        handle(item: item)
+    }
+}
 
 extension UIViewController {
     // find the most top viewController but presentedViewController

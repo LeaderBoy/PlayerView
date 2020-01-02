@@ -27,6 +27,7 @@
 //
 
 import UIKit
+import AVKit
 
 /// init
 public final class PlayerConfiguration : NSObject {
@@ -35,6 +36,9 @@ public final class PlayerConfiguration : NSObject {
     /// if set to false,video will play from the start time
     public var disableCacheProgress : Bool
     public var backgroundColor : UIColor = .black
+    public var videoGravity : AVLayerVideoGravity = .resizeAspect
+    /// when playback to end, repeat play or not
+    public var repeatWhenFinished = false
     
     public var indicatorPreferences : IndicatorPreferences
     public var controlsPreferences : ControlsPreferences

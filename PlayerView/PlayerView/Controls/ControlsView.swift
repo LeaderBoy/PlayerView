@@ -384,7 +384,6 @@ class ControlsView : UIView {
         case .status(let s):
             if s == .readyToPlay {
                 isReadyToPlay = true
-                publish(state: .play)
             }
         case .duration(let t):
             duration = t

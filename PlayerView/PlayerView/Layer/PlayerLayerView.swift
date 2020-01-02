@@ -47,7 +47,11 @@ class PlayerLayerView: UIView {
     
     var disableCacheProgress = false
     
-    var videoGravity : AVLayerVideoGravity = .resizeAspect
+    var videoGravity : AVLayerVideoGravity = .resizeAspect {
+        didSet {
+            playerLayer.videoGravity = videoGravity
+        }
+    }
     
     private var url : String?
     private var isReadyToPlay = false
@@ -100,8 +104,8 @@ class PlayerLayerView: UIView {
         player.pause()
     }
     
-    public func replay(completionHandler: ((Bool) -> Void)? = nil) {
-        seekToTime(0, completionHandler: completionHandler)
+    public func replay() {
+        player.seek(to: .zero)
     }
     
     public func stop() {

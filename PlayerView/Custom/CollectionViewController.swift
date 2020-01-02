@@ -57,7 +57,7 @@ extension CollectionViewController : UICollectionViewDelegate {
         
         let model = videos.models[indexPath.row]
         
-        let playerVC = InteractivePlayerViewController(imageView: cell.imageView, model: model)        
+        let playerVC = InteractivePlayerViewController(container : cell.container,imageView: cell.imageView, model: model)        
         
         let animator = InteractiveDismissAnimator(sourceView: cell.container)
         self.animator = animator

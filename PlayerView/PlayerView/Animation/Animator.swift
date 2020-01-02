@@ -526,6 +526,7 @@ protocol PresentAnimation {
 }
 
 protocol DismissAnimation {
+    func dismissWillBegin()
     func dismissAnimationWillBegin()
     func dismissAnimating()
     func dismissAnimationCanceled()
@@ -539,6 +540,7 @@ extension PresentAnimation {
 }
 
 extension DismissAnimation {
+    func dismissWillBegin(){}
     func dismissAnimationWillBegin(){}
     func dismissAnimating(){}
     func dismissAnimationCanceled(){}
