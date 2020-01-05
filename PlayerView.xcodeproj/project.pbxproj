@@ -282,13 +282,12 @@
 		52978E4823AFB2780043846B /* Custom */ = {
 			isa = PBXGroup;
 			children = (
+				52B7DDE623C192DA00A834C3 /* Animator */,
 				52C5DAB023B8647200D4D9D6 /* CollectionViewController.swift */,
 				52C5DAB123B8647200D4D9D6 /* CollectionViewController.xib */,
 				52C5DAB823B867E600D4D9D6 /* WaterFallLayout.swift */,
 				52C5DAB423B8657000D4D9D6 /* WaterFallCell.swift */,
 				52C5DAB523B8657000D4D9D6 /* WaterFallCell.xib */,
-				52C5DAA823B78E9C00D4D9D6 /* InteractivePlayerViewController.swift */,
-				52C5DAA923B78E9C00D4D9D6 /* InteractivePlayerViewController.xib */,
 			);
 			path = Custom;
 			sourceTree = "<group>";
@@ -297,8 +296,6 @@
 			isa = PBXGroup;
 			children = (
 				52A7972C2386A7BA0043EB99 /* Animator.swift */,
-				5287C5BB23BC873A00595A1A /* InteractiveDismissAnimator.swift */,
-				5287C5BD23BC895900595A1A /* InteractiveDismissTransition.swift */,
 				52138F4623A792660064785D /* TransitionContext.swift */,
 				52138F4823A792660064785D /* Transition.swift */,
 			);
@@ -321,6 +318,17 @@
 				52A797262386A4CB0043EB99 /* PlayerViewController.xib */,
 			);
 			path = Controller;
+			sourceTree = "<group>";
+		};
+		52B7DDE623C192DA00A834C3 /* Animator */ = {
+			isa = PBXGroup;
+			children = (
+				52C5DAA823B78E9C00D4D9D6 /* InteractivePlayerViewController.swift */,
+				52C5DAA923B78E9C00D4D9D6 /* InteractivePlayerViewController.xib */,
+				5287C5BB23BC873A00595A1A /* InteractiveDismissAnimator.swift */,
+				5287C5BD23BC895900595A1A /* InteractiveDismissTransition.swift */,
+			);
+			path = Animator;
 			sourceTree = "<group>";
 		};
 		52F8966F2385123D00D87D9E = {

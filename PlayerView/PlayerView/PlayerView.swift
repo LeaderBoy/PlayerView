@@ -83,6 +83,14 @@ public class PlayerView: UIView {
         return self.window != nil
     }
     
+    var videoGravity : AVLayerVideoGravity = .resizeAspect {
+        didSet {
+            
+        }
+    }
+    
+    public var controlsTapGesture : UITapGestureRecognizer?
+    
     private var reachability = Reachability.forInternetConnection()
     private var animator : Animator?
     
@@ -172,7 +180,9 @@ public class PlayerView: UIView {
         container.addSubview(self)
         translatesAutoresizingMaskIntoConstraints = false
         edges(to: container)
+        container.layoutIfNeeded()
     }
+    
     
     public func stop() {
         if modeState == .landscape || isAnimating {
@@ -193,29 +203,57 @@ public class PlayerView: UIView {
         publish(state: .paused)
     }
     
+    /// seek to specified time
+    /// - Parameter time: time should >= 0
     public func seekTo(time : TimeInterval) {
+        if time < 0 {
+            print("Warn : time should greater than or equal to zero")
+        }
         publish(state: .seeking(time))
     }
     
+    /// switch player videoGravity
+    /// - Parameter gesture: gesture should be ignored if gesture located in controlsView
+    public func switchVideoGravity(gesture : UIGestureRecognizer? = nil) {
+        if !isControlsDisabled && gesture != nil {
+            if controlsView.ignore(gesture: gesture!) {
+                return
+            }
+        }
+        layerView.switchVideoGravity()
+    }
+    
+    /// change mode state programmly
+    /// - Parameter mode: full or not full state
     public func updateMode(_ mode : PlayerModeState) {
         publish(state: .mode(mode))
     }
     
-    public func updateWillChangeTableView(_ tableView : UITableView) {
-        offset = tableView.contentOffset
+    public func updateWillChange(_ scrollView : UIScrollView) {
+        offset = scrollView.contentOffset
     }
     
-    public func updateDidChangeTableView(_ tableView : UITableView) {
+    public func updateDidChange(_ scrollView : UIScrollView) {
         if let i = indexPath {
             DispatchQueue.main.async {
-                tableView.contentOffset = self.offset
+                scrollView.contentOffset = self.offset
                 /// deadline should less than playerTransitionDuration
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.016) {
-                    if let cell = tableView.cellForRow(at: i) as? PlayerContainerable {
-                        let container = cell.playerContainer
-                        self.animator?.superView = container
-                    }else {
-                        fatalError("your cell must confirm to protocol PlayerContainerable")
+                    
+                    if let tableView = scrollView as? UITableView {
+                        if let cell = tableView.cellForRow(at: i) as? PlayerContainerable {
+                            let container = cell.playerContainer
+                            self.animator?.superView = container
+                        }else {
+                            fatalError("your cell must confirm to protocol PlayerContainerable")
+                        }
+                    }else if let collectionView = scrollView as? UICollectionView {
+                        if let cell = collectionView.cellForItem(at: i) as? PlayerContainerable {
+                            let container = cell.playerContainer
+                            self.animator?.superView = container
+                        }else {
+                            fatalError("your cell must confirm to protocol PlayerContainerable")
+                        }
                     }
                 }
             }
@@ -255,16 +293,13 @@ public class PlayerView: UIView {
     }
     
     func addGestures() {
-        let oneTap = UITapGestureRecognizer(target: controlsView, action: #selector(ControlsView.switchHiddenState(gesture:)))
-        oneTap.numberOfTapsRequired = 1
-        oneTap.delegate = self
-        addGestureRecognizer(oneTap)
-        
-        let doubleTap = UITapGestureRecognizer(target: self, action: #selector(switchVideoGravity(gesture:)))
-        doubleTap.numberOfTapsRequired = 2
-        doubleTap.delegate = self
-        oneTap.require(toFail: doubleTap)
-        addGestureRecognizer(doubleTap)
+        if !isControlsDisabled {
+            let oneTap = UITapGestureRecognizer(target: controlsView, action: #selector(ControlsView.switchHiddenState(gesture:)))
+            oneTap.numberOfTapsRequired = 1
+            oneTap.delegate = self
+            addGestureRecognizer(oneTap)
+            controlsTapGesture = oneTap
+        }
     }
     
     func reachabilityCallBack() {
@@ -284,13 +319,6 @@ public class PlayerView: UIView {
         case .wwan:
             publish(state: .network(.wwan))
         }
-    }
-    
-    @objc func switchVideoGravity(gesture : UIGestureRecognizer) {
-        if controlsView.ignore(gesture: gesture) {
-            return
-        }
-        layerView.switchVideoGravity()
     }
     
     func handle(state : PlayerState) {

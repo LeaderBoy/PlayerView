@@ -74,14 +74,14 @@ class PresentPlanViewController: UIViewController {
     override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
         guard let player = self.player else { return  }
         if newCollection.verticalSizeClass == .compact {
-            player.updateWillChangeTableView(tableView)
+            player.updateWillChange(tableView)
         }
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         guard let player = self.player else { return  }
         if let pre = previousTraitCollection,pre.verticalSizeClass == .compact {
-            player.updateDidChangeTableView(tableView)
+            player.updateDidChange(tableView)
         }
     }
 

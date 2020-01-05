@@ -50,7 +50,6 @@ public enum PlayerNetworkState {
 /// full screen or not
 public enum PlayerModeState {
     case landscape
-    case portraitFull
     case portrait
 }
 

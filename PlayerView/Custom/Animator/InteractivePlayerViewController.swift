@@ -57,7 +57,6 @@ class InteractivePlayerViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        container.backgroundColor = .red
     }
     
     
@@ -85,7 +84,6 @@ extension InteractivePlayerViewController : PresentAnimation {
         let urlString = model.video.play_addr.url_list[0]
         if let url = URL(string: urlString) {
             player.prepare(url: url, in: container)
-            container.layoutIfNeeded()
         }
         if let url = URL(string: model.video.origin_cover.url_list[0]) {
             imageView.contentMode = .scaleAspectFill

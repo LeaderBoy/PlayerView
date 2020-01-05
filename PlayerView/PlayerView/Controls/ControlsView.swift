@@ -362,7 +362,7 @@ class ControlsView : UIView {
             hide()
         case .mode(let mode):
             switch mode {
-            case .landscape,.portraitFull:
+            case .landscape:
                 backButton.isHidden = false
                 fullButton.isSelected = true
             case .portrait:

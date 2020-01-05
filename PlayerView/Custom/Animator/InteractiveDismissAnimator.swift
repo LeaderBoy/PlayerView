@@ -46,7 +46,7 @@ class InteractiveDismissAnimator : NSObject {
     }
     
     let animationDuration : TimeInterval = 0.5
-    var animation : AnimationOptions
+    var animationOptions : AnimationOptions
     
     lazy var panGesture: UIPanGestureRecognizer = {
         let gesure = UIPanGestureRecognizer()
@@ -55,7 +55,7 @@ class InteractiveDismissAnimator : NSObject {
     }()
     
     init(sourceView : UIView) {
-        self.animation = .spring
+        self.animationOptions = .spring
         self.sourceView = sourceView
         self.sourceFrame = sourceView.convert(sourceView.bounds, to: nil)
         if let superView = sourceView.superview {
@@ -66,9 +66,9 @@ class InteractiveDismissAnimator : NSObject {
         super.init()
     }
     
-    convenience init(sourceView : UIView,animation : AnimationOptions) {
+    convenience init(sourceView : UIView,animationOptions : AnimationOptions) {
         self.init(sourceView : sourceView)
-        self.animation = animation
+        self.animationOptions = animationOptions
     }
     
     func present(with context : TransitionContext) {
@@ -98,7 +98,7 @@ class InteractiveDismissAnimator : NSObject {
         sourceView.frame = sourceFrame
         toView.addSubview(sourceView)
                 
-        let damping : CGFloat =  animation == .spring ? 0.8 : 1
+        let damping : CGFloat =  animationOptions == .spring ? 0.8 : 1
 
         UIView.animate(withDuration: transitionDuration(using: context.transitionContext), delay: 0, usingSpringWithDamping: damping, initialSpringVelocity: 0.5, options: [.layoutSubviews,.curveEaseIn], animations: {
             from?.presentAnimating()
@@ -139,7 +139,6 @@ class InteractiveDismissAnimator : NSObject {
         let totalH = dismissView.bounds.height
         let x = abs(translationY) / totalH
         // ax² + bx + c
-        
         let alpha = max(7 * pow(x, 2) - 8 * x + 1, 0)
         
         var percent = 1 - x

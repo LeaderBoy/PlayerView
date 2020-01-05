@@ -9,7 +9,7 @@
 import UIKit
 
 
-class TransitionContext {
+public class TransitionContext {
     var transitionContext : UIViewControllerContextTransitioning
     var fromView : UIView
     var toView : UIView
