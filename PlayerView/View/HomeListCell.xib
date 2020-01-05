@@ -26,7 +26,7 @@
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1ei-6Z-1Mf">
                         <rect key="frame" x="16" y="148" width="288" height="144"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="1cU-e5-09U">
+                            <imageView clipsSubviews="YES" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="1cU-e5-09U" customClass="URLImageView" customModule="PlayerView" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="288" height="144"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="1cU-e5-09U" secondAttribute="height" multiplier="2:1" id="gOp-kO-iM8"/>
@@ -66,7 +66,7 @@
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
                 <outlet property="container" destination="1ei-6Z-1Mf" id="9Zj-Yc-YYo"/>
-                <outlet property="coverImageView" destination="1cU-e5-09U" id="daa-jk-zy2"/>
+                <outlet property="coverImageView" destination="1cU-e5-09U" id="VYQ-mb-1vN"/>
                 <outlet property="desLabel" destination="gcF-2P-rHF" id="GLZ-Pd-Uc8"/>
                 <outlet property="playButton" destination="YqV-vE-sjf" id="vE3-io-xMl"/>
             </connections>

@@ -25,7 +25,7 @@ class DouYinUIPlayer: UIView {
     @IBOutlet weak var button: UIButton!
     
     var container : UIView!
-    var imageView : UIImageView!
+    var imageView : URLImageView!
     var imageViewHiddenOptions : ImageViewHiddenOption = []
 
     var model : DouYinModel! {
@@ -52,7 +52,7 @@ class DouYinUIPlayer: UIView {
     
     private var isPlaying = false
     
-    init(container :UIView , imageView : UIImageView,model : DouYinModel) {
+    init(container :UIView , imageView : URLImageView,model : DouYinModel) {
         self.imageView = imageView
         self.model = model
         self.container = container
@@ -78,7 +78,7 @@ class DouYinUIPlayer: UIView {
         playerContainer.layoutIfNeeded()
     }
     
-    func prepare(imageView : UIImageView,container : UIView,model : DouYinModel) {
+    func prepare(imageView : URLImageView,container : UIView,model : DouYinModel) {
         isPlaying = true
         self.imageView = imageView
         self.model = model
@@ -131,7 +131,7 @@ class DouYinUIPlayer: UIView {
     func presentAnimationWillBegin() {
         if let url = URL(string: model.video.origin_cover.url_list[0]) {
             imageView.contentMode = .scaleAspectFill
-            imageView.kf.setImage(with: url,options: [])
+            imageView.load(url: url)
         }
         
         prepare(imageView: imageView, container: container, model: model)
@@ -156,7 +156,7 @@ class DouYinUIPlayer: UIView {
     
     func dismissAnimationWillBegin(){
         if let url = URL(string: model.video.cover.url_list[0]) {
-            imageView.kf.setImage(with: url,options: [])
+            imageView.load(url: url)
         }
     }
     

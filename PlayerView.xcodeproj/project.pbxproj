@@ -28,6 +28,7 @@
 		52138F5B23A8683B0064785D /* PresentPlanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52138F5923A8683B0064785D /* PresentPlanViewController.swift */; };
 		52138F5C23A8683B0064785D /* PresentPlanViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52138F5A23A8683B0064785D /* PresentPlanViewController.xib */; };
 		52138F5E23A869800064785D /* MovieDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52138F5D23A869800064785D /* MovieDataSource.swift */; };
+		523DF4B023C205530079933E /* URLImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 523DF4AF23C205530079933E /* URLImageView.swift */; };
 		523FB84523C1A052004B15E4 /* DouYinUIPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 523FB84423C1A052004B15E4 /* DouYinUIPlayer.swift */; };
 		523FB84723C1A05C004B15E4 /* DouYinUIPlayer.xib in Resources */ = {isa = PBXBuildFile; fileRef = 523FB84623C1A05C004B15E4 /* DouYinUIPlayer.xib */; };
 		524AC45123AD2FE5006A412E /* PlayerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 524AC45023AD2FE5006A412E /* PlayerConfiguration.swift */; };
@@ -112,6 +113,7 @@
 		52138F5923A8683B0064785D /* PresentPlanViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentPlanViewController.swift; sourceTree = "<group>"; };
 		52138F5A23A8683B0064785D /* PresentPlanViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PresentPlanViewController.xib; sourceTree = "<group>"; };
 		52138F5D23A869800064785D /* MovieDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDataSource.swift; sourceTree = "<group>"; };
+		523DF4AF23C205530079933E /* URLImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLImageView.swift; sourceTree = "<group>"; };
 		523FB84423C1A052004B15E4 /* DouYinUIPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DouYinUIPlayer.swift; sourceTree = "<group>"; };
 		523FB84623C1A05C004B15E4 /* DouYinUIPlayer.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DouYinUIPlayer.xib; sourceTree = "<group>"; };
 		524AC45023AD2FE5006A412E /* PlayerConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerConfiguration.swift; sourceTree = "<group>"; };
@@ -265,6 +267,14 @@
 			path = State;
 			sourceTree = "<group>";
 		};
+		523DF4AE23C205370079933E /* URLImageView */ = {
+			isa = PBXGroup;
+			children = (
+				523DF4AF23C205530079933E /* URLImageView.swift */,
+			);
+			path = URLImageView;
+			sourceTree = "<group>";
+		};
 		523FB84223C19FFB004B15E4 /* DouYinUIPlayer */ = {
 			isa = PBXGroup;
 			children = (
@@ -375,6 +385,7 @@
 				5287C5B723BC68DA00595A1A /* DouYinDataSource.swift */,
 				52978E4923AFB2920043846B /* CustomViewController.swift */,
 				52978E4A23AFB2920043846B /* CustomViewController.xib */,
+				523DF4AE23C205370079933E /* URLImageView */,
 				52978E4823AFB2780043846B /* Custom */,
 				52138F6223A8719F0064785D /* Detail */,
 				52138F6123A871690064785D /* View */,
@@ -665,6 +676,7 @@
 				2FCEBEA3239E21F5000FEDB6 /* RootTabBarViewController.swift in Sources */,
 				52F896B22386273100D87D9E /* Reachability.swift in Sources */,
 				5287C5BE23BC895900595A1A /* InteractiveDismissTransition.swift in Sources */,
+				523DF4B023C205530079933E /* URLImageView.swift in Sources */,
 				524AC45123AD2FE5006A412E /* PlayerConfiguration.swift in Sources */,
 				52138F4D23A792660064785D /* Transition.swift in Sources */,
 				52138F5723A868290064785D /* WindowPlanViewController.swift in Sources */,

@@ -43,7 +43,7 @@ class InteractivePlayerViewController: UIViewController {
         super.viewDidLoad()
     }
     
-    init(container :UIView , imageView : UIImageView,model : DouYinModel) {
+    init(container :UIView , imageView : URLImageView,model : DouYinModel) {
         player = DouYinUIPlayer(container: container, imageView: imageView, model: model)
         super.init(nibName: nil, bundle: nil)
     }

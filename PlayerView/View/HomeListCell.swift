@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Kingfisher
 
 
 protocol CellClick : class {
@@ -17,7 +16,8 @@ protocol CellClick : class {
 class HomeListCell: UITableViewCell {
     
     @IBOutlet weak var container : UIView!
-    @IBOutlet weak var coverImageView: UIImageView!
+    @IBOutlet weak var coverImageView: URLImageView!
+    
     @IBOutlet weak var desLabel: UILabel!
     @IBOutlet weak var playButton: UIButton!
     
@@ -26,7 +26,7 @@ class HomeListCell: UITableViewCell {
     var model : MovieModel! {
         didSet {
             if let url = URL(string: model.coverImg) {
-                coverImageView.kf.setImage(with: url,options: [.transition(.fade(1))])
+                coverImageView.load(url: url)
             }
             desLabel.text = model.movieName
         }

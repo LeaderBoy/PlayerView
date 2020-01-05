@@ -6,8 +6,6 @@ target 'PlayerView' do
   # use_frameworks!
 
   # Pods for PlayerView
-  pod 'Kingfisher'
-
   target 'PlayerViewUITests' do
     inherit! :search_paths
     # Pods for testing

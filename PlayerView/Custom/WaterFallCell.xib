@@ -20,7 +20,7 @@
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8pw-Ww-P54">
                         <rect key="frame" x="0.0" y="0.0" width="335" height="408"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="rfW-vv-u7u">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="rfW-vv-u7u" customClass="URLImageView" customModule="PlayerView" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="335" height="408"/>
                             </imageView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="usI-91-JSS">
@@ -64,7 +64,7 @@
             <size key="customSize" width="335" height="408"/>
             <connections>
                 <outlet property="container" destination="8pw-Ww-P54" id="AMY-wA-5Ws"/>
-                <outlet property="imageView" destination="rfW-vv-u7u" id="6d8-T4-yHs"/>
+                <outlet property="imageView" destination="rfW-vv-u7u" id="26l-Zm-4lO"/>
                 <outlet property="numberLabel" destination="fzY-j2-J5n" id="dNb-fN-9QE"/>
                 <outlet property="staticStackView" destination="usI-91-JSS" id="bfT-qR-Pdx"/>
                 <outlet property="titleLabel" destination="2zd-8d-vHC" id="y3i-gu-3uu"/>
