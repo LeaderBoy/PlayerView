@@ -55,23 +55,24 @@ extension CollectionViewController : UICollectionViewDataSource {
 
 extension CollectionViewController : UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        /// get cell at indexPath
-        let cell = collectionView.cellForItem(at: indexPath) as! WaterFallCell
-        self.cell = cell
-        /// get model at indexPath
-        let model = videos.models[indexPath.row]
-        /// create controller
-        let playerVC = InteractivePlayerViewController(container : cell.container,imageView: cell.imageView, model: model)
-        /// create animator
-        let animator = InteractiveDismissAnimator(sourceView: cell.container)
-        self.animator = animator
-        /// create transition
-        let transition = InteractiveDismissTransition(animator: animator)
-        self.transition = transition
-        /// present
-        playerVC.transitioningDelegate = transition
-        playerVC.modalPresentationStyle = .overFullScreen
-        present(playerVC, animated: true, completion: nil)
+        collectionView.reloadData()
+//        /// get cell at indexPath
+//        let cell = collectionView.cellForItem(at: indexPath) as! WaterFallCell
+//        self.cell = cell
+//        /// get model at indexPath
+//        let model = videos.models[indexPath.row]
+//        /// create controller
+//        let playerVC = InteractivePlayerViewController(container : cell.container,imageView: cell.imageView, model: model)
+//        /// create animator
+//        let animator = InteractiveDismissAnimator(sourceView: cell.container)
+//        self.animator = animator
+//        /// create transition
+//        let transition = InteractiveDismissTransition(animator: animator)
+//        self.transition = transition
+//        /// present
+//        playerVC.transitioningDelegate = transition
+//        playerVC.modalPresentationStyle = .overFullScreen
+//        present(playerVC, animated: true, completion: nil)
     }
 }
 
