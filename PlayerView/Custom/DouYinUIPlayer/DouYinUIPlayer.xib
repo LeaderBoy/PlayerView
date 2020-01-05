@@ -134,6 +134,7 @@
                                 <constraint firstAttribute="trailing" secondItem="c9C-4g-ZSU" secondAttribute="trailing" constant="15" id="Nd6-Ld-S6G"/>
                                 <constraint firstAttribute="trailing" secondItem="5QA-mT-0PB" secondAttribute="trailing" constant="10" id="OKL-EA-AYL"/>
                                 <constraint firstItem="F0K-nL-N9B" firstAttribute="centerX" secondItem="9sG-9f-hph" secondAttribute="centerX" id="VaO-Bz-32n"/>
+                                <constraint firstAttribute="bottom" secondItem="c9C-4g-ZSU" secondAttribute="bottom" priority="999" constant="15" id="bgH-nf-Pf6"/>
                                 <constraint firstItem="F0K-nL-N9B" firstAttribute="centerY" secondItem="9sG-9f-hph" secondAttribute="centerY" id="pHk-3S-KIT"/>
                             </constraints>
                         </view>

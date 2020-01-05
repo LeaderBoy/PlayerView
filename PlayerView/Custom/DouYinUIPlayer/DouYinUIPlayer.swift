@@ -57,6 +57,8 @@ class DouYinUIPlayer: UIView {
         self.model = model
         self.container = container
         super.init(frame: .zero)
+        /// prevent autolayout warn from **(frame .zero)** :
+        translatesAutoresizingMaskIntoConstraints = false
         setup()
     }
     
