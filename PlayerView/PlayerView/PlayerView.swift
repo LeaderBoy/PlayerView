@@ -187,7 +187,6 @@ public class PlayerView: UIView {
     
     public func replay() {
         layerView.replay()
-        publish(state: .play)
     }
     
     public func paused() {
@@ -319,14 +318,14 @@ public class PlayerView: UIView {
     }
     
     fileprivate func handle(item : PlayerItem) {
-        switch item {
-        case .status(let s):
-            if s == .readyToPlay {
-                publish(state: .play)
-            }
-        default:
-            break
-        }
+//        switch item {
+//        case .status(let s):
+//            if s == .readyToPlay {
+//                publish(state: .play)
+//            }
+//        default:
+//            break
+//        }
     }
     
     func handleLandscape() {

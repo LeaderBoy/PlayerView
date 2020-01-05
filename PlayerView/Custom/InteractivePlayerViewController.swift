@@ -57,7 +57,7 @@ class InteractivePlayerViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        container.backgroundColor = .red
+//        container.backgroundColor = .red
     }
     
     

@@ -42,6 +42,10 @@ class PlayerLayerView: UIView {
     var isReadyToDisplay = false {
         didSet {
             playerLayer.isHidden = !isReadyToDisplay
+            
+            if isReadyToDisplay {
+                publish(state: .play)
+            }
         }
     }
     
@@ -106,6 +110,7 @@ class PlayerLayerView: UIView {
     
     public func replay() {
         player.seek(to: .zero)
+        publish(state: .play)
     }
     
     public func stop() {
