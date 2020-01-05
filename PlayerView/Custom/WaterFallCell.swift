@@ -19,7 +19,7 @@ class WaterFallCell: UICollectionViewCell {
     var model : DouYinModel! {
         didSet {
             if let url = URL(string: model.video.cover.url_list[0]) {
-                imageView.load(url: url)
+                imageView.load(url: url, animated: true)
             }
             titleLabel.text = model.desc
             numberLabel.text = "播放\(model.statistics.digg_count)次"

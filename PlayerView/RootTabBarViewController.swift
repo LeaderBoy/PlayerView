@@ -132,6 +132,7 @@ extension UIViewController {
         return .portrait
     }
     
+    @discardableResult
     static func overrideSupportedInterfaceOrientations() -> UIInterfaceOrientationMask {
         if let orientations = class_getInstanceMethod(self, #selector(getter: supportedInterfaceOrientations)),let resetDefaultOrientations = class_getInstanceMethod(self, #selector(overrideDefaultSupportedInterfaceOrientations)) {
             method_exchangeImplementations(orientations, resetDefaultOrientations)

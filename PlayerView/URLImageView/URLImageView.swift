@@ -32,11 +32,12 @@ class ImageCache {
 class URLImageView: UIImageView {
     
     let cache = ImageCache.shared
-        
     var key : String = ""
+    var animated : Bool = false
     
-    func load(url : URL) {
+    func load(url : URL,animated : Bool,completed:((Bool,Error?) ->Void)? = nil) {
         key = url.absoluteString
+        self.animated = animated
         image = nil
         
         if let image = cache.object(forKey: key as NSString) {
@@ -50,12 +51,22 @@ class URLImageView: UIImageView {
         URLSession.shared.dataTask(with: request) { (data, response, error) in
             if error != nil {
                 print(error!)
+                completed?(false,error!)
                 return
             }
             if self.key == url.absoluteString {
                 if let imageData = data,let image = UIImage(data: imageData) {
                     DispatchQueue.main.async {
-                        self.image = image
+                        if self.animated {
+                            self.alpha = 0
+                            UIView.animate(withDuration: 0.25) {
+                                self.image = image
+                                self.alpha = 1.0
+                            }
+                        } else {
+                            self.image = image
+                        }
+                        completed?(true,nil)
                         self.cache.setObject(image, forKey: self.key as NSString)
                     }
                 }

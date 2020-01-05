@@ -131,7 +131,7 @@ class DouYinUIPlayer: UIView {
     func presentAnimationWillBegin() {
         if let url = URL(string: model.video.origin_cover.url_list[0]) {
             imageView.contentMode = .scaleAspectFill
-            imageView.load(url: url)
+            imageView.load(url: url, animated: false)
         }
         
         prepare(imageView: imageView, container: container, model: model)
@@ -156,7 +156,7 @@ class DouYinUIPlayer: UIView {
     
     func dismissAnimationWillBegin(){
         if let url = URL(string: model.video.cover.url_list[0]) {
-            imageView.load(url: url)
+            imageView.load(url: url, animated: false)
         }
     }
     

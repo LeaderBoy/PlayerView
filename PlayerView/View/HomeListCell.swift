@@ -26,7 +26,7 @@ class HomeListCell: UITableViewCell {
     var model : MovieModel! {
         didSet {
             if let url = URL(string: model.coverImg) {
-                coverImageView.load(url: url)
+                coverImageView.load(url: url, animated: true)
             }
             desLabel.text = model.movieName
         }

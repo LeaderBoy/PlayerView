@@ -27,7 +27,6 @@ class WaterFallLayout: UICollectionViewLayout {
         
         let sectionInsets = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0)
         let horInsets = sectionInsets.left + sectionInsets.right
-        let verInsets = sectionInsets.top + sectionInsets.bottom
         
         let columns = 2
         let itemSpacing : CGFloat = 2
