@@ -66,6 +66,7 @@ class PlayerLayerView: UIView {
     private let cache = MemoryCache.shared
     private var state : PlayerState = .unknown
     private var pauseBySeeking = false
+    private var shouldSeekToCacheTime = false
     
     var playerLayer : AVPlayerLayer {
         return self.layer as! AVPlayerLayer
@@ -170,6 +171,7 @@ class PlayerLayerView: UIView {
     private func handle(state : PlayerState) {
         switch state {
         case .prepare:
+            shouldSeekToCacheTime = true
             break
         case .play:
             isReadyToPlay = true
@@ -220,7 +222,7 @@ class PlayerLayerView: UIView {
     }
     
     func seekToCachedProgress() {
-        if disableCacheProgress {
+        if disableCacheProgress  || !shouldSeekToCacheTime {
             return
         }
         
@@ -229,6 +231,7 @@ class PlayerLayerView: UIView {
                 let duration = CMTimeGetSeconds(item.duration)
                 let seekTime = time.doubleValue
                 if seekTime < duration {
+                    shouldSeekToCacheTime = false
                     publish(state: .seeking(seekTime))
                 }
             }
