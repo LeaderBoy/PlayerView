@@ -37,35 +37,15 @@ struct ImageViewHiddenOption : OptionSet {
 }
 
 class InteractivePlayerViewController: UIViewController {
-
-    private var container : UIView
-    private var imageView : UIImageView
-    private var model : DouYinModel
-    
-    lazy var player: PlayerView = {
-        let configuration = PlayerConfiguration()
-        configuration.backgroundColor = .clear
-        configuration.repeatWhenFinished = true
-        configuration.controlsPreferences.disable = true
-        configuration.disableCacheProgress = true
-        configuration.videoGravity = .resizeAspectFill
-        let player = PlayerView(configuration: configuration)
-        return player
-    }()
-
-    var imageViewHiddenOptions : ImageViewHiddenOption = []
+    var player : DouYinUIPlayer!
     
     override func viewDidLoad() {
         super.viewDidLoad()
     }
     
-    
     init(container :UIView , imageView : UIImageView,model : DouYinModel) {
-        self.imageView = imageView
-        self.model = model
-        self.container = container
+        player = DouYinUIPlayer(container: container, imageView: imageView, model: model)
         super.init(nibName: nil, bundle: nil)
-        registerAsStateSubscriber()
     }
     
     required init?(coder: NSCoder) {
@@ -79,74 +59,39 @@ class InteractivePlayerViewController: UIViewController {
 }
 
 extension InteractivePlayerViewController : PresentAnimation {
-        
     func presentAnimationWillBegin() {
-        let urlString = model.video.play_addr.url_list[0]
-        if let url = URL(string: urlString) {
-            player.prepare(url: url, in: container)
-        }
-        if let url = URL(string: model.video.origin_cover.url_list[0]) {
-            imageView.contentMode = .scaleAspectFill
-            imageView.kf.setImage(with: url,options: [])
-        }
+        player.presentAnimationWillBegin()
     }
     
     func presentAnimating() {
-
+        player.presentAnimating()
     }
     
     func presentAnimationDidEnd() {
-        imageViewHiddenOptions = imageViewHiddenOptions.union(.animationEnd)
-        
-        if imageViewHiddenOptions == ImageViewHiddenOption.all {
-            imageView.isHidden = true
-        }
+        player.presentAnimationDidEnd()
     }
 }
 
 extension InteractivePlayerViewController : DismissAnimation {
     
     func dismissWillBegin() {
-        player.paused()
+        player.dismissWillBegin()
     }
     
     func dismissAnimationWillBegin(){
-        if let url = URL(string: model.video.cover.url_list[0]) {
-            imageView.kf.setImage(with: url,options: [])
-        }
+        player.dismissAnimationWillBegin()
     }
     
     func dismissAnimationDidEnd() {
-        imageView.contentMode = .scaleAspectFit
+        player.dismissAnimationDidEnd()
     }
     
     func dismissAnimationCanceled() {
-        player.play()
+        player.dismissAnimationCanceled()
     }
     
     func dismissAnimating() {
-        player.stop()
-    }
-}
-
-extension InteractivePlayerViewController : PlayerStateSubscriber {
-    func receive(state: PlayerState) {
-        if state == .play {
-            if !imageView.isHidden {
-                imageViewHiddenOptions = imageViewHiddenOptions.union(.readyToPlay)
-                if imageViewHiddenOptions == ImageViewHiddenOption.all {
-                    imageView.isHidden = true
-                }
-            }
-        }else if state == .stop(nil) {
-            imageView.isHidden = false
-        }else if state == .paused {
-            print("停止")
-        }
-    }
-    
-    var eventBus: EventBus {
-        return player.eventBus
+        player.dismissAnimating()
     }
 }
 

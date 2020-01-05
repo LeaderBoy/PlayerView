@@ -40,11 +40,25 @@ class InteractiveDismissAnimator : NSObject {
     public var superView : UIView
     private var dismissView : UIView!
     private var context : TransitionContext!
-    private var dismissViewController : UIViewController!
-    private var dismissAnimation : DismissAnimation? {
-        return dismissViewController as? DismissAnimation
+    private var presentedViewController : UIViewController!
+    private var presentingViewController : UIViewController!
+    
+    private var presentingPresentAnimation : PresentAnimation? {
+        return presentingViewController as? PresentAnimation
     }
     
+    private var presentedPresentAnimation : PresentAnimation? {
+        return presentedViewController as? PresentAnimation
+    }
+    
+    private var presentingDismissAnimation : DismissAnimation? {
+        return presentingViewController as? DismissAnimation
+    }
+    
+    private var presentedDismissAnimation : DismissAnimation? {
+        return presentedViewController as? DismissAnimation
+    }
+
     let animationDuration : TimeInterval = 0.5
     var animationOptions : AnimationOptions
     
@@ -76,23 +90,21 @@ class InteractiveDismissAnimator : NSObject {
         self.context = context
         
         let container = context.containerView
+        /// from
+        let fromViewController = context.fromTopViewController
+        presentingViewController = fromViewController
+        presentingPresentAnimation?.presentAnimationWillBegin()
+        /// to
         let toViewController = context.toViewController
         let toView = context.toView
-        
-        let fromViewController = context.fromTopViewController
-        let from = fromViewController as? PresentAnimation
-        from?.presentAnimationWillBegin()
-        
         toView.backgroundColor = UIColor(white: 0, alpha: 0)
         toView.addGestureRecognizer(panGesture)
         toView.frame = container.bounds
         container.addSubview(toView)
-        
-        let to = toViewController as? PresentAnimation
-        to?.presentAnimationWillBegin()
+        presentedViewController = toViewController
+        presentedPresentAnimation?.presentAnimationWillBegin()
         
         dismissView = toView
-        dismissViewController = toViewController
         
         sourceView.removeConstraints()
         sourceView.frame = sourceFrame
@@ -101,14 +113,14 @@ class InteractiveDismissAnimator : NSObject {
         let damping : CGFloat =  animationOptions == .spring ? 0.8 : 1
 
         UIView.animate(withDuration: transitionDuration(using: context.transitionContext), delay: 0, usingSpringWithDamping: damping, initialSpringVelocity: 0.5, options: [.layoutSubviews,.curveEaseIn], animations: {
-            from?.presentAnimating()
-            to?.presentAnimating()
+            self.presentingPresentAnimation?.presentAnimating()
+            self.presentedPresentAnimation?.presentAnimating()
             toView.backgroundColor = UIColor(white: 0, alpha: 1)
             self.sourceView.frame = toView.bounds
         }) { (_) in
             context.transitionContext.completeTransition(true)
-            from?.presentAnimationDidEnd()
-            to?.presentAnimationDidEnd()
+            self.presentingPresentAnimation?.presentAnimationDidEnd()
+            self.presentedPresentAnimation?.presentAnimationDidEnd()
         }
     }
     
@@ -122,7 +134,8 @@ class InteractiveDismissAnimator : NSObject {
         
         switch gesure.state {
         case .began:
-            dismissAnimation?.dismissWillBegin()
+            presentedDismissAnimation?.dismissWillBegin()
+            presentingDismissAnimation?.dismissWillBegin()
             break
         case .changed:
             scale(with: translation)
@@ -163,8 +176,8 @@ class InteractiveDismissAnimator : NSObject {
     }
     
     func cancelAnimation() {
-        dismissAnimation?.dismissAnimationCanceled()
-        
+        presentedDismissAnimation?.dismissAnimationCanceled()
+        presentingDismissAnimation?.dismissAnimationCanceled()
         UIView.animate(withDuration: 0.2) {
             self.dismissView.backgroundColor = UIColor(white: 0, alpha: 1)
             self.sourceView.transform = .identity
@@ -172,18 +185,20 @@ class InteractiveDismissAnimator : NSObject {
     }
     
     func endAnimation() {
-        dismissAnimation?.dismissAnimationWillBegin()
-        
+        presentedDismissAnimation?.dismissAnimationWillBegin()
+        presentingDismissAnimation?.dismissAnimationWillBegin()
         UIView.animate(withDuration: 0.2, delay: 0, options: .layoutSubviews, animations: {
-            self.dismissAnimation?.dismissAnimating()
+            self.presentedDismissAnimation?.dismissAnimating()
+            self.presentingDismissAnimation?.dismissAnimating()
             self.sourceView.transform = .identity
             self.sourceView.frame = self.sourceFrame
         }) { (_) in
             self.sourceView.removeFromSuperview()
             self.superView.addSubview(self.sourceView)
             self.sourceView.edges(to: self.superView)
-            self.dismissViewController.dismiss(animated: false) {
-                self.dismissAnimation?.dismissAnimationDidEnd()
+            self.presentedViewController.dismiss(animated: false) {
+                self.presentedDismissAnimation?.dismissAnimationDidEnd()
+                self.presentingDismissAnimation?.dismissAnimationDidEnd()
             }
         }
     }

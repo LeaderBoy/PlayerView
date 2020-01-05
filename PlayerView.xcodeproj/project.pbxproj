@@ -28,6 +28,8 @@
 		52138F5B23A8683B0064785D /* PresentPlanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52138F5923A8683B0064785D /* PresentPlanViewController.swift */; };
 		52138F5C23A8683B0064785D /* PresentPlanViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52138F5A23A8683B0064785D /* PresentPlanViewController.xib */; };
 		52138F5E23A869800064785D /* MovieDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52138F5D23A869800064785D /* MovieDataSource.swift */; };
+		523FB84523C1A052004B15E4 /* DouYinUIPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 523FB84423C1A052004B15E4 /* DouYinUIPlayer.swift */; };
+		523FB84723C1A05C004B15E4 /* DouYinUIPlayer.xib in Resources */ = {isa = PBXBuildFile; fileRef = 523FB84623C1A05C004B15E4 /* DouYinUIPlayer.xib */; };
 		524AC45123AD2FE5006A412E /* PlayerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 524AC45023AD2FE5006A412E /* PlayerConfiguration.swift */; };
 		524AC46323B60233006A412E /* CALayer + Animation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 524AC46223B60233006A412E /* CALayer + Animation.swift */; };
 		526C9F0623A1CE4F007F10A3 /* MotionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 526C9F0523A1CE4F007F10A3 /* MotionManager.swift */; };
@@ -110,6 +112,8 @@
 		52138F5923A8683B0064785D /* PresentPlanViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentPlanViewController.swift; sourceTree = "<group>"; };
 		52138F5A23A8683B0064785D /* PresentPlanViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PresentPlanViewController.xib; sourceTree = "<group>"; };
 		52138F5D23A869800064785D /* MovieDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDataSource.swift; sourceTree = "<group>"; };
+		523FB84423C1A052004B15E4 /* DouYinUIPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DouYinUIPlayer.swift; sourceTree = "<group>"; };
+		523FB84623C1A05C004B15E4 /* DouYinUIPlayer.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DouYinUIPlayer.xib; sourceTree = "<group>"; };
 		524AC45023AD2FE5006A412E /* PlayerConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerConfiguration.swift; sourceTree = "<group>"; };
 		524AC46223B60233006A412E /* CALayer + Animation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CALayer + Animation.swift"; sourceTree = "<group>"; };
 		526C9F0523A1CE4F007F10A3 /* MotionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionManager.swift; sourceTree = "<group>"; };
@@ -261,6 +265,15 @@
 			path = State;
 			sourceTree = "<group>";
 		};
+		523FB84223C19FFB004B15E4 /* DouYinUIPlayer */ = {
+			isa = PBXGroup;
+			children = (
+				523FB84423C1A052004B15E4 /* DouYinUIPlayer.swift */,
+				523FB84623C1A05C004B15E4 /* DouYinUIPlayer.xib */,
+			);
+			path = DouYinUIPlayer;
+			sourceTree = "<group>";
+		};
 		526C9F0423A1CE2C007F10A3 /* Motion */ = {
 			isa = PBXGroup;
 			children = (
@@ -282,6 +295,7 @@
 		52978E4823AFB2780043846B /* Custom */ = {
 			isa = PBXGroup;
 			children = (
+				523FB84223C19FFB004B15E4 /* DouYinUIPlayer */,
 				52B7DDE623C192DA00A834C3 /* Animator */,
 				52C5DAB023B8647200D4D9D6 /* CollectionViewController.swift */,
 				52C5DAB123B8647200D4D9D6 /* CollectionViewController.xib */,
@@ -544,6 +558,7 @@
 			files = (
 				52F896882385124000D87D9E /* LaunchScreen.storyboard in Resources */,
 				52046AD923A0A023008B0B43 /* Localizable.strings in Resources */,
+				523FB84723C1A05C004B15E4 /* DouYinUIPlayer.xib in Resources */,
 				52F896B823866B8100D87D9E /* ControlsView.xib in Resources */,
 				52138F5823A868290064785D /* WindowPlanViewController.xib in Resources */,
 				52138F5423A867140064785D /* TextCell.xib in Resources */,
@@ -641,6 +656,7 @@
 				529E2D18239226BB0026055D /* Subscriber.swift in Sources */,
 				52C5DAB923B867E600D4D9D6 /* WaterFallLayout.swift in Sources */,
 				52C5DAAA23B78E9C00D4D9D6 /* InteractivePlayerViewController.swift in Sources */,
+				523FB84523C1A052004B15E4 /* DouYinUIPlayer.swift in Sources */,
 				52D7421E239550E70068C08D /* EventBus.swift in Sources */,
 				52F8967C2385123D00D87D9E /* AppDelegate.swift in Sources */,
 				52F8969F2385136D00D87D9E /* PlayerView.swift in Sources */,

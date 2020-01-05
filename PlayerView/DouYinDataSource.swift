@@ -21,6 +21,7 @@ struct DouYinModel : Decodable {
 struct DouYinVideoStatistics : Decodable {
     let digg_count : Int
     let share_count : Int
+    let comment_count : Int
 }
 
 /// video

@@ -160,7 +160,12 @@ public class PlayerView: UIView {
         reachabilityCallBack()
     }
     
-    public func prepare(url : URL,in container : UIView,at indexPath : IndexPath? = nil) {
+    
+    /// prepare video url for player
+    /// - Parameter url: video url
+    /// - Parameter container: if container is nil,that is to say you already add player in some view
+    /// - Parameter indexPath: record cell indexPath
+    public func prepare(url : URL,in container : UIView? = nil,at indexPath : IndexPath? = nil) {
         /// stop observer for oldItem
         if item != nil {
             publish(state: .stop(self.indexPath))
@@ -176,11 +181,13 @@ public class PlayerView: UIView {
         player.replaceCurrentItem(with: item)
         itemObserver.item = item
         itemObserver.player = player
-        /// add player
-        container.addSubview(self)
-        translatesAutoresizingMaskIntoConstraints = false
-        edges(to: container)
-        container.layoutIfNeeded()
+        /// if container is not nil,add player
+        if container != nil {
+            container!.addSubview(self)
+            translatesAutoresizingMaskIntoConstraints = false
+            edges(to: container!)
+            container!.layoutIfNeeded()
+        }
     }
     
     

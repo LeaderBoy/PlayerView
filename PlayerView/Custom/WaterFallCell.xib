@@ -66,6 +66,7 @@
                 <outlet property="container" destination="8pw-Ww-P54" id="AMY-wA-5Ws"/>
                 <outlet property="imageView" destination="rfW-vv-u7u" id="6d8-T4-yHs"/>
                 <outlet property="numberLabel" destination="fzY-j2-J5n" id="dNb-fN-9QE"/>
+                <outlet property="staticStackView" destination="usI-91-JSS" id="bfT-qR-Pdx"/>
                 <outlet property="titleLabel" destination="2zd-8d-vHC" id="y3i-gu-3uu"/>
             </connections>
             <point key="canvasLocation" x="344.20289855072468" y="272.54464285714283"/>

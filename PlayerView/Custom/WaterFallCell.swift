@@ -16,6 +16,7 @@ class WaterFallCell: UICollectionViewCell {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var numberLabel: UILabel!
     
+    @IBOutlet weak var staticStackView: UIStackView!
     var model : DouYinModel! {
         didSet {
             if let url = URL(string: model.video.cover.url_list[0]) {
@@ -26,9 +27,11 @@ class WaterFallCell: UICollectionViewCell {
         }
     }
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
+    func present() {
+        staticStackView.isHidden = true
     }
-
+   
+    func dismiss() {
+        staticStackView.isHidden = false
+    }
 }
