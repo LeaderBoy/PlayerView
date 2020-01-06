@@ -32,13 +32,14 @@ class ImageDiskCache {
         if var fileName = fileURL(for: key) {
             do {
                 try obj.write(to: fileName)
-//                do {
-//                    var resourceValues = URLResourceValues()
-//                    resourceValues.isExcludedFromBackup = false
-//                    try fileName.setResourceValues(resourceValues)
-//                } catch let e {
-//                    print("disable backup failed:\(e)")
-//                }
+                do {
+                    /// prevent backup
+                    var resourceValues = URLResourceValues()
+                    resourceValues.isExcludedFromBackup = false
+                    try fileName.setResourceValues(resourceValues)
+                } catch let e {
+                    print("disable backup failed:\(e)")
+                }
             } catch let e {
                 print("file write to disk failed:\(e)")
             }
@@ -126,16 +127,21 @@ class ImageMemoryCache {
     static let shared = ImageMemoryCache()
     lazy var cache = NSCache<NSString, UIImage>()
     
+    func md5Key(for key : NSString) -> NSString {
+        let newKey = key as String
+        return newKey.md5Value as NSString
+    }
+    
     func setObject(_ obj: UIImage, forKey key: NSString) {
-        cache.setObject(obj, forKey: key)
+        cache.setObject(obj, forKey: md5Key(for: key))
     }
     
     func object(forKey key: NSString) -> UIImage? {
-        return cache.object(forKey: key)
+        return cache.object(forKey: md5Key(for: key))
     }
     
     func removeObject(for key: NSString) {
-        cache.removeObject(forKey: key)
+        cache.removeObject(forKey: md5Key(for: key))
     }
     
     func removeAll() {
@@ -163,6 +169,7 @@ class URLImageView: UIImageView {
         
         if let image = diskCache.object(forKey: key) {
             self.image = image
+            memoryCache.setObject(image, forKey: key as NSString)
             print("disk")
             return
         }
