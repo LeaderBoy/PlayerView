@@ -28,6 +28,14 @@
 		52138F5C23A8683B0064785D /* PresentPlanViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52138F5A23A8683B0064785D /* PresentPlanViewController.xib */; };
 		52138F5E23A869800064785D /* MovieDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52138F5D23A869800064785D /* MovieDataSource.swift */; };
 		523DF4B023C205530079933E /* URLImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 523DF4AF23C205530079933E /* URLImageView.swift */; };
+		523EC4BF23C5B9D600AFE5DA /* ImageDiskCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 523EC4BE23C5B9D600AFE5DA /* ImageDiskCache.swift */; };
+		523EC4C123C5B9E600AFE5DA /* ImageMemoryCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 523EC4C023C5B9E600AFE5DA /* ImageMemoryCache.swift */; };
+		523EC4C423C5BA8C00AFE5DA /* String + MD5.swift in Sources */ = {isa = PBXBuildFile; fileRef = 523EC4C323C5BA8C00AFE5DA /* String + MD5.swift */; };
+		523EC4C623C5BCBD00AFE5DA /* ImageResize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 523EC4C523C5BCBD00AFE5DA /* ImageResize.swift */; };
+		523EC4C923C5CDDA00AFE5DA /* ImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 523EC4C723C5CDDA00AFE5DA /* ImageViewController.swift */; };
+		523EC4CA23C5CDDA00AFE5DA /* ImageViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 523EC4C823C5CDDA00AFE5DA /* ImageViewController.xib */; };
+		523EC4CF23C5D05A00AFE5DA /* ImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 523EC4CD23C5D05A00AFE5DA /* ImageCell.swift */; };
+		523EC4D023C5D05A00AFE5DA /* ImageCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 523EC4CE23C5D05A00AFE5DA /* ImageCell.xib */; };
 		523FB84523C1A052004B15E4 /* DouYinUIPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 523FB84423C1A052004B15E4 /* DouYinUIPlayer.swift */; };
 		523FB84723C1A05C004B15E4 /* DouYinUIPlayer.xib in Resources */ = {isa = PBXBuildFile; fileRef = 523FB84623C1A05C004B15E4 /* DouYinUIPlayer.xib */; };
 		524AC45123AD2FE5006A412E /* PlayerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 524AC45023AD2FE5006A412E /* PlayerConfiguration.swift */; };
@@ -110,6 +118,14 @@
 		52138F5A23A8683B0064785D /* PresentPlanViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PresentPlanViewController.xib; sourceTree = "<group>"; };
 		52138F5D23A869800064785D /* MovieDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDataSource.swift; sourceTree = "<group>"; };
 		523DF4AF23C205530079933E /* URLImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLImageView.swift; sourceTree = "<group>"; };
+		523EC4BE23C5B9D600AFE5DA /* ImageDiskCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDiskCache.swift; sourceTree = "<group>"; };
+		523EC4C023C5B9E600AFE5DA /* ImageMemoryCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageMemoryCache.swift; sourceTree = "<group>"; };
+		523EC4C323C5BA8C00AFE5DA /* String + MD5.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String + MD5.swift"; sourceTree = "<group>"; };
+		523EC4C523C5BCBD00AFE5DA /* ImageResize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageResize.swift; sourceTree = "<group>"; };
+		523EC4C723C5CDDA00AFE5DA /* ImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewController.swift; sourceTree = "<group>"; };
+		523EC4C823C5CDDA00AFE5DA /* ImageViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ImageViewController.xib; sourceTree = "<group>"; };
+		523EC4CD23C5D05A00AFE5DA /* ImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCell.swift; sourceTree = "<group>"; };
+		523EC4CE23C5D05A00AFE5DA /* ImageCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ImageCell.xib; sourceTree = "<group>"; };
 		523FB84423C1A052004B15E4 /* DouYinUIPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DouYinUIPlayer.swift; sourceTree = "<group>"; };
 		523FB84623C1A05C004B15E4 /* DouYinUIPlayer.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DouYinUIPlayer.xib; sourceTree = "<group>"; };
 		524AC45023AD2FE5006A412E /* PlayerConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerConfiguration.swift; sourceTree = "<group>"; };
@@ -252,8 +268,39 @@
 			isa = PBXGroup;
 			children = (
 				523DF4AF23C205530079933E /* URLImageView.swift */,
+				523EC4BE23C5B9D600AFE5DA /* ImageDiskCache.swift */,
+				523EC4C023C5B9E600AFE5DA /* ImageMemoryCache.swift */,
+				523EC4C523C5BCBD00AFE5DA /* ImageResize.swift */,
+				523EC4C223C5BA7900AFE5DA /* Extension */,
 			);
 			path = URLImageView;
+			sourceTree = "<group>";
+		};
+		523EC4C223C5BA7900AFE5DA /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				523EC4C323C5BA8C00AFE5DA /* String + MD5.swift */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
+		523EC4CB23C5D02800AFE5DA /* Image */ = {
+			isa = PBXGroup;
+			children = (
+				523EC4C723C5CDDA00AFE5DA /* ImageViewController.swift */,
+				523EC4C823C5CDDA00AFE5DA /* ImageViewController.xib */,
+				523EC4CC23C5D03C00AFE5DA /* View */,
+			);
+			path = Image;
+			sourceTree = "<group>";
+		};
+		523EC4CC23C5D03C00AFE5DA /* View */ = {
+			isa = PBXGroup;
+			children = (
+				523EC4CD23C5D05A00AFE5DA /* ImageCell.swift */,
+				523EC4CE23C5D05A00AFE5DA /* ImageCell.xib */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 		523FB84223C19FFB004B15E4 /* DouYinUIPlayer */ = {
@@ -363,6 +410,7 @@
 				2FCEBEA2239E21F5000FEDB6 /* RootViewControllerInitial.swift */,
 				52138F5D23A869800064785D /* MovieDataSource.swift */,
 				5287C5B723BC68DA00595A1A /* DouYinDataSource.swift */,
+				523EC4CB23C5D02800AFE5DA /* Image */,
 				52978E4923AFB2920043846B /* CustomViewController.swift */,
 				52978E4A23AFB2920043846B /* CustomViewController.xib */,
 				523DF4AE23C205370079933E /* URLImageView */,
@@ -550,7 +598,9 @@
 				5287C5B623BC675600595A1A /* douyin.json in Resources */,
 				2FCEBEAC239E2D72000FEDB6 /* HomeListCell.xib in Resources */,
 				2FCEBEA0239E216B000FEDB6 /* movie.json in Resources */,
+				523EC4D023C5D05A00AFE5DA /* ImageCell.xib in Resources */,
 				52C5DAAB23B78E9C00D4D9D6 /* InteractivePlayerViewController.xib in Resources */,
+				523EC4CA23C5CDDA00AFE5DA /* ImageViewController.xib in Resources */,
 				52C5DAB323B8647200D4D9D6 /* CollectionViewController.xib in Resources */,
 				52978E4C23AFB2920043846B /* CustomViewController.xib in Resources */,
 				52138F5C23A8683B0064785D /* PresentPlanViewController.xib in Resources */,
@@ -586,6 +636,7 @@
 				526C9F0623A1CE4F007F10A3 /* MotionManager.swift in Sources */,
 				52A7973C238E15B90043EB99 /* IndicatorLoading.swift in Sources */,
 				2FCEBEA4239E21F5000FEDB6 /* RootViewControllerInitial.swift in Sources */,
+				523EC4CF23C5D05A00AFE5DA /* ImageCell.swift in Sources */,
 				52F896AB23852B3A00D87D9E /* ItemObserver.swift in Sources */,
 				529E2D1A239229E50026055D /* Publisher.swift in Sources */,
 				52138F5323A867140064785D /* TextCell.swift in Sources */,
@@ -610,14 +661,19 @@
 				52F896AD2385403F00D87D9E /* PlayerLayerView.swift in Sources */,
 				52978E4723AF9B270043846B /* InfiniteIndicator.swift in Sources */,
 				52A7972D2386A7BA0043EB99 /* Animator.swift in Sources */,
+				523EC4C623C5BCBD00AFE5DA /* ImageResize.swift in Sources */,
+				523EC4C123C5B9E600AFE5DA /* ImageMemoryCache.swift in Sources */,
 				2FE975A0239E61E800DF782D /* VideoDetailViewController.swift in Sources */,
+				523EC4C423C5BA8C00AFE5DA /* String + MD5.swift in Sources */,
 				520595822385938300BBEF77 /* IndicatorView.swift in Sources */,
 				52C5DAB223B8647200D4D9D6 /* CollectionViewController.swift in Sources */,
 				52978E4B23AFB2920043846B /* CustomViewController.swift in Sources */,
 				52B3571D23AA0EC700CE98EA /* UIView + LayerAnimation.swift in Sources */,
 				5287C5BC23BC873A00595A1A /* InteractiveDismissAnimator.swift in Sources */,
 				52138F5E23A869800064785D /* MovieDataSource.swift in Sources */,
+				523EC4BF23C5B9D600AFE5DA /* ImageDiskCache.swift in Sources */,
 				52F896B623866B5A00D87D9E /* ControlsView.swift in Sources */,
+				523EC4C923C5CDDA00AFE5DA /* ImageViewController.swift in Sources */,
 				52A797272386A4CB0043EB99 /* PlayerViewController.swift in Sources */,
 				52138F5B23A8683B0064785D /* PresentPlanViewController.swift in Sources */,
 				52F896A52385151300D87D9E /* UIView + Constraints.swift in Sources */,

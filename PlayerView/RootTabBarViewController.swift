@@ -39,7 +39,6 @@ class RootNavigationController: UINavigationController {
         if children.count > 0 {
             viewController.hidesBottomBarWhenPushed = true
         }
-        
         super.pushViewController(viewController, animated: animated)
     }
 }
@@ -51,6 +50,8 @@ class RootTabBarViewController: UITabBarController {
             TabbarItem(title: "Window", image: #imageLiteral(resourceName: "tab_play_back"), selectedImage: #imageLiteral(resourceName: "tab_play_back_selected")),
             TabbarItem(title: "Present",image: #imageLiteral(resourceName: "tab_play"), selectedImage: #imageLiteral(resourceName: "tab_play_selected")),
             TabbarItem(title: "Custom",image: #imageLiteral(resourceName: "tab_play_forward"), selectedImage: #imageLiteral(resourceName: "tab_play_forward_selected")),
+            TabbarItem(title: "Image",image: #imageLiteral(resourceName: "tab_play_forward"), selectedImage: #imageLiteral(resourceName: "tab_play_forward_selected")),
+
     ]
     
     override public func viewDidLoad() {
@@ -63,7 +64,8 @@ class RootTabBarViewController: UITabBarController {
             [
                 WindowPlanViewController(),
                 PresentPlanViewController(),
-                CollectionViewController()
+                CollectionViewController(),
+                ImageViewController()
         ]
         return vcs
     }
