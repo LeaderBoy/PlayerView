@@ -8,6 +8,8 @@
 
 import UIKit
 
+let imageDecodeQueue = DispatchQueue(label: "image.decode.queue")
+
 class URLImageView: UIImageView {
     
     let memoryCache = ImageMemoryCache.shared
@@ -95,18 +97,23 @@ extension URLImageView : URLSessionDataDelegate {
         completionHandler(.allow)
     }
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
-        receiveData!.append(data)
         
-        let loadFinished = receiveData!.count == totalSize
-        
-        CGImageSourceUpdateData(increatementallyImageSource!, receiveData! as CFData, loadFinished)
-        
-        let downSampleOptions = [
-            kCGImageSourceShouldCacheImmediately : true,
-        ] as CFDictionary
-        
-        if let imageRef = CGImageSourceCreateImageAtIndex(increatementallyImageSource!, 0, downSampleOptions) {
-            self.image = UIImage(cgImage: imageRef)
+        imageDecodeQueue.async {
+            self.receiveData!.append(data)
+            
+            let loadFinished = self.receiveData!.count == self.totalSize
+            
+            CGImageSourceUpdateData(self.increatementallyImageSource!, self.receiveData! as CFData, loadFinished)
+            
+            let downSampleOptions = [
+                kCGImageSourceShouldCacheImmediately : true,
+            ] as CFDictionary
+            
+            if let imageRef = CGImageSourceCreateImageAtIndex(self.increatementallyImageSource!, 0, downSampleOptions) {
+                DispatchQueue.main.async {
+                    self.image = UIImage(cgImage: imageRef)
+                }
+            }
         }
         
     }
